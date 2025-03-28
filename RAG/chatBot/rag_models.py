@@ -53,7 +53,7 @@ Format:
 """)
 
 class RAGModel:
-    def __init__(self, chunks_dir="RAG/Section Chunking", index_dir="RAG/chatBot/vector_indices"):
+    def __init__(self, chunks_dir="reprocessed_section_chunks", index_dir="RAG/chatBot/vector_indices"):
         self.chunks_dir = chunks_dir
         self.index_dir = index_dir
         self.db = None
@@ -77,7 +77,7 @@ class RAGModel:
         chunks = []
         
         # Get all JSON files in the chunks directory
-        json_files = list(Path(self.chunks_dir).glob("*.json*"))
+        json_files = list(Path(self.chunks_dir).glob("**/*.json*"))
         
         if not json_files:
             logger.warning(f"No JSON files found in {self.chunks_dir}")

@@ -7,3 +7,6 @@ __pycache__
 *.pyd
 *.pyw
 
+reprocessed_section_chunks/
+reprocessed_section_chunks_2/
+reprocessed_section_chunks_3/
