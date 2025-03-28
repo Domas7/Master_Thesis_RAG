@@ -1,0 +1,302 @@
+[
+    {
+      "id": 1,
+      "question": "What is lunar dust and why is it significant?",
+      "expected_answer": "Lunar dust is the finest size portion of loose surficial material called lunar regolith. It has drawn significant public and scientific interest even before Apollo missions. There were concerns about spacecraft stability on the moon due to regolith structure and depth, and potential biological hazards. While some concerns were addressed during Apollo missions, others were partially validated.",
+      "relevant_chunk_ids": ["ICES doc.pdf_0"]
+    },
+    {
+      "id": 2,
+      "question": "What was the objective of the LTV remote operations studies?",
+      "expected_answer": "The objective was to determine how many kilometers per day an operator on Earth could remotely drive a notional Lunar Terrain Vehicle (LTV) with minimal remote operator capabilities under four communication delays: 0-second, 4-second, 6-second, and 8-second roundtrip (Earth-Moon-Earth) delay.",
+      "relevant_chunk_ids": ["Teleops IEEE Paper FY24 FINAL.pdf_3"]
+    },
+    {
+      "id": 3,
+      "question": "What facilities were used for the LTV remote operations tests?",
+      "expected_answer": "Two NASA Johnson Space Center facilities were employed: the Simulation and Exploration Analysis Laboratory (SEAL) for the April study, and a simulated mission control center in Building 16 in the Systems Engineering Simulators (SES) facility for the August study.",
+      "relevant_chunk_ids": ["Teleops IEEE Paper FY24 FINAL.pdf_5"]
+    },
+    {
+      "id": 4,
+      "question": "What are the challenges with food for Mars missions?",
+      "expected_answer": "The main challenges include limited shelf-life (current ISS food items last ~18 months vs. 36-60 months needed for Mars), mass constraints (food represents the largest non-propellant logistical mass), and water content requirements (needs to be reduced to <30% to balance with life support systems). Additionally, Mars missions won't have the variety of fresh foods available on ISS.",
+      "relevant_chunk_ids": ["IAC2024_Manuscript-Human-System-Needs_STRIVES.pdf_11"]
+    },
+    {
+      "id": 5,
+      "question": "What is FACET and what is it used for?",
+      "expected_answer": "FACET (Future ATM Concepts and Evaluation Tool) is a flexible software tool that allows researchers to explore, develop and evaluate advanced air transportation concepts. It can quickly generate and analyze thousands of aircraft trajectories using aircraft performance profiles, airspace models, weather data, and flight schedules. It's used by NASA researchers, FAA traffic flow managers, and commercial airline dispatchers for research, real-time operations planning, and rerouting flights around congestion and severe weather.",
+      "relevant_chunk_ids": ["20170010406.pdf_2"]
+    },
+    {
+      "id": 6,
+      "question": "What are the injury concerns for astronauts during EVAs?",
+      "expected_answer": "There are significant concerns about musculoskeletal injuries during long-duration planetary missions. During Apollo EVAs, 9 injuries of varying severity were reported across 14 EVAs, ranging from blisters to fingernail delamination to shoulder injuries requiring surgery. Poor spacesuit fit is believed to contribute to injuries and affect performance. Future missions with more frequent EVAs and less recovery time between them increase injury risk.",
+      "relevant_chunk_ids": ["IAC2024_Manuscript-Human-System-Needs_STRIVES.pdf_15"]
+    },
+    {
+      "id": 7,
+      "question": "What is the purpose of the CH Products 3-axis joystick in NASA's rover operations?",
+      "expected_answer": "The CH Products 3-axis joystick was chosen during the Small Pressurized Rover concept development (2007-2022) because the extra degree of freedom in the yaw direction allowed engineers to incorporate a crabbing function without relying on display software.",
+      "relevant_chunk_ids": ["Teleops IEEE Paper FY24 FINAL.pdf_5"]
+    },
+    {
+      "id": 8,
+      "question": "What are the challenges with exercise equipment for Mars missions?",
+      "expected_answer": "Current spaceflight exercise hardware has substantial mass (~2,000 kg), power (~2.1 kW), and volume (19 m³) requirements that can be accommodated on the ISS but would be challenging for Mars missions due to mass, power, volume, crew time, and spacecraft structural constraints.",
+      "relevant_chunk_ids": ["IAC2024_Manuscript-Human-System-Needs_STRIVES.pdf_16"]
+    },
+    {
+      "id": 9,
+      "question": "How were CGHs used in the WFIRST mission study?",
+      "expected_answer": "Infrared Computer-Generated Holograms (CGHs) were designed and manufactured in-house to measure the wavefront of optical elements E1 and E3. The Center for Nanoscale Science and Technology (CNST) at NIST used a laser writer and plasma etcher to make phase CGHs, which shortened test turnaround time, provided flexibility to learn the manufacturing process, and reduced cost.",
+      "relevant_chunk_ids": ["20170002231.pdf_6"]
+    },
+    {
+      "id": 10,
+      "question": "What is DCS risk in space exploration and why is it important?",
+      "expected_answer": "DCS (Decompression Sickness) risk is a significant concern for space exploration, particularly during EVAs. The cabin atmosphere during Apollo was 100% oxygen, eliminating DCS risk but increasing fire risk. Future missions will use nitrox gas mixtures, requiring astronauts to breathe 100% oxygen before EVAs. Selecting appropriate atmospheres for different spacecraft elements involves complex trade-offs between hypoxia, flammability, crew time, consumables, and DCS risk. Current DCS risk models have significant uncertainty, with expert estimates varying widely.",
+      "relevant_chunk_ids": ["IAC2024_Manuscript-Human-System-Needs_STRIVES.pdf_14"]
+    },
+    {
+      "id": 11,
+      "question": "What assumptions were made during the LTV remote operations testing?",
+      "expected_answer": "Testing assumed continuous high-bandwidth communication between the LTV and remote operator, with no time constraints imposed on test operators. Unlike the eventual flight LTV, autonomous hazard detection was not incorporated in the simulation. The remote operations console was not necessarily flight-like, and operators received limited familiarization training (15 minutes to 3 hours) compared to what actual LTV operators will receive.",
+      "relevant_chunk_ids": ["Teleops IEEE Paper FY24 FINAL.pdf_4"]
+    },
+    {
+      "id": 12,
+      "question": "What is the purpose of the Interface Control Document (ICD) for FACET?",
+      "expected_answer": "The Interface Control Document (ICD) specifies the interface requirements that airspace adaptations and historical air traffic data archives must meet for NASA's Future ATM Concepts and Evaluation Tool (FACET). It provides information on data formats, general descriptions of data elements, assumptions, and sample data messages for each interface.",
+      "relevant_chunk_ids": ["20170010406.pdf_3"]
+    },
+    {
+      "id": 13,
+      "question": "What is a NAVAID in the context of air traffic management?",
+      "expected_answer": "A NAVAID (Navigational Aid) is an electronic device on the earth's surface which provides point-to-point guidance information or position data to aircraft in flight.",
+      "relevant_chunk_ids": ["20170010406.pdf_5"]
+    },
+    {
+      "id": 14,
+      "question": "What physiological adaptations are of concern for Mars-duration missions?",
+      "expected_answer": "NASA is assessing how the duration of exposure to spaceflight (3-5 years for Mars missions) affects each physiological system. The ISS has provided data on 6-month missions, with a handful of crewmembers spending about a year in space. One specific adaptation of concern is the spaceflight associated neuro-ocular syndrome first described in 2011.",
+      "relevant_chunk_ids": ["IAC2024_Manuscript-Human-System-Needs_STRIVES.pdf_12"]
+    },
+    {
+      "id": 15,
+      "question": "Why is interindividual variability important for Mars mission planning?",
+      "expected_answer": "Interindividual variability is important because astronauts show significant differences in physiological and psychological adaptations to spaceflight. For example, some gain muscle while others lose muscle during spaceflight. Understanding these differences allows for tailoring individual countermeasures to protect health and performance during resource-constrained Mars missions. NASA is using precision health, precision medicine, AI, and omics research to better predict changes in individuals traveling to Mars.",
+      "relevant_chunk_ids": ["IAC2024_Manuscript-Human-System-Needs_STRIVES.pdf_13"]
+    },
+    {
+      "id": 16,
+      "question": "What acknowledgments were made regarding the CGH manufacturing process?",
+      "expected_answer": "Manufacturing the CGHs was possible because of the use of facilities at the NIST (National Institute of Standards and Technology) CNST (Center for Nanoscale Science and Technology). This center provides access to world-class nanoscale measurement and fabrication tools, with staff that trains users interested in using their facilities.",
+      "relevant_chunk_ids": ["20170002231.pdf_7"]
+    },
+    {
+      "id": 17,
+      "question": "What are the requirements being investigated for the Lunar Terrain Vehicle?",
+      "expected_answer": "The requirements being investigated are from the Lunar Terrain Vehicle (LTV) System Requirements Document (SRD), specifically LTV-SYS-071 (Uncrewed Daily Range) and LTV-SYS-029 (Vehicle Range).",
+      "relevant_chunk_ids": ["Teleops IEEE Paper FY24 FINAL.pdf_3"]
+    },
+    {
+      "id": 18,
+      "question": "What is the focus of the ICD described in the document?",
+      "expected_answer": "The ICD is predominantly focused on describing the airspace database (module 39) and the track flight plan and schedule data modules (module 50).",
+      "relevant_chunk_ids": ["20170010406.pdf_4"]
+    },
+    {
+      "id": 19,
+      "question": "What capabilities did the LTV remote operations include?",
+      "expected_answer": "The LTV remote operations capabilities included a single high-definition (HD) camera view with pan/tilt/zoom capabilities. The HD camera had a field-of-view of 2.2 to 58.5 degrees horizontal and 1.2 to 34 degrees vertical, with 1920 x 1080 at 60 frames per second resolution. The remote control operator console included two displays showing camera view and navigation information, and a joystick hand controller for translation inputs.",
+      "relevant_chunk_ids": ["Teleops IEEE Paper FY24 FINAL.pdf_3"]
+    },
+    {
+      "id": 20,
+      "question": "What are the challenges with spacesuit design for future missions?",
+      "expected_answer": "Future spacesuits must accommodate astronauts of all shapes and sizes while allowing them to perform all necessary mission tasks without discomfort, performance decrements, or increased injury risk. Current spacesuits have led to injuries during Apollo and ISS EVAs. Future missions will involve more frequent EVAs with less recovery time, increasing injury risk. Models to predict, monitor, and mitigate injuries are needed for all mission phases and all anticipated crewmember anthropometries.",
+      "relevant_chunk_ids": ["IAC2024_Manuscript-Human-System-Needs_STRIVES.pdf_15"]
+    },
+    {
+      "id": 21,
+      "question": "What is the architecture of FACET that contributes to its performance capabilities?",
+      "expected_answer": "FACET's architecture strikes a balance between flexibility and fidelity. It can model airspace operations for the continental United States, processing thousands of aircraft on a single computer. It was written in Java and C, enabling portability across operating systems. It has a modular software architecture to facilitate rapid prototyping of diverse ATM concepts.",
+      "relevant_chunk_ids": ["20170010406.pdf_2"]
+    },
+    {
+      "id": 22,
+      "question": "What were the results from IR3 measurements of optical elements?",
+      "expected_answer": "IR3 was able to measure the full aperture of the elements and validate that a wavelength shifting interferometer can successfully measure an optic with a diffractive surface. The results showed Element 1 had measurements of 86.9 ± 4.2 (Zygo), 63.1 ± 0.9 (IR3 Wavelength shifting), and 62.2 ± 1.1 (IR3 Piezo shifting). Element 3 had measurements of 55.7 ± 5.9 (Zygo), 57.5 ± 0.6 (IR3 Wavelength shifting), and 57.3 ± 0.8 (IR3 Piezo shifting).",
+      "relevant_chunk_ids": ["20170002231.pdf_5"]
+    },
+    {
+      "id": 23,
+      "question": "What is the secondary objective of the LTV remote operations studies?",
+      "expected_answer": "A secondary objective was to collect exploratory data on workload while under 0-second, 4-second, 6-second, and 8-second communications delay.",
+      "relevant_chunk_ids": ["Teleops IEEE Paper FY24 FINAL.pdf_3"]
+    },
+    {
+      "id": 24,
+      "question": "What information does the aircraft performance database provide in FACET?",
+      "expected_answer": "The aircraft performance database provides relevant performance information on more than 500 aircraft, optionally including data for each aircraft on maximum airspeed in the absence of wind, fuel consumption at different altitudes, different air speeds and different payload weights, maximum climb rate at one or more altitudes, aircraft weight range (empty to fully loaded), practical maximum flight altitude, and angle of attack at initiation of stall (optional).",
+      "relevant_chunk_ids": ["20170010406.pdf_4"]
+    },
+    {
+      "id": 25,
+      "question": "What are the concerns about food water content for Mars missions?",
+      "expected_answer": "If prepackaged food for Mars missions contains close to 50% water content (as with the current ISS food system), excess water will result during the mission. The water content of food must be reduced to less than 30% to realize the benefits of high-efficiency water and oxygen recovery systems being developed for Mars missions.",
+      "relevant_chunk_ids": ["IAC2024_Manuscript-Human-System-Needs_STRIVES.pdf_11"]
+    },
+    {
+        "id": 26,
+        "question": "What are the technology gaps identified in life support systems by international partners?",
+        "expected_answer": "The technology gaps are the differences between the system that each partner believes is important for future missions and the system that is available with current technology. NASA, ESA, and JAXA found significant agreement in the technology gaps they were addressing. Russian participants also showed significant similarities in capabilities and investments based on publications.",
+        "relevant_chunk_ids": ["20160005019.pdf_5"]
+      },
+      {
+        "id": 27,
+        "question": "What CO2 removal technologies are being developed by different space agencies?",
+        "expected_answer": "NASA is developing Carbon Dioxide Removal Assembly (CDRA) Upgrades & CO2 removal technologies with new sorbents or methods. ESA is working on Advanced Closed Loop Life Support System (ACLS) CO2 Concentration System (CCA) with amine beds. JAXA is developing Amine CO2 Removal absorption beds. Russia has the Vozdukh System.",
+        "relevant_chunk_ids": ["20160005019.pdf_6"]
+      },
+      {
+        "id": 28,
+        "question": "What is the purpose of the U.S. Spacesuit Knowledge Capture program?",
+        "expected_answer": "The U.S. Spacesuit Knowledge Capture program focuses on capturing the historical knowledge of spacesuits, their associated technologies, and peripheral topics that enhance an engineer's performance in developing spacesuits. It collects and preserves knowledge through recollections, lessons learned, and recommendations of subject matter experts in written, video, and audio formats to support future spacesuit development.",
+        "relevant_chunk_ids": ["20140012938.pdf_3"]
+      },
+      {
+        "id": 29,
+        "question": "How does crew metabolic rate impact life support system design?",
+        "expected_answer": "Human metabolism varies depending on size, gender, activity level, and individual differences. The HIDH documents oxygen consumption, carbon dioxide production, and respiration and perspiration water requirements for future life support systems. While these requirements may not determine technology feasibility, they will determine size and performance requirements. Longer duration missions likely require longer exercise periods to maintain crew health, which impacts these requirements.",
+        "relevant_chunk_ids": ["20160005019.pdf_18"]
+      },
+      {
+        "id": 30,
+        "question": "How do biological systems like plants impact spacecraft life support systems?",
+        "expected_answer": "Even small 'pick and eat' plant growth systems impact life support systems in several ways: ethylene can damage plant growth at levels that don't harm humans; plant transpiration increases condensate collection and wastewater processing requirements; and plants exposed to cabin atmosphere remove CO2 and generate O2. The presence of plants changes requirements on the life support system even if only a small system is considered.",
+        "relevant_chunk_ids": ["20160005019.pdf_19"]
+      },
+      {
+        "id": 31,
+        "question": "What is the importance of dissimilar redundancy in life support systems?",
+        "expected_answer": "Dissimilar redundancy, such as multiple CO2 removal systems, has proven to be very important to ISS success. While sharing standards is important, having different systems that can perform the same function provides critical backup capabilities. This approach is important for the design of early vehicles in cislunar space and for implementation of ISS demonstrations.",
+        "relevant_chunk_ids": ["20160005019.pdf_20"]
+      },
+      {
+        "id": 32,
+        "question": "What are the key collaborators in the U.S. Spacesuit Knowledge Capture program?",
+        "expected_answer": "Key collaborators include: 1) Subject Matter Experts (SMEs) who conduct lectures, 2) MOD Training Academy that provides recording venue and production capabilities, 3) JSC History Office that interviews SMEs and archives transcriptions, 4) JSC Engineering Academy that archives events on internal website, 5) NASA Scientific and Technical Information (STI) Program that collects and distributes NASA STI worldwide, and 6) Smithsonian Institution's National Air and Space Museum that preserves spacesuit artifacts.",
+        "relevant_chunk_ids": ["20140012938.pdf_7"]
+      },
+      {
+        "id": 33,
+        "question": "What is the ideal test process for human-in-the-loop testing of life support systems?",
+        "expected_answer": "The ideal test process for human-in-the-loop testing of life support systems in altitude chambers requires a strong foundation in terms of information needed to get started and a clear organizational setup with defined roles. It includes a defined organizational structure, specific information, and a structured process to ensure both success of the project/test and safety of test subjects. This approach has been developed based on experience and lessons learned over decades of testing.",
+        "relevant_chunk_ids": ["20160006072.pdf_6"]
+      },
+      {
+        "id": 34,
+        "question": "What are the elements of the iterative test process for life support systems?",
+        "expected_answer": "The iterative test process begins with a solid Smart Start, where the Test Director and Test Team gather information on vision, plan, work breakdown structure (WBS), schedule, cost estimate, design, buildup, and test procedure and documentation (including design reviews, protocols, hazard analyses, etc.).",
+        "relevant_chunk_ids": ["20160006072.pdf_7"]
+      },
+      {
+        "id": 35,
+        "question": "What was the HESTIA project and what challenges did it face?",
+        "expected_answer": "HESTIA's vision was to integrate existing and emerging technologies to create a closed loop habitat for human habitation and running a human-in-the-loop evaluation. The project faced organizational challenges, particularly the lack of a test director which caused communication issues. The big picture of how systems would work together was missing, resulting in a lack of a test plan describing the goals of test operations as a whole and the absence of a discrete test matrix outlining test points and configurations.",
+        "relevant_chunk_ids": ["20160006072.pdf_9", "20160006072.pdf_10", "20160006072.pdf_11", "20160006072.pdf_12"]
+      },
+      {
+        "id": 36,
+        "question": "What is SPRWG and what is its role in satellite architecture studies?",
+        "expected_answer": "SPRWG (Satellite Observing System Architecture Study Program Requirements Working Group) manages the interface between stakeholders and the architecture study team. Its primary job is to determine the details of the tradeable range in the EVM (Earth Value Model). This involves looking at projections for mission concepts of operations out to 2030 and assessing where changes to how missions are conducted will be reflected in data quality attributes. SPRWG also advises study teams on other aspects of value modeling and relative prioritization of user needs.",
+        "relevant_chunk_ids": ["20160008953.pdf_10"]
+      },
+      {
+        "id": 37,
+        "question": "What factors affect the science value of returned soil samples from Mars?",
+        "expected_answer": "Important factors include: Earth-sourced organic and biological contamination; Earth-sourced inorganic contamination; magnetization history; thermal history; volatile gain or loss; loss of drilled samples; radiation history; and exchange with non-Mars environment. Unlike rock samples where maintaining mechanical integrity is important, soils have a wide size range and maintaining relative movement of fragments may not be feasible. However, selective comminution of soil particles by larger pieces 'rattling around' in sample containers needs to be minimized.",
+        "relevant_chunk_ids": ["20140009564.pdf_7"]
+      },
+      {
+        "id": 38,
+        "question": "What is the Trash-to-Gas (TtG) technology and what is its purpose?",
+        "expected_answer": "Trash-to-Gas (TtG) is part of NASA's Logistics Reduction and Repurposing (LRR) project that aims to reduce volume and reuse items that would typically end up as logistical waste. TtG converts waste into high-value products including life support oxygen and water, rocket fuels, raw material production feedstocks, and other energy sources. A gasification reactor was designed at Kennedy Space Center to generate carbon dioxide, which could then be fed into a Sabatier reactor with hydrogen to produce methane and water.",
+        "relevant_chunk_ids": ["20140010796.pdf_3"]
+      },
+      {
+        "id": 39,
+        "question": "What are the challenges with tar production in the gasification process?",
+        "expected_answer": "During gasification, large hydrocarbons (tars), dust, and ash are generated as byproducts. Tars are potentially harmful to humans and cause considerable damage to processing equipment as they form and condense within a system. Tar production is often a function of temperature. Optimization techniques include optimizing gasifier design, using char beds above the primary air inlet, operating at the optimal equivalence ratio, and introducing catalysts for tar reduction or assistance in reactor kinetics.",
+        "relevant_chunk_ids": ["20140010796.pdf_3"]
+      },
+      {
+        "id": 40,
+        "question": "What are the five tenets of the U.S. Spacesuit Knowledge Capture program?",
+        "expected_answer": "The five tenets of the U.S. Spacesuit Knowledge Capture program are: 1) To collect and preserve the oral history of spacesuits to educate its audience and enhance the chances for success of future spacesuit programs, 2) To identify and collect information across the agency, 3) To efficiently manage the agency's knowledge resources, 4) To develop techniques and tools enabling teams to collaborate across barriers of time and space, and 5) To support NASA's mission to send astronauts to near-Earth asteroids by advancing future spacesuit designs.",
+        "relevant_chunk_ids": ["20140012938.pdf_4", "20140012938.pdf_5"]
+      },
+      {
+        "id": 41,
+        "question": "What accomplishments did the U.S. Spacesuit Knowledge Capture program achieve in FY12 & FY13?",
+        "expected_answer": "Accomplishments included: engaging the JSC History Office to conduct interviews; archiving audio with the JSC Oral History Project; obtaining written transcription of audio at no cost; securing Human Resource budget for external SMEs; preparing a 2012 ICES Paper; designing and releasing a U.S. Spacesuit KC Catalog; continuing to archive recordings with the JSC Engineering Academy; processing KC events through Export Control; publicly releasing viable recordings through the NASA Technical Library; and releasing the first U.S. Spacesuit KC event to YouTube.",
+        "relevant_chunk_ids": ["20140012938.pdf_9"]
+      },
+      {
+        "id": 42,
+        "question": "How does the U.S. Spacesuit Knowledge Capture program share information?",
+        "expected_answer": "The program shares information through various techniques: lunch-and-learns, training courses, lectures by experts, workshops, and formal interviews. These KC events are electronically recorded and archived with the NASA Technical Reports Server (NTRS). The recordings include the verbal presentation along with questions posed by attendees. Events that are not export controlled are made available for public consumption, including through YouTube.",
+        "relevant_chunk_ids": ["20140012938.pdf_10"]
+      },
+      {
+        "id": 43,
+        "question": "What is the significance of grain size in Martian soil samples?",
+        "expected_answer": "Grain size of Martian soils can display a wide range from sub-10 μm through several mm, to even coarser material including pebbles. Returned pebbles could provide important information as a diverse, 'grab bag' sample, providing they can fit within the planned sample holders (a total volume of ~8 cc).",
+        "relevant_chunk_ids": ["20140009564.pdf_6"]
+      },
+      {
+        "id": 44,
+        "question": "What is the purpose of the International System Maturation Team (ISMT)?",
+        "expected_answer": "The International System Maturation Team (ISMT) facilitates collaboration between international space agencies on life support technology development. Through the ISMT, agencies share information about failures and lessons learned, such as on urine processors, which has led to conversations about how challenging early tests may prevent unexpected failures in the future. The collaboration has also helped elevate the need to clarify and share information even with internal NASA stakeholders and contributed to conversations on sample frequency and cost for existing operations.",
+        "relevant_chunk_ids": ["20160005019.pdf_21"]
+      },
+      {
+        "id": 45,
+        "question": "What are the key considerations for oxygen recovery from CO2 in life support systems?",
+        "expected_answer": "NASA is working on the Spacecraft Oxygen Recovery Project for >75% Recovery from CO2 or Methane Decomposition. ESA is developing the ACLS CO2 Reprocessing Subsystem (CRA) Sabatier Reactor. These technologies are critical for closing the oxygen loop in life support systems for long-duration missions, reducing the need to resupply oxygen.",
+        "relevant_chunk_ids": ["20160005019.pdf_6"]
+      },
+      {
+        "id": 46,
+        "question": "What is the role of the Test Director (TD) in complex life support system tests?",
+        "expected_answer": "As test complexity grows, the Test Director (TD) works alongside a dedicated Project Manager (PM). While the PM collects requirements, manages schedule and budget, and acts as liaison between requesting groups and the facility team, the TD focuses on hardware and software integration, engineer and technician leadership, test design buildup, and operations. The TD also acts as a 'gate keeper' to the test team, allowing the team to focus on tackling technological challenges.",
+        "relevant_chunk_ids": ["20160006072.pdf_9"]
+      },
+      {
+        "id": 47,
+        "question": "What is the purpose of the pre-filter in the ISS air handling system?",
+        "expected_answer": "Intakes for the air handling system on ISS have a 20 x 20 pre-filter Nomex mesh with opening size 841 μm which prevents larger particles from entering the ISS filter element media. In the absence of gravitational settling, large particles can remain airborne but are easily entrained in the flow towards the filters. Regular vacuuming of the pre-filter is required to maintain system performance.",
+        "relevant_chunk_ids": ["20150000882.pdf_2"]
+      },
+      {
+        "id": 48,
+        "question": "What was the initial aerosol source model used for ISS filtration design?",
+        "expected_answer": "The initial aerosol source model for filtration design was based on reports quantifying rates for human-generated particles from literature and Shuttle cabin air filter analyses. This inventory included particles ranging from 1μm to 1270 μm, with binned size distribution information for coughs and sneezes. The model specified emission rates in terms of both aerosol number and mass generated per person, and quantified viable colony forming units of bacteria and fungi in these particles.",
+        "relevant_chunk_ids": ["20150000882.pdf_2"]
+      },
+      {
+        "id": 49,
+        "question": "What is the significance of Winston Churchill's quote in relation to the Knowledge Capture program?",
+        "expected_answer": "The quote \"The farther backward you can look the farther forward you can see\" summarizes the essence and purpose of Knowledge Capture. It emphasizes that KC makes it possible for scientists, engineers, and other members of the spacesuit community to look into the past, capture recorded past lessons learned, and use them to achieve more advanced technical designs for spacesuits.",
+        "relevant_chunk_ids": ["20140012938.pdf_4"]
+      },
+      {
+        "id": 50,
+        "question": "What are the criteria for selecting catalysts in a gasification system?",
+        "expected_answer": "Common criteria for selecting catalysts in a gasification system include: resistance to deactivation, minimal fouling, easy regeneration, high attrition resistance, low cost, and effective tar removal. Deactivation of a catalyst can be caused by coke formation, which is a major drawback. It's important to select a catalyst with low attrition to avoid coking and clogging of the system.",
+        "relevant_chunk_ids": ["20140010796.pdf_3"]
+      }
+  ]
