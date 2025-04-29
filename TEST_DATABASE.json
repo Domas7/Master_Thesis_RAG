@@ -1,302 +1,902 @@
 [
-    {
-      "id": 1,
-      "question": "What is lunar dust and why is it significant?",
-      "expected_answer": "Lunar dust is the finest size portion of loose surficial material called lunar regolith. It has drawn significant public and scientific interest even before Apollo missions. There were concerns about spacecraft stability on the moon due to regolith structure and depth, and potential biological hazards. While some concerns were addressed during Apollo missions, others were partially validated.",
-      "relevant_chunk_ids": ["ICES doc.pdf_0"]
-    },
-    {
-      "id": 2,
-      "question": "What was the objective of the LTV remote operations studies?",
-      "expected_answer": "The objective was to determine how many kilometers per day an operator on Earth could remotely drive a notional Lunar Terrain Vehicle (LTV) with minimal remote operator capabilities under four communication delays: 0-second, 4-second, 6-second, and 8-second roundtrip (Earth-Moon-Earth) delay.",
-      "relevant_chunk_ids": ["Teleops IEEE Paper FY24 FINAL.pdf_3"]
-    },
-    {
-      "id": 3,
-      "question": "What facilities were used for the LTV remote operations tests?",
-      "expected_answer": "Two NASA Johnson Space Center facilities were employed: the Simulation and Exploration Analysis Laboratory (SEAL) for the April study, and a simulated mission control center in Building 16 in the Systems Engineering Simulators (SES) facility for the August study.",
-      "relevant_chunk_ids": ["Teleops IEEE Paper FY24 FINAL.pdf_5"]
-    },
-    {
-      "id": 4,
-      "question": "What are the challenges with food for Mars missions?",
-      "expected_answer": "The main challenges include limited shelf-life (current ISS food items last ~18 months vs. 36-60 months needed for Mars), mass constraints (food represents the largest non-propellant logistical mass), and water content requirements (needs to be reduced to <30% to balance with life support systems). Additionally, Mars missions won't have the variety of fresh foods available on ISS.",
-      "relevant_chunk_ids": ["IAC2024_Manuscript-Human-System-Needs_STRIVES.pdf_11"]
-    },
-    {
-      "id": 5,
-      "question": "What is FACET and what is it used for?",
-      "expected_answer": "FACET (Future ATM Concepts and Evaluation Tool) is a flexible software tool that allows researchers to explore, develop and evaluate advanced air transportation concepts. It can quickly generate and analyze thousands of aircraft trajectories using aircraft performance profiles, airspace models, weather data, and flight schedules. It's used by NASA researchers, FAA traffic flow managers, and commercial airline dispatchers for research, real-time operations planning, and rerouting flights around congestion and severe weather.",
-      "relevant_chunk_ids": ["20170010406.pdf_2"]
-    },
-    {
-      "id": 6,
-      "question": "What are the injury concerns for astronauts during EVAs?",
-      "expected_answer": "There are significant concerns about musculoskeletal injuries during long-duration planetary missions. During Apollo EVAs, 9 injuries of varying severity were reported across 14 EVAs, ranging from blisters to fingernail delamination to shoulder injuries requiring surgery. Poor spacesuit fit is believed to contribute to injuries and affect performance. Future missions with more frequent EVAs and less recovery time between them increase injury risk.",
-      "relevant_chunk_ids": ["IAC2024_Manuscript-Human-System-Needs_STRIVES.pdf_15"]
-    },
-    {
-      "id": 7,
-      "question": "What is the purpose of the CH Products 3-axis joystick in NASA's rover operations?",
-      "expected_answer": "The CH Products 3-axis joystick was chosen during the Small Pressurized Rover concept development (2007-2022) because the extra degree of freedom in the yaw direction allowed engineers to incorporate a crabbing function without relying on display software.",
-      "relevant_chunk_ids": ["Teleops IEEE Paper FY24 FINAL.pdf_5"]
-    },
-    {
-      "id": 8,
-      "question": "What are the challenges with exercise equipment for Mars missions?",
-      "expected_answer": "Current spaceflight exercise hardware has substantial mass (~2,000 kg), power (~2.1 kW), and volume (19 m³) requirements that can be accommodated on the ISS but would be challenging for Mars missions due to mass, power, volume, crew time, and spacecraft structural constraints.",
-      "relevant_chunk_ids": ["IAC2024_Manuscript-Human-System-Needs_STRIVES.pdf_16"]
-    },
-    {
-      "id": 9,
-      "question": "How were CGHs used in the WFIRST mission study?",
-      "expected_answer": "Infrared Computer-Generated Holograms (CGHs) were designed and manufactured in-house to measure the wavefront of optical elements E1 and E3. The Center for Nanoscale Science and Technology (CNST) at NIST used a laser writer and plasma etcher to make phase CGHs, which shortened test turnaround time, provided flexibility to learn the manufacturing process, and reduced cost.",
-      "relevant_chunk_ids": ["20170002231.pdf_6"]
-    },
-    {
-      "id": 10,
-      "question": "What is DCS risk in space exploration and why is it important?",
-      "expected_answer": "DCS (Decompression Sickness) risk is a significant concern for space exploration, particularly during EVAs. The cabin atmosphere during Apollo was 100% oxygen, eliminating DCS risk but increasing fire risk. Future missions will use nitrox gas mixtures, requiring astronauts to breathe 100% oxygen before EVAs. Selecting appropriate atmospheres for different spacecraft elements involves complex trade-offs between hypoxia, flammability, crew time, consumables, and DCS risk. Current DCS risk models have significant uncertainty, with expert estimates varying widely.",
-      "relevant_chunk_ids": ["IAC2024_Manuscript-Human-System-Needs_STRIVES.pdf_14"]
-    },
-    {
-      "id": 11,
-      "question": "What assumptions were made during the LTV remote operations testing?",
-      "expected_answer": "Testing assumed continuous high-bandwidth communication between the LTV and remote operator, with no time constraints imposed on test operators. Unlike the eventual flight LTV, autonomous hazard detection was not incorporated in the simulation. The remote operations console was not necessarily flight-like, and operators received limited familiarization training (15 minutes to 3 hours) compared to what actual LTV operators will receive.",
-      "relevant_chunk_ids": ["Teleops IEEE Paper FY24 FINAL.pdf_4"]
-    },
-    {
-      "id": 12,
-      "question": "What is the purpose of the Interface Control Document (ICD) for FACET?",
-      "expected_answer": "The Interface Control Document (ICD) specifies the interface requirements that airspace adaptations and historical air traffic data archives must meet for NASA's Future ATM Concepts and Evaluation Tool (FACET). It provides information on data formats, general descriptions of data elements, assumptions, and sample data messages for each interface.",
-      "relevant_chunk_ids": ["20170010406.pdf_3"]
-    },
-    {
-      "id": 13,
-      "question": "What is a NAVAID in the context of air traffic management?",
-      "expected_answer": "A NAVAID (Navigational Aid) is an electronic device on the earth's surface which provides point-to-point guidance information or position data to aircraft in flight.",
-      "relevant_chunk_ids": ["20170010406.pdf_5"]
-    },
-    {
-      "id": 14,
-      "question": "What physiological adaptations are of concern for Mars-duration missions?",
-      "expected_answer": "NASA is assessing how the duration of exposure to spaceflight (3-5 years for Mars missions) affects each physiological system. The ISS has provided data on 6-month missions, with a handful of crewmembers spending about a year in space. One specific adaptation of concern is the spaceflight associated neuro-ocular syndrome first described in 2011.",
-      "relevant_chunk_ids": ["IAC2024_Manuscript-Human-System-Needs_STRIVES.pdf_12"]
-    },
-    {
-      "id": 15,
-      "question": "Why is interindividual variability important for Mars mission planning?",
-      "expected_answer": "Interindividual variability is important because astronauts show significant differences in physiological and psychological adaptations to spaceflight. For example, some gain muscle while others lose muscle during spaceflight. Understanding these differences allows for tailoring individual countermeasures to protect health and performance during resource-constrained Mars missions. NASA is using precision health, precision medicine, AI, and omics research to better predict changes in individuals traveling to Mars.",
-      "relevant_chunk_ids": ["IAC2024_Manuscript-Human-System-Needs_STRIVES.pdf_13"]
-    },
-    {
-      "id": 16,
-      "question": "What acknowledgments were made regarding the CGH manufacturing process?",
-      "expected_answer": "Manufacturing the CGHs was possible because of the use of facilities at the NIST (National Institute of Standards and Technology) CNST (Center for Nanoscale Science and Technology). This center provides access to world-class nanoscale measurement and fabrication tools, with staff that trains users interested in using their facilities.",
-      "relevant_chunk_ids": ["20170002231.pdf_7"]
-    },
-    {
-      "id": 17,
-      "question": "What are the requirements being investigated for the Lunar Terrain Vehicle?",
-      "expected_answer": "The requirements being investigated are from the Lunar Terrain Vehicle (LTV) System Requirements Document (SRD), specifically LTV-SYS-071 (Uncrewed Daily Range) and LTV-SYS-029 (Vehicle Range).",
-      "relevant_chunk_ids": ["Teleops IEEE Paper FY24 FINAL.pdf_3"]
-    },
-    {
-      "id": 18,
-      "question": "What is the focus of the ICD described in the document?",
-      "expected_answer": "The ICD is predominantly focused on describing the airspace database (module 39) and the track flight plan and schedule data modules (module 50).",
-      "relevant_chunk_ids": ["20170010406.pdf_4"]
-    },
-    {
-      "id": 19,
-      "question": "What capabilities did the LTV remote operations include?",
-      "expected_answer": "The LTV remote operations capabilities included a single high-definition (HD) camera view with pan/tilt/zoom capabilities. The HD camera had a field-of-view of 2.2 to 58.5 degrees horizontal and 1.2 to 34 degrees vertical, with 1920 x 1080 at 60 frames per second resolution. The remote control operator console included two displays showing camera view and navigation information, and a joystick hand controller for translation inputs.",
-      "relevant_chunk_ids": ["Teleops IEEE Paper FY24 FINAL.pdf_3"]
-    },
-    {
-      "id": 20,
-      "question": "What are the challenges with spacesuit design for future missions?",
-      "expected_answer": "Future spacesuits must accommodate astronauts of all shapes and sizes while allowing them to perform all necessary mission tasks without discomfort, performance decrements, or increased injury risk. Current spacesuits have led to injuries during Apollo and ISS EVAs. Future missions will involve more frequent EVAs with less recovery time, increasing injury risk. Models to predict, monitor, and mitigate injuries are needed for all mission phases and all anticipated crewmember anthropometries.",
-      "relevant_chunk_ids": ["IAC2024_Manuscript-Human-System-Needs_STRIVES.pdf_15"]
-    },
-    {
-      "id": 21,
-      "question": "What is the architecture of FACET that contributes to its performance capabilities?",
-      "expected_answer": "FACET's architecture strikes a balance between flexibility and fidelity. It can model airspace operations for the continental United States, processing thousands of aircraft on a single computer. It was written in Java and C, enabling portability across operating systems. It has a modular software architecture to facilitate rapid prototyping of diverse ATM concepts.",
-      "relevant_chunk_ids": ["20170010406.pdf_2"]
-    },
-    {
-      "id": 22,
-      "question": "What were the results from IR3 measurements of optical elements?",
-      "expected_answer": "IR3 was able to measure the full aperture of the elements and validate that a wavelength shifting interferometer can successfully measure an optic with a diffractive surface. The results showed Element 1 had measurements of 86.9 ± 4.2 (Zygo), 63.1 ± 0.9 (IR3 Wavelength shifting), and 62.2 ± 1.1 (IR3 Piezo shifting). Element 3 had measurements of 55.7 ± 5.9 (Zygo), 57.5 ± 0.6 (IR3 Wavelength shifting), and 57.3 ± 0.8 (IR3 Piezo shifting).",
-      "relevant_chunk_ids": ["20170002231.pdf_5"]
-    },
-    {
-      "id": 23,
-      "question": "What is the secondary objective of the LTV remote operations studies?",
-      "expected_answer": "A secondary objective was to collect exploratory data on workload while under 0-second, 4-second, 6-second, and 8-second communications delay.",
-      "relevant_chunk_ids": ["Teleops IEEE Paper FY24 FINAL.pdf_3"]
-    },
-    {
-      "id": 24,
-      "question": "What information does the aircraft performance database provide in FACET?",
-      "expected_answer": "The aircraft performance database provides relevant performance information on more than 500 aircraft, optionally including data for each aircraft on maximum airspeed in the absence of wind, fuel consumption at different altitudes, different air speeds and different payload weights, maximum climb rate at one or more altitudes, aircraft weight range (empty to fully loaded), practical maximum flight altitude, and angle of attack at initiation of stall (optional).",
-      "relevant_chunk_ids": ["20170010406.pdf_4"]
-    },
-    {
-      "id": 25,
-      "question": "What are the concerns about food water content for Mars missions?",
-      "expected_answer": "If prepackaged food for Mars missions contains close to 50% water content (as with the current ISS food system), excess water will result during the mission. The water content of food must be reduced to less than 30% to realize the benefits of high-efficiency water and oxygen recovery systems being developed for Mars missions.",
-      "relevant_chunk_ids": ["IAC2024_Manuscript-Human-System-Needs_STRIVES.pdf_11"]
-    },
-    {
-        "id": 26,
-        "question": "What are the technology gaps identified in life support systems by international partners?",
-        "expected_answer": "The technology gaps are the differences between the system that each partner believes is important for future missions and the system that is available with current technology. NASA, ESA, and JAXA found significant agreement in the technology gaps they were addressing. Russian participants also showed significant similarities in capabilities and investments based on publications.",
-        "relevant_chunk_ids": ["20160005019.pdf_5"]
-      },
-      {
-        "id": 27,
-        "question": "What CO2 removal technologies are being developed by different space agencies?",
-        "expected_answer": "NASA is developing Carbon Dioxide Removal Assembly (CDRA) Upgrades & CO2 removal technologies with new sorbents or methods. ESA is working on Advanced Closed Loop Life Support System (ACLS) CO2 Concentration System (CCA) with amine beds. JAXA is developing Amine CO2 Removal absorption beds. Russia has the Vozdukh System.",
-        "relevant_chunk_ids": ["20160005019.pdf_6"]
-      },
-      {
-        "id": 28,
-        "question": "What is the purpose of the U.S. Spacesuit Knowledge Capture program?",
-        "expected_answer": "The U.S. Spacesuit Knowledge Capture program focuses on capturing the historical knowledge of spacesuits, their associated technologies, and peripheral topics that enhance an engineer's performance in developing spacesuits. It collects and preserves knowledge through recollections, lessons learned, and recommendations of subject matter experts in written, video, and audio formats to support future spacesuit development.",
-        "relevant_chunk_ids": ["20140012938.pdf_3"]
-      },
-      {
-        "id": 29,
-        "question": "How does crew metabolic rate impact life support system design?",
-        "expected_answer": "Human metabolism varies depending on size, gender, activity level, and individual differences. The HIDH documents oxygen consumption, carbon dioxide production, and respiration and perspiration water requirements for future life support systems. While these requirements may not determine technology feasibility, they will determine size and performance requirements. Longer duration missions likely require longer exercise periods to maintain crew health, which impacts these requirements.",
-        "relevant_chunk_ids": ["20160005019.pdf_18"]
-      },
-      {
-        "id": 30,
-        "question": "How do biological systems like plants impact spacecraft life support systems?",
-        "expected_answer": "Even small 'pick and eat' plant growth systems impact life support systems in several ways: ethylene can damage plant growth at levels that don't harm humans; plant transpiration increases condensate collection and wastewater processing requirements; and plants exposed to cabin atmosphere remove CO2 and generate O2. The presence of plants changes requirements on the life support system even if only a small system is considered.",
-        "relevant_chunk_ids": ["20160005019.pdf_19"]
-      },
-      {
-        "id": 31,
-        "question": "What is the importance of dissimilar redundancy in life support systems?",
-        "expected_answer": "Dissimilar redundancy, such as multiple CO2 removal systems, has proven to be very important to ISS success. While sharing standards is important, having different systems that can perform the same function provides critical backup capabilities. This approach is important for the design of early vehicles in cislunar space and for implementation of ISS demonstrations.",
-        "relevant_chunk_ids": ["20160005019.pdf_20"]
-      },
-      {
-        "id": 32,
-        "question": "What are the key collaborators in the U.S. Spacesuit Knowledge Capture program?",
-        "expected_answer": "Key collaborators include: 1) Subject Matter Experts (SMEs) who conduct lectures, 2) MOD Training Academy that provides recording venue and production capabilities, 3) JSC History Office that interviews SMEs and archives transcriptions, 4) JSC Engineering Academy that archives events on internal website, 5) NASA Scientific and Technical Information (STI) Program that collects and distributes NASA STI worldwide, and 6) Smithsonian Institution's National Air and Space Museum that preserves spacesuit artifacts.",
-        "relevant_chunk_ids": ["20140012938.pdf_7"]
-      },
-      {
-        "id": 33,
-        "question": "What is the ideal test process for human-in-the-loop testing of life support systems?",
-        "expected_answer": "The ideal test process for human-in-the-loop testing of life support systems in altitude chambers requires a strong foundation in terms of information needed to get started and a clear organizational setup with defined roles. It includes a defined organizational structure, specific information, and a structured process to ensure both success of the project/test and safety of test subjects. This approach has been developed based on experience and lessons learned over decades of testing.",
-        "relevant_chunk_ids": ["20160006072.pdf_6"]
-      },
-      {
-        "id": 34,
-        "question": "What are the elements of the iterative test process for life support systems?",
-        "expected_answer": "The iterative test process begins with a solid Smart Start, where the Test Director and Test Team gather information on vision, plan, work breakdown structure (WBS), schedule, cost estimate, design, buildup, and test procedure and documentation (including design reviews, protocols, hazard analyses, etc.).",
-        "relevant_chunk_ids": ["20160006072.pdf_7"]
-      },
-      {
-        "id": 35,
-        "question": "What was the HESTIA project and what challenges did it face?",
-        "expected_answer": "HESTIA's vision was to integrate existing and emerging technologies to create a closed loop habitat for human habitation and running a human-in-the-loop evaluation. The project faced organizational challenges, particularly the lack of a test director which caused communication issues. The big picture of how systems would work together was missing, resulting in a lack of a test plan describing the goals of test operations as a whole and the absence of a discrete test matrix outlining test points and configurations.",
-        "relevant_chunk_ids": ["20160006072.pdf_9", "20160006072.pdf_10", "20160006072.pdf_11", "20160006072.pdf_12"]
-      },
-      {
-        "id": 36,
-        "question": "What is SPRWG and what is its role in satellite architecture studies?",
-        "expected_answer": "SPRWG (Satellite Observing System Architecture Study Program Requirements Working Group) manages the interface between stakeholders and the architecture study team. Its primary job is to determine the details of the tradeable range in the EVM (Earth Value Model). This involves looking at projections for mission concepts of operations out to 2030 and assessing where changes to how missions are conducted will be reflected in data quality attributes. SPRWG also advises study teams on other aspects of value modeling and relative prioritization of user needs.",
-        "relevant_chunk_ids": ["20160008953.pdf_10"]
-      },
-      {
-        "id": 37,
-        "question": "What factors affect the science value of returned soil samples from Mars?",
-        "expected_answer": "Important factors include: Earth-sourced organic and biological contamination; Earth-sourced inorganic contamination; magnetization history; thermal history; volatile gain or loss; loss of drilled samples; radiation history; and exchange with non-Mars environment. Unlike rock samples where maintaining mechanical integrity is important, soils have a wide size range and maintaining relative movement of fragments may not be feasible. However, selective comminution of soil particles by larger pieces 'rattling around' in sample containers needs to be minimized.",
-        "relevant_chunk_ids": ["20140009564.pdf_7"]
-      },
-      {
-        "id": 38,
-        "question": "What is the Trash-to-Gas (TtG) technology and what is its purpose?",
-        "expected_answer": "Trash-to-Gas (TtG) is part of NASA's Logistics Reduction and Repurposing (LRR) project that aims to reduce volume and reuse items that would typically end up as logistical waste. TtG converts waste into high-value products including life support oxygen and water, rocket fuels, raw material production feedstocks, and other energy sources. A gasification reactor was designed at Kennedy Space Center to generate carbon dioxide, which could then be fed into a Sabatier reactor with hydrogen to produce methane and water.",
-        "relevant_chunk_ids": ["20140010796.pdf_3"]
-      },
-      {
-        "id": 39,
-        "question": "What are the challenges with tar production in the gasification process?",
-        "expected_answer": "During gasification, large hydrocarbons (tars), dust, and ash are generated as byproducts. Tars are potentially harmful to humans and cause considerable damage to processing equipment as they form and condense within a system. Tar production is often a function of temperature. Optimization techniques include optimizing gasifier design, using char beds above the primary air inlet, operating at the optimal equivalence ratio, and introducing catalysts for tar reduction or assistance in reactor kinetics.",
-        "relevant_chunk_ids": ["20140010796.pdf_3"]
-      },
-      {
-        "id": 40,
-        "question": "What are the five tenets of the U.S. Spacesuit Knowledge Capture program?",
-        "expected_answer": "The five tenets of the U.S. Spacesuit Knowledge Capture program are: 1) To collect and preserve the oral history of spacesuits to educate its audience and enhance the chances for success of future spacesuit programs, 2) To identify and collect information across the agency, 3) To efficiently manage the agency's knowledge resources, 4) To develop techniques and tools enabling teams to collaborate across barriers of time and space, and 5) To support NASA's mission to send astronauts to near-Earth asteroids by advancing future spacesuit designs.",
-        "relevant_chunk_ids": ["20140012938.pdf_4", "20140012938.pdf_5"]
-      },
-      {
-        "id": 41,
-        "question": "What accomplishments did the U.S. Spacesuit Knowledge Capture program achieve in FY12 & FY13?",
-        "expected_answer": "Accomplishments included: engaging the JSC History Office to conduct interviews; archiving audio with the JSC Oral History Project; obtaining written transcription of audio at no cost; securing Human Resource budget for external SMEs; preparing a 2012 ICES Paper; designing and releasing a U.S. Spacesuit KC Catalog; continuing to archive recordings with the JSC Engineering Academy; processing KC events through Export Control; publicly releasing viable recordings through the NASA Technical Library; and releasing the first U.S. Spacesuit KC event to YouTube.",
-        "relevant_chunk_ids": ["20140012938.pdf_9"]
-      },
-      {
-        "id": 42,
-        "question": "How does the U.S. Spacesuit Knowledge Capture program share information?",
-        "expected_answer": "The program shares information through various techniques: lunch-and-learns, training courses, lectures by experts, workshops, and formal interviews. These KC events are electronically recorded and archived with the NASA Technical Reports Server (NTRS). The recordings include the verbal presentation along with questions posed by attendees. Events that are not export controlled are made available for public consumption, including through YouTube.",
-        "relevant_chunk_ids": ["20140012938.pdf_10"]
-      },
-      {
-        "id": 43,
-        "question": "What is the significance of grain size in Martian soil samples?",
-        "expected_answer": "Grain size of Martian soils can display a wide range from sub-10 μm through several mm, to even coarser material including pebbles. Returned pebbles could provide important information as a diverse, 'grab bag' sample, providing they can fit within the planned sample holders (a total volume of ~8 cc).",
-        "relevant_chunk_ids": ["20140009564.pdf_6"]
-      },
-      {
-        "id": 44,
-        "question": "What is the purpose of the International System Maturation Team (ISMT)?",
-        "expected_answer": "The International System Maturation Team (ISMT) facilitates collaboration between international space agencies on life support technology development. Through the ISMT, agencies share information about failures and lessons learned, such as on urine processors, which has led to conversations about how challenging early tests may prevent unexpected failures in the future. The collaboration has also helped elevate the need to clarify and share information even with internal NASA stakeholders and contributed to conversations on sample frequency and cost for existing operations.",
-        "relevant_chunk_ids": ["20160005019.pdf_21"]
-      },
-      {
-        "id": 45,
-        "question": "What are the key considerations for oxygen recovery from CO2 in life support systems?",
-        "expected_answer": "NASA is working on the Spacecraft Oxygen Recovery Project for >75% Recovery from CO2 or Methane Decomposition. ESA is developing the ACLS CO2 Reprocessing Subsystem (CRA) Sabatier Reactor. These technologies are critical for closing the oxygen loop in life support systems for long-duration missions, reducing the need to resupply oxygen.",
-        "relevant_chunk_ids": ["20160005019.pdf_6"]
-      },
-      {
-        "id": 46,
-        "question": "What is the role of the Test Director (TD) in complex life support system tests?",
-        "expected_answer": "As test complexity grows, the Test Director (TD) works alongside a dedicated Project Manager (PM). While the PM collects requirements, manages schedule and budget, and acts as liaison between requesting groups and the facility team, the TD focuses on hardware and software integration, engineer and technician leadership, test design buildup, and operations. The TD also acts as a 'gate keeper' to the test team, allowing the team to focus on tackling technological challenges.",
-        "relevant_chunk_ids": ["20160006072.pdf_9"]
-      },
-      {
-        "id": 47,
-        "question": "What is the purpose of the pre-filter in the ISS air handling system?",
-        "expected_answer": "Intakes for the air handling system on ISS have a 20 x 20 pre-filter Nomex mesh with opening size 841 μm which prevents larger particles from entering the ISS filter element media. In the absence of gravitational settling, large particles can remain airborne but are easily entrained in the flow towards the filters. Regular vacuuming of the pre-filter is required to maintain system performance.",
-        "relevant_chunk_ids": ["20150000882.pdf_2"]
-      },
-      {
-        "id": 48,
-        "question": "What was the initial aerosol source model used for ISS filtration design?",
-        "expected_answer": "The initial aerosol source model for filtration design was based on reports quantifying rates for human-generated particles from literature and Shuttle cabin air filter analyses. This inventory included particles ranging from 1μm to 1270 μm, with binned size distribution information for coughs and sneezes. The model specified emission rates in terms of both aerosol number and mass generated per person, and quantified viable colony forming units of bacteria and fungi in these particles.",
-        "relevant_chunk_ids": ["20150000882.pdf_2"]
-      },
-      {
-        "id": 49,
-        "question": "What is the significance of Winston Churchill's quote in relation to the Knowledge Capture program?",
-        "expected_answer": "The quote \"The farther backward you can look the farther forward you can see\" summarizes the essence and purpose of Knowledge Capture. It emphasizes that KC makes it possible for scientists, engineers, and other members of the spacesuit community to look into the past, capture recorded past lessons learned, and use them to achieve more advanced technical designs for spacesuits.",
-        "relevant_chunk_ids": ["20140012938.pdf_4"]
-      },
-      {
-        "id": 50,
-        "question": "What are the criteria for selecting catalysts in a gasification system?",
-        "expected_answer": "Common criteria for selecting catalysts in a gasification system include: resistance to deactivation, minimal fouling, easy regeneration, high attrition resistance, low cost, and effective tar removal. Deactivation of a catalyst can be caused by coke formation, which is a major drawback. It's important to select a catalyst with low attrition to avoid coking and clogging of the system.",
-        "relevant_chunk_ids": ["20140010796.pdf_3"]
-      }
-  ]
+  {
+    "id": 1,
+    "question": "What was the most efficient sweeping jet actuator configuration for controlling flow separation?",
+    "expected_answer": "The actuator with the largest jet deflection angle, at the pressure ratios investigated, was the most efficient at controlling flow separation on the flap of the model. Oil flow visualization studies revealed that the flow field controlled by the sweeping jets was more three-dimensional than expected.",
+    "relevant_chunk_ids": ["20160010108.pdf_2"]
+  },
+  {
+    "id": 2,
+    "question": "What is the definition of the turbulent heat flux vector in the context of RANS equations?",
+    "expected_answer": "Within the context of the RANS equations, the turbulent heat flux vector is defined as qjT and must be modeled. This is typically done by relating the heat flux to a thermal diffusivity and the mean thermal gradient, much like the Boussinesq approximation relates the Reynolds' stress to the eddy viscosity and the mean velocity gradient.",
+    "relevant_chunk_ids": ["20160010069.pdf_7", "20160010069.pdf_8"]
+  },
+  {
+    "id": 3,
+    "question": "How do zero-equation models relate eddy diffusivity to turbulent viscosity?",
+    "expected_answer": "Many zero-equation (i.e., algebraic) models relate the eddy diffusivity to the turbulent viscosity and a turbulent Prandtl number. The simplest expression for the turbulent Prandtl number is to prescribe a constant value, with 0.9 being common for boundary layers, while a value as low as 0.5 is more appropriate in free shear flows.",
+    "relevant_chunk_ids": ["20160010069.pdf_8", "20160010069.pdf_9"]
+  },
+  {
+    "id": 4,
+    "question": "What issue was discovered with the ILT radiator during the CALIPSO satellite-level thermal vacuum test?",
+    "expected_answer": "The results of the satellite-level thermal vacuum test showed sizing of the ILT (Integrated Lidar Transmitter) radiator to be too large, because power dissipation within the lasers was lower than expected. At the original laser radiator size, the operational heater (at 20.7 W) used to maintain the operating laser's pedestal temperature at the desired 17°C set point would be undersized. Based on this result, a resizing of the ILT radiator was explored through analysis.",
+    "relevant_chunk_ids": ["20070021525.pdf_11"]
+  },
+  {
+    "id": 5,
+    "question": "What was identified as an important factor in the success of the CALIPSO mission's thermal control?",
+    "expected_answer": "One of the most important factors in the success of the CALIPSO mission has been the high degree of cooperation among all parties responsible for the various thermal control aspects of CALIPSO. This cooperative nature was particularly evident in the development of a solution to the potentially mission-ending laser radiator issue.",
+    "relevant_chunk_ids": ["20070021525.pdf_12"]
+  },
+  {
+    "id": 6,
+    "question": "What lesson was learned from the Cassini reaction wheel bearing cage instability?",
+    "expected_answer": "After two and one-half years of operational use, a bearing cage instability trend developed in a bearing in one of three Cassini reaction wheels. The lesson learned was to manage reaction wheel assemblies as a limited resource: track RWA performance beginning with acceptance test and throughout mission operations to identify potential limitations on reaction wheel lifespan, take measures to mitigate mission impact, use software tools to manage reaction wheel biasing events, and implement a reaction wheel drag torque estimator in flight software to identify anomalous bearing drag conditions.",
+    "relevant_chunk_ids": ["ttps://llis.nasa.gov/lesson/1598"]
+  },
+  {
+    "id": 7,
+    "question": "What caused the ATMOS instrument laser failure on Spacelab 3?",
+    "expected_answer": "After some two days of flight aboard Spacelab 3, the Atmospheric Trace Molecule Spectroscopy (ATMOS) instrument failed when the laser did not turn on for occultation 75. The laser failed due to a high voltage arc-over, which resulted from a pressure loss in the laser housing. Investigation revealed that the pressure loss was caused by use of machine screws of excessive length. The housing had been modified, based on a Material Review Board decision, which resulted in threaded holes of a different length than the original design drawings.",
+    "relevant_chunk_ids": ["https://llis.nasa.gov/lesson/393"]
+  },
+  {
+    "id": 8,
+    "question": "What issue occurred with the Viking Orbiter-1 pressure regulator and what design corrective measures were recommended?",
+    "expected_answer": "The pressure regulator in the Viking Orbiter-1 Propulsion Subsystem leaked when it was brought back on-line by the opening of an explosive valve which had isolated the regulator and propellant tanks from the pressurant tanks. Design corrective measures recommended for propulsion pressurization subsystems included: using separate regulators for the fuel and oxidizer sides, incorporating a bellows in the pyro valve to eliminate blowby, and adding an isolation valve between the regulator and propellant tank to minimize propellant migration into the regulator.",
+    "relevant_chunk_ids": ["https://llis.nasa.gov/lesson/420"]
+  },
+  {
+    "id": 9,
+    "question": "What damage occurred to the Magellan spacecraft due to a violation of electrical interfacing and grounding requirements?",
+    "expected_answer": "In an effort to take advantage of spare telemetry channels in the Command and Data System (CDS) hardware, the Attitude Reference Unit (ARU) motor current telemetry was added to the CDS analog telemetry channels of the Magellan Spacecraft. This addition violated the VRM 2-260 'Electrical Grounding and Interfacing' specification without obtaining a waiver. Subsequent failure of the chassis ground path, caused by a poor mechanical connection at the attitude and articulation control subsystem single point ground, resulted in substantial damage to the MGN CDS analog telemetry circuitry, requiring rework of the CDS and resulting in a late delivery to the spacecraft at Kennedy Space Center.",
+    "relevant_chunk_ids": ["https://llis.nasa.gov/lesson/379"]
+  },
+  {
+    "id": 10,
+    "question": "What variables are included in the nomenclature for the RANS equations related to sweeping jet actuators?",
+    "expected_answer": "The nomenclature includes: Ajet (sweeping jet orifice area), b (wing span), c (airfoil chord), CL (lift coefficient), Cµ (SWJ actuator momentum coefficient), Cp (pressure coefficient), Cp,TE (model trailing edge Cp), C⇡ (Power coefficient), m˙ (mass flow rate), njet (total number of sweeping jet actuators), P (pressure), Pa (ambient pressure), Pr (pressure ratio), Ps (actuator plenum static pressure), Q (Volume flow rate), q (freestream dynamic pressure), Rec (Reynolds number based on chord), s (wing semispan length), Sref (reference surface area), U and V (velocity components), Ujet (theoretical sweeping jet actuator orifice velocity), U1 (average streamwise velocity), α (angle of attack), δf (flap deflection angle), and ρ (density).",
+    "relevant_chunk_ids": ["20160010108.pdf_3"]
+  },
+  {
+    "id": 11,
+    "question": "What is the Wassel and Catton model for turbulent Prandtl number?",
+    "expected_answer": "Wassel and Catton developed a model for the turbulent Prandtl number expressed as: PrT = C3[1 - exp(-C2/((µT/µL)Pr))]^-1, where a value of 0.9 is common for boundary layers, while a value as low as 0.5 is more appropriate in free shear flows.",
+    "relevant_chunk_ids": ["20160010069.pdf_9"]
+  },
+  {
+    "id": 12,
+    "question": "How did the CALIPSO payload thermal system perform after launch?",
+    "expected_answer": "Shortly after launch, the payload thermal team performed an evaluation of pre-launch predictions of performance for many subsystems. Both during SHM and data acquisition mode (DAQ), the CALIPSO Satellite and the payload in particular performed well within defined thermal boundary conditions with appropriate margin. In PL Standby Ready, Standby Thermal-Stabilization, and Safe modes, the PL thermal system performed well and was again within allotted power budget. After stabilizing in SHM, the payload's survival heaters were able to maintain the correct temperature set points and do so within the bounding amount.",
+    "relevant_chunk_ids": ["20070021525.pdf_10"]
+  },
+  {
+    "id": 13,
+    "question": "What variables are defined in the nomenclature section related to time derivatives and generalized forces?",
+    "expected_answer": "The nomenclature defines q̇j as the first time derivative of qj, Qj as the jth generalized force, ⃗v*n as the absolute velocity of point mass dm inside body n, ⃗a*n as the absolute acceleration of dm inside body n, qn as the flexible DOF of body n, q̇n as the first time derivative of qn, q̈n as the second time derivative of qn, and various mass matrices including Mrr,n (rigid-rigid mass matrix of body n), Mre,n (rigid-elastic mass matrix of body n), Mer,n (elastic-rigid mass matrix of body n), and Mee,n (elastic-elastic mass matrix of body n).",
+    "relevant_chunk_ids": ["20070021569.pdf_1"]
+  },
+  {
+    "id": 14,
+    "question": "What is the purpose of active flow control (AFC) in the context of the NACA 0015 semi-span wing experiment?",
+    "expected_answer": "Active flow control (AFC) was used to investigate how the output produced by a sweeping jet interacts with separated flow and the mechanisms by which flow separation is controlled. In the experiment, three sweeping jet actuator configurations with the same orifice size but different internal geometries were installed on the flap shoulder of an unswept, NACA 0015 semi-span wing. The flow separation was generated by deflecting the wing's 30% chord trailing edge flap to produce an adverse pressure gradient.",
+    "relevant_chunk_ids": ["20160010108.pdf_2", "20160010108.pdf_4"]
+  },
+  {
+    "id": 15,
+    "question": "What references are cited in the CALIPSO thermal control paper?",
+    "expected_answer": "The references cited are: [1] F. Douillet and P. Landiech, Overview of PROTEUS SmallSat Family, IAC-02-U.4.05; [2] M. Valentini and P. Arfi, PROTEUS Small Sat Family: Multi-Mission Thermal Control Design and Performances, 06ICES-329; [3] J. Thomas, CALIPSO Thermal Design and Analysis Report, CALIPSO Systems Engineering Report SER-SYS-2481A (2003); [4] L. Fantano and W. Ousley, CALIPSO Payload Satellite Thermal Balance Test Report, CALIPSO Procedure Document, PC-SAT-673 (2005); and [5] Gasbarre, J.F., ILT Radiator Resizing Parametric Analysis, CALIPSO Systems Engineering Report PCSER-JFG-004B (2005).",
+    "relevant_chunk_ids": ["20070021525.pdf_13"]
+  },
+  {
+    "id": 16,
+    "question": "What is the affiliation of Leslie J. Quiocho?",
+    "expected_answer": "Leslie J. Quiocho is affiliated with NASA Johnson Space Center, Automation, Robotics, & Simulation Division, Houston, Texas 77058.",
+    "relevant_chunk_ids": ["20070021569.pdf_0"]
+  },
+  {
+    "id": 17,
+    "question": "What abbreviations are listed in the nomenclature section of the sweeping jet actuator paper?",
+    "expected_answer": "The abbreviations listed are: 2D (two dimensional), 3D (three dimensional), AFC (active flow control), BART (Basic Aerodynamics Research Tunnel), CHL (Conventional High Lift), CRM (Common Research Model), FAST-MAC (Fundamental Aerodynamics Subsonic/Transonic-Modular Active Control), LaRC (Langley Research Center), NTF (National Transonic Facility), PIV (Particle Image Velocimetry), SLA (stereolithography), SHL (Simplified High Lift), and SWJ (sweeping jet).",
+    "relevant_chunk_ids": ["20160010108.pdf_3"]
+  },
+  {
+    "id": 18,
+    "question": "What recommendations were made for sealed flight equipment requiring container integrity based on the ATMOS laser failure?",
+    "expected_answer": "Sealed flight equipment requiring container integrity should be designed to provide continuous passive indication of leaks by pressurizing above atmospheric pressure and monitoring with pressure transducers to provide evidence of proper pressure and seal integrity. When modifying equipment, care should be taken to ascertain that the as-built configuration is understood. Equipment can be modified by Engineering Change Notices or corrective actions based on Material Review Board decisions.",
+    "relevant_chunk_ids": ["https://llis.nasa.gov/lesson/393"]
+  },
+  {
+    "id": 19,
+    "question": "What lesson was learned from the violation of Magellan electrical and grounding specification?",
+    "expected_answer": "Violations of electrical interfacing and grounding requirements can have serious consequences and should not be undertaken lightly or without a formal project waiver. Care must be taken to ensure that design changes are properly reviewed.",
+    "relevant_chunk_ids": ["https://llis.nasa.gov/lesson/379"]
+  },
+  {
+    "id": 20,
+    "question": "What data types were acquired to assess the performance of the three sweeping jet actuator configurations?",
+    "expected_answer": "Steady and unsteady pressure data, Particle Image Velocimetry data, and force and moment data were acquired to assess the performance of the three actuator configurations. Additionally, oil flow visualization studies were conducted which revealed that the flow field controlled by the sweeping jets was more three-dimensional than expected.",
+    "relevant_chunk_ids": ["20160010108.pdf_2"]
+  },
+  {
+    "id": 21,
+    "question": "What is the relationship between the turbulent Prandtl number and boundary layers versus free shear flows?",
+    "expected_answer": "The simplest expression for the turbulent Prandtl number is to prescribe a constant value. A value of 0.9 is common for boundary layers, while a value as low as 0.5 is more appropriate in free shear flows. In applying a constant value of PrT, an analogy is assumed between the turbulent heat and momentum transfer.",
+    "relevant_chunk_ids": ["20160010069.pdf_9"]
+  },
+  {
+    "id": 22,
+    "question": "What was the primary objective of the CALIPSO satellite-level thermal vacuum test?",
+    "expected_answer": "One primary objective of the satellite-level thermal vacuum test was to demonstrate positive thermal control of all payload components within their required temperature limits under simulated hot and cold flight environments while operating the payload in a flight configuration.",
+    "relevant_chunk_ids": ["20070021525.pdf_11"]
+  },
+  {
+    "id": 23,
+    "question": "What symbols are used to represent force and moment in the nomenclature of the NASA Johnson Space Center paper?",
+    "expected_answer": "The symbols used to represent force and moment include: Fnp (Force and moment of body p acting on body n), Fns (Force and moment of body s acting on body n), Er,n (External rigid forces and moments acting on body n), Ee,n (External elastic forces and moments acting on body n), Fn (Force and moment from body p (previous body to n) acting at joint n), and Fs (Force and moment from body n (previous body to s) acting at joint s).",
+    "relevant_chunk_ids": ["20070021569.pdf_1"]
+  },
+  {
+    "id": 24,
+    "question": "What measures did the Cassini project take to control reaction wheel performance degradation?",
+    "expected_answer": "The Cassini project took the following steps to control reaction wheel performance degradation: 1) Kept RWA use to an absolute minimum during the outer Solar cruise phase to ensure RWA availability for science operations during the primary mission, 2) Used a JPL-developed Reaction Wheel Bias Optimization Tool (RBOT) to analyze optimal RWA bias rates so that the total RWA dwell time inside the problematic low-rpm region can be minimized, and 3) Continued to monitor and trend the performance of the reaction wheels (including RWA-3, which now serves as the backup).",
+    "relevant_chunk_ids": ["ttps://llis.nasa.gov/lesson/1598"]
+  },
+  {
+    "id": 25,
+    "question": "What is the significance of the Active Thermal Control (CTA) subsystem for the CALIPSO payload shortly after launch?",
+    "expected_answer": "The platform-controlled Active Thermal Control (CTA) subsystem for the payload was of particular interest shortly after launch because it was instrumental in keeping the payload safe while the platform was being activated. After the platform activation was complete, the payload subsystems were activated one by one, with the last subsystem to be activated, the Integrated Lidar Transmitter (ILT), being heavily dependent on the thermal subsystem to allow it to operate properly.",
+    "relevant_chunk_ids": ["20070021525.pdf_10"]
+  },
+  {
+    "id": 26,
+    "question": "What is the purpose of the Kee,n variable in the NASA Johnson Space Center paper's nomenclature?",
+    "expected_answer": "In the nomenclature, Kee,n represents the elastic stiffness matrix of body n.",
+    "relevant_chunk_ids": ["20070021569.pdf_1"]
+  },
+  {
+    "id": 27,
+    "question": "What was the failure mechanism that led to bearing cage instability in the Cassini reaction wheels?",
+    "expected_answer": "Bearing cage instability is typically heralded by audible noise, a significant spontaneous increase in the bearing drag torque, and excessive drag torque 'roughness.' The failure mechanism promotes energetic vibration of the retaining cage that leads to localized heating and polymerization of bearing lubricant (i.e., 'gelled' oil) and, ultimately, premature bearing failure.",
+    "relevant_chunk_ids": ["ttps://llis.nasa.gov/lesson/1598"]
+  },
+  {
+    "id": 28,
+    "question": "What was the conclusion about the actuator spacing in the sweeping jet experiment?",
+    "expected_answer": "The results presented showed that the actuator spacing was appropriate for the pressure ratios examined.",
+    "relevant_chunk_ids": ["20160010108.pdf_2"]
+  },
+  {
+    "id": 29,
+    "question": "What is the relationship between the heat flux and thermal diffusivity in turbulence modeling?",
+    "expected_answer": "The heat flux is typically related to a thermal diffusivity and the mean thermal gradient, much like the Boussinesq approximation relates the Reynolds' stress to the eddy viscosity and the mean velocity gradient. The equation is expressed as qjT = -ρᾱT ∂T/∂xj, where models for heat transfer must provide an expression for the thermal diffusivity.",
+    "relevant_chunk_ids": ["20160010069.pdf_8"]
+  },
+  {
+    "id": 30,
+    "question": "What was the timeline of the Cassini bearing cage instability issue?",
+    "expected_answer": "The Cassini reaction wheels were first used for spacecraft attitude control in March 2000. Beginning in October 2002, after two and one-half years of operation, a bearing cage instability trend developed in at least one of the two bearings in Cassini reaction wheel assembly No. 3 (RWA-3). When the data showed a 9-month period of intermittent RWA-3 bearing cage instability, this reaction wheel was replaced with the backup (RWA-4) in July 2003.",
+    "relevant_chunk_ids": ["ttps://llis.nasa.gov/lesson/1598"]
+  },
+  {
+    "id": 31,
+    "question": "What is the purpose of calibrating individual components in Ground Support Equipment (GSE) systems?",
+    "expected_answer": "Individual components in Ground Support Equipment (GSE) systems should be calibrated because validating the system as a whole is not sufficient. As demonstrated in the Space Shuttle Main Engine (SSME) Shop incident, when a power supply malfunctioned, it was discovered that two power monitors were not calibrated. The system had been validated every year, but the individual power monitoring components had not been calibrated. It's important for system validation to document that individual component calibrations are up to date, and a mechanism should be in place to ensure components are scheduled and sent for calibrations as required.",
+    "relevant_chunk_ids": ["https://llis.nasa.gov/lesson/3763"]
+  },
+  {
+    "id": 32,
+    "question": "What safety issue was identified with dry well transducer installations in Hypergol systems?",
+    "expected_answer": "Dry well transducer installations in Hypergol systems were found to be susceptible to inadvertent removal, which could lead to major fuel spills. In one incident, a Hypergol technician erroneously removed a temperature transducer from a 3-inch Hypergol line at the pad 'A' fuel farm. While the dry well installation design allows for transducer removal without opening the fluid volume, it was inadequate to prevent an untrained or careless technician from inadvertently removing the dry well itself from the Hypergol propellant line. This oversight could release hazardous materials like MMH liquid.",
+    "relevant_chunk_ids": ["https://llis.nasa.gov/lesson/299"]
+  },
+  {
+    "id": 33,
+    "question": "What are the two main functions of an Uninterruptable Power Supply (UPS) system?",
+    "expected_answer": "An Uninterruptable Power Supply (UPS) typically does two things: (1) It either provides power to enable the safe shutdown of equipment and saving data to a nonvolatile medium, or (2) it provides continuous power to critical equipment until personnel can move to another area. Additionally, UPS can provide filtered AC power to equipment and eliminate disturbances such as spikes, undervoltages, outage flicker, and transient noise which can affect system performance.",
+    "relevant_chunk_ids": ["https://llis.nasa.gov/lesson/662"]
+  },
+  {
+    "id": 34,
+    "question": "What issue was identified with using vinyl tape during clamping procedures?",
+    "expected_answer": "Vinyl tape was found to act as a lubricant, preventing the secure clamping of an object to a workstation. In one mishap, technicians secured a T-shaped mounting fixture with only one C-clamp to an access platform's kick plate that had vinyl tape on both sides. The C-clamp was improperly used to prevent rotation, and the vinyl tape acted as a lubricant between the clamped surfaces. These conditions allowed the offset weight of the mounting fixture/thruster assembly to overcome the clamping force, rotate about the single C-clamp, and fall, potentially resulting in damage to the object.",
+    "relevant_chunk_ids": ["https://llis.nasa.gov/lesson/43"]
+  },
+  {
+    "id": 35,
+    "question": "What safety concern exists with NASA Standard Initiators (NSI) in relation to radio frequency fields?",
+    "expected_answer": "NASA Standard Initiators (NSI) cannot be protected against inadvertent detonation while in excessive radio frequency fields. NSIs are used to ignite a charge of boron potassium nitrate pellets, which begin the solid rocket booster (SRB) ignition sequence. The electromagnetic interference may cause a premature firing of an NSI, possibly resulting in personnel injury/loss of life and damage to flight hardware or ground support equipment. During pyrotechnic operations/post-landing safing, NSIs are unprotected against excessive radio frequency (RF) fields, which may result in injury/damage.",
+    "relevant_chunk_ids": ["https://llis.nasa.gov/lesson/35"]
+  },
+  {
+    "id": 36,
+    "question": "What lesson was learned about cryogenic line sizing in the Space Shuttle Program?",
+    "expected_answer": "A major lesson learned was that cryogenic lines should be oversized during initial design to accommodate potential future increased flow rate requirements. This was demonstrated when Extended Duration Operations (EDO) pallets were added to the Shuttle Program several years after its start. These pallets included additional tanks of liquid hydrogen and liquid oxygen, but full loading of the pallets was often not achieved because the original vent tubing was not sized to accommodate the increased flow from additional tanks. If the lines had been sized with excess capacity during initial design, this modification might have been better supported, avoiding back-pressure buildup that affected the ability to service and deservice the vehicle.",
+    "relevant_chunk_ids": ["https://llis.nasa.gov/lesson/4618"]
+  },
+  {
+    "id": 37,
+    "question": "What caused the thread failure during the SRB holddown stud detensioning operation?",
+    "expected_answer": "The thread failure during the SRB holddown stud detensioning operation was caused by failure to fully engage the puller bar prior to detensioning. During the operation, while pressure of approximately 8K to 10K lbs was being applied, a loud 'bang' was heard and pressure on the tensioner fell to zero. With only 8 threads engaged (instead of full engagement), the shear stresses increased to 96,000 psi, which was very close to the 98,000 psi shear strength of the stud. Examination revealed that 8 threads sheared on a 135 degree circumferential segment of the holddown stud.",
+    "relevant_chunk_ids": ["https://llis.nasa.gov/lesson/80"]
+  },
+  {
+    "id": 38,
+    "question": "What safety issue occurred during the GN2 system pressurization test at the Multi Payload Processing Facility?",
+    "expected_answer": "During a pressurization test of the Gaseous Nitrogen (GN2) system at the Multi Payload Processing Facility (MPPF), four panels that were part of the unmodified heritage portion of the GN2 system were inadvertently pressurized. The intent of the test was to pressurize only the new or modified parts of the GN2 system as part of Verification and Validation (V&V). This unintended pressurization could have caused an oxygen deficient atmosphere within the interstitial walls of the facility and/or the high bay and airlock areas if there had been any disconnected lines or leaks in the tubing assemblies. The incident was classified as a 'Close Call' and was caused by inadequate understanding of the actual configuration of the system.",
+    "relevant_chunk_ids": ["https://llis.nasa.gov/lesson/17601"]
+  },
+  {
+    "id": 39,
+    "question": "What is the Helium Signature Test and why was it developed for the Space Shuttle?",
+    "expected_answer": "The Helium Signature Test is an end-to-end leak check of the entire Main Propulsion System (MPS) that serves as a final validation of flightworthiness. It was initially developed to find the source of a massive hydrogen leak detected during the Flight Readiness Firing of the orbiter Challenger before its first flight. The test works by pressurizing the MPS propellant systems with helium and sampling the aft fuselage atmosphere using the Hazardous Gas Detection System (HGDS). Any helium leaking from the MPS would mix with the air in the aft fuselage and be detected as an increase in helium concentration. By measuring this change and knowing the air purge flow rate, a total system leak rate can be calculated. The test was later refined to become an important preflight leak test and can be used for any enclosed hazardous system with a control volume to ensure overall system integrity.",
+    "relevant_chunk_ids": ["https://llis.nasa.gov/lesson/3177"]
+  },
+  {
+    "id": 40,
+    "question": "What hazard can occur with pressurized cans in automobiles during hot weather?",
+    "expected_answer": "Pressurized cans stored in automobiles during hot weather can explode when the interior temperature exceeds their maximum storage temperature of 120 degrees F. In one incident, a civilian car owner placed a pressurized can in an automobile during hot weather, and when the interior of the closed car heated up beyond the can's maximum storage temperature, the can exploded with enough force to blow out the rear window. Almost all pressurized cans have a maximum storage temperature of 120 degrees F, which can easily be exceeded in a car exposed to the sun in hot weather.",
+    "relevant_chunk_ids": ["https://llis.nasa.gov/lesson/1337"]
+  },
+  {
+    "id": 41,
+    "question": "What is the primary scientific objective of the LiteBIRD mission?",
+    "expected_answer": "LiteBIRD (Lite satellite for the study of B-mode polarization and Inflation from cosmic background Radiation Detection) is a JAXA-led Strategic Large-Class mission aimed at mapping the cosmic microwave background (CMB) polarized emission over the full sky at large angular scales. As the fourth generation of CMB space missions, LiteBIRD is specifically targeting the measurement of the CMB B-mode signals, which are the best probe of primordial gravitational waves generated during the first period of our Universe's history, as predicted by the cosmological inflation theory. The detection of these B-modes would allow scientists to test major inflationary models and directly access the energy of inflation.",
+    "relevant_chunk_ids": ["20210000323 Overview of the mediumand high frequency telescopes-Wollack.pdf_2"]
+  },
+  {
+    "id": 42,
+    "question": "What are the technical requirements for the MHFT in the LiteBIRD mission?",
+    "expected_answer": "The technical requirements of the Medium and High Frequency Telescope (MHFT) are derived from the scientific high-level requirements on the tensor-to-scalar ratio r, with a total uncertainty δr < 0.001. This total error budget is distributed equally over three main contributions at a level of 5.7 × 10^-4 each: statistical uncertainty, systematic uncertainty, and margin. The statistical uncertainty requirement is strongly driven by the global sensitivity of the instrument and implies stringent constraints on the 1/f noise component and mitigation of foreground contaminants. The systematics uncertainty budget is driven by the level of knowledge of the instruments, with the goal to keep the uncertainty on r smaller than 5.7 × 10^-6 for each source of instrumental systematic.",
+    "relevant_chunk_ids": ["20210000323 Overview of the mediumand high frequency telescopes-Wollack.pdf_3"]
+  },
+  {
+    "id": 43,
+    "question": "Why did the LiteBIRD mission choose to include a continuously-rotating half-wave plate (HWP) in its design?",
+    "expected_answer": "The LiteBIRD mission included a continuously-rotating half-wave plate (HWP) as the first optical element for all telescopes to effectively suppress 1/f noise. The presence of this continuously-rotating HWP allows the instrument to distinguish between the instrumental polarized signal and the sky signal, which is modulated at 4fHWP. A detailed trade-off analysis, including the polarization effects induced by the HWP itself, showed that performance would be degraded by a factor of about 2 without the HWP, with degradation scaling as the ratio of fknee over the spin rate of the satellite. Both the Medium Frequency Telescope (MFT) and High Frequency Telescope (HFT) are equipped with a levitating continuously-rotating HWP to minimize the heat load impact.",
+    "relevant_chunk_ids": ["20210000323 Overview of the mediumand high frequency telescopes-Wollack.pdf_4"]
+  },
+  {
+    "id": 44,
+    "question": "Why did the LiteBIRD mission split the 89-448 GHz frequency range into two telescopes?",
+    "expected_answer": "The split of the 89-448 GHz frequency range into two telescopes (Medium Frequency Telescope and High Frequency Telescope) was motivated by a trade-off analysis between reflective versus refractive options. After studies conducted in the framework of the ESA CDF study and subsequent optimization, the fully refractive option was selected as the baseline for the MHFT. This design choice provides a very simple and compact design that takes advantage of strong heritage from ground-based and balloon-borne experiments such as BICEP2, Keck, SPIDER, LSPE, and Simons Observatory. Furthermore, the split between middle and high frequencies facilitates the design of the filtering scheme and the calibration strategy.",
+    "relevant_chunk_ids": ["20210000323 Overview of the mediumand high frequency telescopes-Wollack.pdf_4"]
+  },
+  {
+    "id": 45,
+    "question": "What fatigue crack growth life prediction method was used in the NASA study of surface cracks in aluminum plates?",
+    "expected_answer": "Fatigue crack growth life predictions were performed using NASGRO® version 8.1, assuming that Linear Elastic Fracture Mechanics (LEFM) is applicable. The study analyzed a surface crack in a 3-inch-wide flat plate of 6061-T6 aluminum, using the SC 30 stress intensity factor solution for this configuration. In the first set of analyses, the plate was subjected to a remote tensile stress of 20 ksi with a stress ratio (R = Smin/Smax) of 0.1. The lives of the crack shown in the figures are the lives for each of the interpolated initial crack size aspect ratios up to the point when the crack transitions from a Part Through Crack (PTC) to a Through Crack (TC).",
+    "relevant_chunk_ids": ["20170001222.pdf_15"]
+  },
+  {
+    "id": 46,
+    "question": "What are the two procedures described for determining crack a and c sizes for analysis in the NASA fracture mechanics study?",
+    "expected_answer": "Two procedures are described for determining crack a and c sizes for analysis. In the first procedure, intermediate points on a straight line connecting the a and c values of the endpoints are read off as aj and cj, or alternatively, the linear equation for the line connecting the a, c endpoints may be used to compute intermediate points. The corresponding aspect ratio is computed as (aj/cj). In the second procedure, for obtaining round (a/c) numbers, simple algebra is used to transform the linear relationship of a and c into relationships between c and a/c and a and a/c. For any given value of (a/c)k, the values of ck can be calculated using the derived equation with the slope m and intercept r, and the corresponding value of ak can be calculated using a = (a/c)*c.",
+    "relevant_chunk_ids": ["20170001222.pdf_16"]
+  },
+  {
+    "id": 47,
+    "question": "How do different combinations of tensile and bending loadings affect crack life in the NASA fracture mechanics study?",
+    "expected_answer": "The study found that pure tensile loading has a much shorter life than cases consisting partly of bending stress. Four different remote loadings were analyzed: (A) St=20 ksi tensile loading, (B) St=15 ksi tensile plus Sb=5 ksi bending loadings, (C) St=10 ksi tensile plus Sb=10 ksi bending loadings, and (D) St=0 tensile with Sb=20 ksi bending loading. These stress loadings were selected to have the same maximum stress acting on the outer surface and the crack c-tip. As expected, the pure tensile loading had a lower life for most aspect ratio crack configurations compared to combined tensile and bending loadings.",
+    "relevant_chunk_ids": ["20170001222.pdf_17"]
+  },
+  {
+    "id": 48,
+    "question": "What is the Laplace equilibrium equation for a satellite in circular orbit around an asteroid?",
+    "expected_answer": "For a satellite in circular orbit around an asteroid, the Laplace equilibrium equation (assuming zero SRP terms) is: ω² (p̂·ĥ)(p̃̂·ĥ) + ωs(Hs·ĥ)(H̃s̃·ĥ) = 0. This equilibrium can be put in terms of the obliquity and Laplace angle, such that the Laplace angle can explicitly be solved: ω² sin 2φ + ωs sin 2(φ - ε) = 0. The Laplace angle φ is an azimuthal angle measured from the body's spin axis that defines the orbit to lie in-between the equator and the orbital plane such that as a goes to 0, φ goes to 0 and when a goes to ∞, φ goes to ε.",
+    "relevant_chunk_ids": ["20180003465.pdf_5"]
+  },
+  {
+    "id": 49,
+    "question": "How does Solar Radiation Pressure (SRP) affect the Laplace angle of a satellite orbiting an asteroid?",
+    "expected_answer": "Solar Radiation Pressure (SRP) increases the Laplace angle for the same radii as the SRP increases. With the inclusion of SRP perturbation terms, the modified Laplace equilibrium equation becomes: ω² sin 2φ + ωs sin 2(φ - ε) + 2ωsrp sin(φ - ε) = 0. The study compared mass-to-area ratios of b = 100 kg/m², b = 1000 kg/m², and no SRP, finding that for an increase in the mass-to-area ratio (i.e., less SRP effect), the bisection of the Laplace angle occurs at a smaller semi-major axis. For reference, a natural satellite with a mass-to-area ratio of 100 kg/m² and 1000 kg/m² is 0.075 m and 0.75 m respectively.",
+    "relevant_chunk_ids": ["20180003465.pdf_5", "20180003465.pdf_6"]
+  },
+  {
+    "id": 50,
+    "question": "What is the Kozai resonance and how does it affect satellite orbits around asteroids?",
+    "expected_answer": "The Kozai resonance occurs in a three-body system when the satellite has negligible mass compared to the other two bodies (asteroid and Sun), and the distance between the primary (asteroid) and the satellite is much closer than that of the primary to the Sun. It is caused by the orbit's argument of periapsis librating due to perturbations from the Sun. In this scenario, there is a conserved quantity: the angular momentum of the satellite's orbit in the Sun-asteroid orbit plane, expressed as Hz = √(1-e²)cos i. Therefore, as the inclination increases, the eccentricity will decrease and vice versa. The Kozai resonance most likely occurs further out from the asteroid where spherical harmonics don't significantly perturb the system. At certain high inclinations, the Kozai resonance can cause instability since the eccentricity will increase to the point of either collision with the asteroid or escape outside of the Hill sphere at apoapsis.",
+    "relevant_chunk_ids": ["20180003465.pdf_6"]
+  },
+  {
+    "id": 51,
+    "question": "What is the EVA Swab Tool designed to collect?",
+    "expected_answer": "The EVA Swab Tool is designed to collect microbial samples from the exterior of spacecraft. It was developed to assess whether microorganisms may be leaking or venting from spacecraft to ensure crewed systems meet planetary protection requirements and to protect science from human contamination. The tool allows collection of up to eight microbial samples for each kit taken on an EVA excursion.",
+    "relevant_chunk_ids": ["20170010188.pdf_0", "20170010188.pdf_1"]
+  },
+  {
+    "id": 52,
+    "question": "How does the EVA Swab Tool handle design work?",
+    "expected_answer": "The EVA Swab Tool handle is a heritage Space Shuttle tile repair device designed to quickly snap into different attachments by means of a spring-loaded mechanism that engages a mating device in each end effector. This allows the handle to snap onto a fresh swab end effector, similar to how modern shaving razor handles snap onto disposable blade cartridges. The handle features a large loop on one end for attachment to an EVA tether, and has a dual-action operation to disengage from a tip attachment that can be performed with one hand while wearing bulky EVA gloves.",
+    "relevant_chunk_ids": ["20170010188.pdf_1"]
+  },
+  {
+    "id": 53,
+    "question": "What potential design improvements were considered for the EVA Swab Tool?",
+    "expected_answer": "Improvements under consideration for the EVA Swab Tool included a retaining ring to prevent the O-ring from rolling out of its piston seal groove, or a different seal profile to mitigate rolling. Alternatively, the piston seal arrangement could be replaced with a different design approach.",
+    "relevant_chunk_ids": ["20170010188.pdf_4"]
+  },
+  {
+    "id": 54,
+    "question": "What forward work was planned for the EVA Swab Tool project?",
+    "expected_answer": "Forward work for the EVA Swab Tool project included analyzing spacesuit samples collected during evaluations, with particular interest in microorganisms that remained viable after several hours of vacuum exposure. The team planned to incorporate design improvements into the prototype kit and evaluate these improvements during suited test opportunities. Although the swab kit had been evaluated at both flight temperatures and vacuum conditions, it remained forward work to evaluate the kit under the combination of these conditions.",
+    "relevant_chunk_ids": ["20170010188.pdf_5"]
+  },
+  {
+    "id": 55,
+    "question": "What other applications were identified for the EVA Swab Kit beyond planetary protection?",
+    "expected_answer": "Beyond supporting human forward contamination planetary protection protocols, other potential applications for the EVA Swab Kit included: astrobiology research (such as collecting samples from external ISS surfaces to search for extremophile bacteria), collecting and preserving space-exposed materials to support astrobiology experiments on uncrewed science missions or crew-controlled telerobotic surface rovers, and micrometeoroid/orbital debris evaluations by replacing the foam swab tip with a sticky-tape type end effector to collect residue from impacts for analysis.",
+    "relevant_chunk_ids": ["20170010188.pdf_6", "20170010188.pdf_7"]
+  },
+  {
+    "id": 56,
+    "question": "What were the conclusions of the EVA Swab Tool testing?",
+    "expected_answer": "Laboratory and vacuum chamber testing validated NASA's EVA swab kit interface with pressurized EVA suits and provided user feedback on tool design and function. Test subjects found the tool relatively straightforward to operate, though several design improvements were identified for incorporation into a flight design. The project team minimized development costs by repurposing retired Space Shuttle Program hardware and by piggy-backing onto suited flight crew training exercises. Microbial data collected during the engineering evaluations will populate a baseline database for developing planetary protection protocols for human Mars missions.",
+    "relevant_chunk_ids": ["20170010188.pdf_7", "20170010188.pdf_8"]
+  },
+  {
+    "id": 57,
+    "question": "Who funded the EVA Swab Tool project and who was acknowledged for their contributions?",
+    "expected_answer": "The EVA Swab Tool project was funded by NASA's Douglas Terrier and the Science and Technology Mission Directorate. The authors acknowledged a cross-organizational test and analysis team, including Mary Sue Bell, Alex Horvath, Justin Connolly, Bekki Bruce, Christian Castro, Dr. Aaron Regberg, Dr. Ganesh Babu Malli Mohan, and Dr. Camilla Urbaniak.",
+    "relevant_chunk_ids": ["20170010188.pdf_8"]
+  },
+  {
+    "id": 58,
+    "question": "What is the primary focus of the paper on jet noise prediction for supersonic aircraft?",
+    "expected_answer": "The paper focuses on predicting jet noise for representative supersonic aircraft to support the International Civil Aviation Organization's effort to develop noise standards for the airport environment. The study investigates different jet-noise prediction approaches: employing empirical models and scaling data acquired in wind tunnels. It compares these predictions to data previously acquired in a Lear 25 flight test, with the Learjet dataset selected because its dominant noise source is expected to be jet noise.",
+    "relevant_chunk_ids": ["20190025295.pdf_1"]
+  },
+  {
+    "id": 59,
+    "question": "What jet-noise source models are available in NASA's Aircraft Noise Prediction Program?",
+    "expected_answer": "NASA's Aircraft Noise Prediction Program (ANOPP) contains several jet-noise source models including those based on SAE 876, modifications to SAE 876, and work performed by Stone. The SAE models were developed in the 1970s based on data available at that time. The original jet-noise model developed by Stone for single stream jets (referred to as Stone 1) was also based on 1970s data. Stone later updated the model using more recent scale-model data and extended it to predict noise for dual-stream jets (referred to as Stone 2).",
+    "relevant_chunk_ids": ["20190025295.pdf_1"]
+  },
+  {
+    "id": 60,
+    "question": "How was the flight test for jet noise prediction conducted?",
+    "expected_answer": "A flight test was conducted in March 2001 at the Estrella Sailport (located south of Phoenix, Arizona) using a Learjet 25 operated by NASA. During 500-ft constant altitude, constant speed flyovers, the left engine was set at the desired power condition while the right engine was throttled back to idle. NASA Langley recorded the acoustic data during the flyovers using ground microphones. The primary purpose of the test was to verify noise reduction benefits of chevron nozzles relative to the baseline nozzles for General Electric CJ610 turbojet engines.",
+    "relevant_chunk_ids": ["20190025295.pdf_2"]
+  },
+  {
+    "id": 61,
+    "question": "What were the conclusions of the jet noise prediction study?",
+    "expected_answer": "The study concluded that flight data consistently showed higher noise levels compared to both predictions and scaled model test data, consistent with findings from the 1970s when prediction models like the SAE method were developed. The noise levels from predictions and scale-model data were below those for the flight data by 2.5-3.5 EPNdB for the SAE model, 1-2 EPNdB for the Stone Jet model, and 3-5 EPNdB for the scale-model data. Differences were attributed to lack of information about engine exhaust temperatures and aircraft position, with a 100-200°F difference in exhaust gas temperature potentially explaining the underprediction. The study also found that pure tensile loading has a much shorter life than cases consisting partly of bending stress.",
+    "relevant_chunk_ids": ["20190025295.pdf_5"]
+  },
+  {
+    "id": 62,
+    "question": "What attenuation calculation methods were used in the Mars 2020 blackout study?",
+    "expected_answer": "The study used the Data Parallel Line Relaxation (DPLR) software suite as the primary tool to predict flow fields and surface heat fluxes. The CFD solutions included the effects of dissociation, ionization, and recombination, with ionization reactions including associative ionization (AI) and electron-impact ionization (EII). For calculating attenuation along the line of sight to MRO and MAVEN, two methods were used: one that assumes ν=0 (collisionless method) and a collisional method. For the collisional method, ν was determined using both DPLR's internal estimate and the Mehra formula.",
+    "relevant_chunk_ids": ["20231201-Blackout-SciTech-Papajak.pdf_7", "20231201-Blackout-SciTech-Papajak.pdf_8"]
+  },
+  {
+    "id": 63,
+    "question": "What was discovered about electron-impact ionization (EII) coefficients in the Mars 2020 blackout study?",
+    "expected_answer": "The study found that electron density in the CFD flow field surrounding Mars 2020 was not sensitive to uncertainty in the electron-impact ionization (EII) coefficients. All five EII coefficients had to be increased by 3 orders of magnitude to yield a significant increase in electron density in the aft-body region. This suggests that the somewhat underpredicted duration of the blackout period towards the end of entry attenuation might not be due to inaccuracies in individual rate coefficients, but possibly due to incompleteness of the set of chemical reactions or missing sources of ionization.",
+    "relevant_chunk_ids": ["20231201-Blackout-SciTech-Papajak.pdf_9"]
+  },
+  {
+    "id": 64,
+    "question": "What evidence of acid sulfate alteration has been found on Mars?",
+    "expected_answer": "Acid sulfate alteration has been identified at all three landing sites visited by NASA rover missions. Spirit landed in Gusev crater in 2004 and discovered Fe-sulfates and materials extensively leached by acid sulfate solutions. Opportunity landed on Meridiani Planum also in 2004 and encountered large abundances of jarosite and hematite in sedimentary rocks. Curiosity landed in Gale crater in 2012 and discovered jarosite and hematite in some of the lacustrine sediments. The high elemental abundance of sulfur in surface materials provides obvious evidence that sulfate has played a major role in aqueous processes at all landing sites.",
+    "relevant_chunk_ids": ["20160006674.pdf_0"]
+  },
+  {
+    "id": 65,
+    "question": "What are the key indicator minerals for acid sulfate weathering on Mars?",
+    "expected_answer": "Key indicator minerals for acid sulfate weathering environments on Mars include jarosite and other Fe-sulfates. While these minerals provide evidence for acid sulfate environments, determining the specific type of acid sulfate environment (sulfidization vs. sulfuricization) is more problematic because the mineralogical/geochemical properties of the host materials may be unknown, such as the presence of Fe-sulfides. However, Mars had extensive volcanism early in its history, suggesting that sulfuric acid fluids have likely interacted with basaltic materials.",
+    "relevant_chunk_ids": ["20160006674.pdf_1"]
+  },
+  {
+    "id": 66,
+    "question": "How does the A-SCAN framework contribute to confidence in IV&V analysis?",
+    "expected_answer": "The A-SCAN framework contributes to confidence in IV&V analysis by modeling strategies and solutions throughout the execution of IV&V analysis. The coverage of individual Technical Framework (TF) objectives represents the breadth or intensity of the analysis, with higher intensity analysis covering more objectives and producing broader sets of distinct evidence. The methods employed and the quality of evidence dictate the rigor, with higher rigor methods producing more irrefutable evidence and leaving less room for doubt. Direct doubt and defeaters to belief/confidence are represented by identified Technical Issues and Measures (TIMs) scaled according to their number and severity. The relationship between these parameters is demonstrated in the form of the Dempster-Shafer theory of evidence.",
+    "relevant_chunk_ids": ["12th IAASS Conference Paper IVV final3.pdf_9"]
+  },
+  {
+    "id": 67,
+    "question": "How did NASA IV&V adapt its approach for the Artemis missions?",
+    "expected_answer": "For the Artemis missions, NASA IV&V adapted its approach by implementing agile project management principles to handle large volumes of work and knowledge across many analysts with distributed skillsets without limiting creativity and adaptability. The team adopted a three-month schedule of 'assurance releases' and used explicit assurance case formalization with Goal Structuring Notation (GSN) syntax to promote communication, collaboration, and consistency. They developed the Artemis Assurance Case (AAC), which was architected to be as mission-agnostic as possible to minimize changes when moving between missions. The AAC includes claims related to assurance of capabilities from both cross-scenario perspectives and mission scenarios.",
+    "relevant_chunk_ids": ["12th IAASS Conference Paper IVV final3.pdf_10", "12th IAASS Conference Paper IVV final3.pdf_11", "12th IAASS Conference Paper IVV final3.pdf_12"]
+  },
+  {
+    "id": 68,
+    "question": "What tools comprise the Artemis Assurance Toolchain?",
+    "expected_answer": "The Artemis Assurance Toolchain includes: Enterprise Architect (EA) for modeling the Artemis Assurance Case (AAC), chosen for its extensibility, collaboration support, and database back-end; the in-house developed A-SCAN tool that integrates with the AAC via the back-end database to avoid managing duplicate datasets; Atlassian Jira for day-to-day task management, with traceability maintained to the AAC nodes; and Resolve, an in-house developed tool for tracking IV&V-identified issues in the form of Technical Issues and Measures (TIMs). The toolchain is designed to avoid duplication of data wherever possible and use the right tool for the right purpose, ensuring that Artemis IV&V assurance data remains comprehensible and manageable over future missions.",
+    "relevant_chunk_ids": ["12th IAASS Conference Paper IVV final3.pdf_13"]
+  },
+  {
+    "id": 69,
+    "question": "What is the purpose of the Goal Structuring Notation (GSN) in the Artemis Assurance Case?",
+    "expected_answer": "The Goal Structuring Notation (GSN) syntax in the Artemis Assurance Case (AAC) standardizes how assurance arguments are captured and allows different strategies to coexist in the same network of claims. It enables NASA IV&V teams and analysts to clearly capture their reasoning, argumentation, and desired evidence when decomposing and elaborating capabilities. The notation makes underlying assumptions and justifications leading to assurance design decisions explicit and apparent. GSN's helpful extensions for modularization and cross-reference of claims and evidence are especially useful for the large and complex AAC, enabling it to be more adaptable to additions, deletions, and other changes in assurance design over time.",
+    "relevant_chunk_ids": ["12th IAASS Conference Paper IVV final3.pdf_12"]
+  },
+  {
+    "id": 70,
+    "question": "What is the relationship between the Artemis Assurance Case (AAC) and the A-SCAN tool?",
+    "expected_answer": "The in-house developed A-SCAN tool integrates seamlessly with the Artemis Assurance Case (AAC) in Enterprise Architect via the back-end database. By mirroring the claim structure and solutions from the AAC in A-SCAN, the team avoids managing two separate but identical datasets. A synchronization process occurs regularly between Enterprise Architect and A-SCAN, so as the AAC is constructed, records are automatically populated in A-SCAN to document corresponding risk assessments and analysis plans. A-SCAN sits on top of the AAC as an additional layer to capture assurance status data, including Assurance Objectives and Assurance Claims, and helps manage identified software risk and IV&V confidence.",
+    "relevant_chunk_ids": ["12th IAASS Conference Paper IVV final3.pdf_13"]
+  },
+  {
+    "id": 71,
+    "question": "What are the two unclosed terms in the Reynolds-averaged Navier-Stokes equations that must be modeled?",
+    "expected_answer": "The two unclosed terms in the Reynolds-averaged Navier-Stokes equations that must be modeled are: 1) The Reynolds stress tensor (τij^T = ρu'i u'j), which appears in both the momentum and energy equations, and 2) The turbulent heat flux vector (qj^T = cpρu'j T'), which appears in the energy equation. The Reynolds stress tensor is commonly modeled using linear eddy viscosity models that assume a linear relationship between the Reynolds stress and mean strain tensors, while the turbulent heat flux vector is typically modeled using the gradient diffusion assumption.",
+    "relevant_chunk_ids": ["20170007700.pdf_3"]
+  },
+  {
+    "id": 72,
+    "question": "How do most turbulent simulations model the turbulent heat flux vector?",
+    "expected_answer": "Most turbulent simulations rely on the simplistic Reynolds analogy to relate turbulent heat transfer to turbulent momentum transfer. The turbulent heat flux vector is modeled using the gradient diffusion assumption: cpρu'jT' = -cp(μt/Prt)(∂T/∂xj), where the turbulent heat flux vector is directly related to the temperature gradient by the eddy viscosity (μt) and the turbulent Prandtl number (Prt). The turbulent Prandtl number is typically taken to be a constant, although there are several models that compute Prt as a function of the flow.",
+    "relevant_chunk_ids": ["20170007700.pdf_3"]
+  },
+  {
+    "id": 73,
+    "question": "What experimental techniques were used by NASA's Glenn Research Center to measure jet flow fields?",
+    "expected_answer": "NASA's Glenn Research Center used three experimental techniques to measure jet flow fields: 1) Particle Image Velocimetry (PIV) for velocity measurements, which is a well-established technique for velocimetry; 2) Rayleigh scattering for time-resolved velocity, temperature, and density measurements; and 3) Raman spectroscopy for instantaneous temperature measurements. The latter two techniques were of an exploratory nature, containing more uncertainty and lacking historical data for comparison.",
+    "relevant_chunk_ids": ["20170007700.pdf_4"]
+  },
+  {
+    "id": 74,
+    "question": "What were the challenges associated with the Rayleigh scattering technique for jet flow measurements?",
+    "expected_answer": "The Rayleigh scattering technique requires clean air flow and is very sensitive to particle contamination. Despite setting up a low-speed co-flow system around the SHJAR nozzle with sub-micron HEPA filters to provide particulate-free air, some contamination occurred, mostly at downstream locations where ambient air was entrained into the jet plume. Mielke reports rms error ranging from ±0.2 to ±0.5 of ΔTj. Error in T'/ΔTj was a function of the shot noise and was shown to be up to 0.043ΔTj or about 20% of the peak value.",
+    "relevant_chunk_ids": ["20170007700.pdf_4"]
+  },
+  {
+    "id": 75,
+    "question": "Why was Raman spectroscopy chosen for temperature measurements in jet flow studies?",
+    "expected_answer": "Raman spectroscopy was chosen for temperature measurements as it was deemed less sensitive to the environmental conditions of the test, namely: large temperature variations, high sonic noise levels, high ambient light levels, and inaccessibility during the test. Both mean and fluctuating temperature measurements were obtained for axial profiles on the jet centerline and lipline, and radial profiles at various x/Dj locations. Error estimates based on calibration data for mean temperature were less than 2.5%.",
+    "relevant_chunk_ids": ["20170007700.pdf_4"]
+  },
+  {
+    "id": 76,
+    "question": "What is the purpose of the large-eddy simulations in the NASA jet flow study?",
+    "expected_answer": "The purpose of the large-eddy simulations (LES) was to bridge the gap between individually measured/uncorrelated velocity and temperature data, and the turbulent heat flux vector. The LES would be validated against both the velocity and temperature data for several flow conditions. Satisfactory validation of the fluctuating velocity and temperatures would provide confidence that the correlated quantity ρu'T' is correctly predicted. The combination of experimental data and validated LES data could then serve as a basis for heat flux model development and validation.",
+    "relevant_chunk_ids": ["20170007700.pdf_5"]
+  },
+  {
+    "id": 77,
+    "question": "What code was used for the large-eddy simulations and what are its characteristics?",
+    "expected_answer": "The code used for the large-eddy simulations was WRLES (Wave Resolving Large-Eddy Simulation), a special-purpose large-eddy simulation code that uses high-resolution temporal and spatial discretization schemes to accurately simulate the convection of turbulent structures. The code solves the compressible Favre-filtered Navier-Stokes equations on structured meshes using generalized curvilinear coordinates. WRLES employs finite-difference methods to solve the equations and has been previously used and validated for jet flows.",
+    "relevant_chunk_ids": ["20170007700.pdf_5"]
+  },
+  {
+    "id": 78,
+    "question": "What set points were computed in the NASA jet flow study and how was time averaging performed?",
+    "expected_answer": "Three cases from the experimental test matrix were computed, corresponding to set points (SP) 3, 23, and 27. Set points 3 and 23 represent a cold and hot jet at the same acoustic Mach number (Ma = Uj/a∞) of 0.5, and exit velocity of 558 ft/s. Set point 27 represents a higher speed jet (Ma = 0.9) at the same temperature ratio as set point 23. The solution was initialized to the ambient state and then run for approximately 60t* to establish a fully turbulent jet flow, free of initial transients. All calculations were then run for a minimum of 180t* to accrue data for time-averaging, where t* = (tDj)/Uj represents the time it takes for a particle of fluid moving at the jet velocity to traverse one jet diameter.",
+    "relevant_chunk_ids": ["20170007700.pdf_6"]
+  },
+  {
+    "id": 79,
+    "question": "How was sample infiltration performed in the density measurement study?",
+    "expected_answer": "In the density measurement study, samples were infiltrated with water. The infiltration was performed under vacuum to avoid trapping air within the sample. This approach removed the dependence on infiltrant density in the calculations.",
+    "relevant_chunk_ids": ["20180000909.pdf_75"]
+  },
+  {
+    "id": 80,
+    "question": "What trends were observed in the density measurement results?",
+    "expected_answer": "The density measurement results showed that the data were generally linear as predicted, except for two potential outliers. Both through-thickness and in-plane samples appeared to follow the same linear trend, though they were grouped by density. Through-thickness samples possessed lower densities than the in-plane samples, which was likely a result of taking like samples from the same region of the felt.",
+    "relevant_chunk_ids": ["20180000909.pdf_76"]
+  },
+  {
+    "id": 81,
+    "question": "How is the optical setup arranged in the detector test system?",
+    "expected_answer": "The optical setup uses a simple combination of lens, mirrors and filters. The spot optics are arranged to provide an on-axis sub-10 micron spot on the detector array by imaging a minified image of a 25 micron sized pinhole located at the exit port of the second integrating sphere. The optics are held at a fixed distance and normal to the detector plane in a baffled and sealed U channel to minimize scattered light. The side port optics are designed to provide an image of one of the windowed ports of the vacuum chamber when a mirror is in place. With the U channel design, they can switch between uniform illumination (no optics), spot illumination, or side port imaging mode by simply switching out the top of the U channel.",
+    "relevant_chunk_ids": ["20190002334.pdf_9"]
+  },
+  {
+    "id": 82,
+    "question": "What were the results of the initial testing of the H4RG-10 detector?",
+    "expected_answer": "After obtaining a spare WFIRST banded array, the detector harness was tested and verified with a safe-to-mate procedure, and the H4RG-10 was successfully powered and operated at room temperature on the bench. At room temperature, all outputs were understandably saturated, but a difference between two subsequent reads was performed to form a correlated double sample. The 32 output channel pattern was readily seen, but the dominant features in this image were from the electronics and out of range saturated pixel values. The dewar vacuum and cooling systems were also tested, with the test dewar reaching an intermediate vacuum of about 5.5 × 10^-4 mBar.",
+    "relevant_chunk_ids": ["20190002334.pdf_10"]
+  },
+  {
+    "id": 83,
+    "question": "What future tests are planned for the H4RG-10 detector test bed?",
+    "expected_answer": "The first tests planned with the test bed are a series of exposures varying flux. These data will allow sensitive measurements of reciprocity failure and persistence and the relationship between the two. These data will also supplement previous work that found a new way to potentially calibrate infrared arrays using the Legendre polynomials as an orthogonal basis, helping to tease out the dependence of different Legendre coefficients on detector characteristics. The second generation of tests will use the optics to look at the response of the detector pixels on a point source, which will help assess interpixel capacitance and the brighter-fatter effect.",
+    "relevant_chunk_ids": ["20190002334.pdf_11"]
+  },
+  {
+    "id": 84,
+    "question": "What is the goal of creating the H4RG-10 detector test bed?",
+    "expected_answer": "The goal of creating the H4RG-10 detector test bed is to provide flexible and detailed study of an H4RG-10 and its response to light, with the aim of developing a detailed physical model that can be used to optimize this latest generation of HgCdTe photodiode arrays to lower systematics and noise in their measurements.",
+    "relevant_chunk_ids": ["20190002334.pdf_11"]
+  },
+  {
+    "id": 85,
+    "question": "What information sets are included in the UAV operations monitoring framework?",
+    "expected_answer": "The UAV operations monitoring framework accommodates multiple information sets, including: 1) Operational variables such as a flight plan defined by way-points and corresponding estimated times of arrival (ETAs), vehicle's basic mass and geometric properties; 2) Measurements of system's variables, which at the very least include position coordinates of the vehicle during flight (from either raw GPS measurements or filtered estimations); and 3) External variables like environmental conditions, change in operational plans or external factors that may affect the dynamics of the vehicle or its capability to operate in the airspace (e.g., wind field, temperature, other weather conditions, dynamic or static obstacles).",
+    "relevant_chunk_ids": ["20190027599.pdf_3"]
+  },
+  {
+    "id": 86,
+    "question": "What are the components of the input model in the UAV monitoring framework?",
+    "expected_answer": "The input model in the UAV monitoring framework is composed of a trajectory generation module that transforms the flight plan (or 4D trajectory) into kinematic profiles utilized to command the vehicle and simulate the vehicle's flight over the set of way-points. The UAV model utilized is a simple rigid body, 6 degrees of freedom (DoF) model, with a linear quadratic regulator (LQR) controller. This approach requires a limited number of parameters to ensure a satisfactory representation of the flight dynamics. The model allows the estimation of quantities of interest (QoIs) like ETAs, velocity and thrust profiles, which can be used to compute other derived QoIs, such as electrical power required by the vehicle's battery to accomplish the mission.",
+    "relevant_chunk_ids": ["20190027599.pdf_3"]
+  },
+  {
+    "id": 87,
+    "question": "What vehicle properties are necessary for the prediction of kinematic profiles and ETA in the UAV monitoring framework?",
+    "expected_answer": "The vehicle properties necessary for the prediction of kinematic profiles and ETA in the UAV monitoring framework include: number of rotors, vehicle mass, payload mass, radius of the main vehicle's body (approximation), length of each arm (from body center of mass to rotor center of mass), and weight of rotors and arms.",
+    "relevant_chunk_ids": ["20190027599.pdf_3"]
+  },
+  {
+    "id": 88,
+    "question": "What reference frames are utilized to compute a UAV's trajectory?",
+    "expected_answer": "Three reference frames are utilized to compute a UAV's trajectory: 1) The geodetic reference frame based on the WGS84 ellipsoid, using latitude (φ), longitude (λ), and altitude (ζ); 2) The Earth-centric, Earth-fixed (ECEF) frame with origin at the center of the Earth, x-axis pointing towards the intersection between the prime meridian and the equator, z-axis pointing towards the North pole, and y-axis pair-wise perpendicular to x and y; and 3) The local tangent plane (also called local, Earth-fixed ENU Cartesian frame), with origin at a point on the Earth's surface, x-axis pointing East, y-axis pointing North, and z-axis pointing upward.",
+    "relevant_chunk_ids": ["20190027599.pdf_4"]
+  },
+  {
+    "id": 89,
+    "question": "How is the UAV modeled in the monitoring framework?",
+    "expected_answer": "The UAV is modeled using a simple, 6 degrees of freedom (DoF) dynamic model described through Newton-Euler equations. It is accurate enough to reproduce the fundamental dynamics of the vehicle and therefore provide predictions of the vehicle's kinematics (position, speed, and acceleration) and an estimation of the thrust required to accomplish the mission. The model is applicable to a variety of UAVs with minimal tuning, making it suitable for implementation in generalized monitoring frameworks. The UAV inertia is described by lumped masses, with a central body sphere and a controller that is a simplified linear quadratic regulator (LQR).",
+    "relevant_chunk_ids": ["20190027599.pdf_5"]
+  },
+  {
+    "id": 90,
+    "question": "What is the lumped-mass model used for UAV simulation?",
+    "expected_answer": "The lumped-mass model defines the mass and geometric properties of the UAV through a system consisting of a central body sphere with arms extending radially outward to the rotors. This approach allows for a simplified representation of the vehicle's inertial properties while maintaining sufficient accuracy for trajectory prediction and monitoring purposes.",
+    "relevant_chunk_ids": ["20190027599.pdf_5"]
+  },
+  {
+    "id": 91,
+    "question": "What is the AztechSat-1 CubeSat technology demonstration?",
+    "expected_answer": "The AztechSat-1 CubeSat technology demonstration is a NASA/AEM Space Act Agreement that exemplifies bilateral collaboration between agencies. It provides NASA with a valuable opportunity to test economical, commercial off-the-shelf components that may be useful in future space missions. Under this agreement, AEM (Mexican Space Agency) has the opportunity to develop requirements, manufacture a prototype, ground test the prototype, deliver a flight certified unit, lead mission operations, and share flight data with NASA. AztecSat was scheduled to fly no earlier than December 2019 on SpaceX Commercial Resupply Services (CRS)-19.",
+    "relevant_chunk_ids": ["20190032337.pdf_26"]
+  },
+  {
+    "id": 92,
+    "question": "What is CineSpace and how does it promote NASA's mission?",
+    "expected_answer": "CineSpace is a short film competition created in 2015 through a Space Act Agreement between NASA and the Houston Cinema Arts Society. It offers filmmakers around the world the opportunity to submit short films of 10 minutes or less that contain at least 10% NASA footage. Winners receive monetary prizes announced at the annual Houston Cinema Arts Festival, and films may be screened at other festivals worldwide and on the ISS. Since its inception, more than 1700 films have been submitted, with dozens from Latin America and Spain. The competition has become so popular that CineSpace films with Spanish subtitles have been presented during film festivals in several Mexican cities. The program has proven to be an outstanding vehicle to educate the public on space, aeronautics and technology globally, with filmmakers from more than 60 countries participating. Many of the films are used in schools, museums and other institutions for educational purposes.",
+    "relevant_chunk_ids": ["20190032337.pdf_27"]
+  },
+  {
+    "id": 93,
+    "question": "What is Ciencia and how does NASA use social media to promote it?",
+    "expected_answer": "Ciencia is a Spanish-language website focused on NASA's scientific discoveries that provides new weekly content on Earth science, the Universe, research conducted on the International Space Station, and NASA Hispanic employees. It also serves as a hub for finding other NASA pages in Spanish. NASA relies heavily on social media to promote Ciencia's content, with its first Spanish social media account, Twitter account @NASA_ES, launched in 2011, followed by YouTube in September 2018 and Instagram in July 2019. The Twitter account has been particularly successful, with 442,000 followers as of October 2019, making it larger than some NASA centers' accounts. Content that works particularly well focuses on people or countries, anniversaries, striking images, and content shared from NASA's flagship account. A successful campaign involved collaboration with popular Latina singer Karol G, which brought thousands of new followers and significant media coverage.",
+    "relevant_chunk_ids": ["20190032337.pdf_28", "20190032337.pdf_29"]
+  },
+  {
+    "id": 94,
+    "question": "What are the demographics of NASA's Spanish-language social media accounts?",
+    "expected_answer": "NASA's Spanish-language Twitter account (@NASA_ES) had 442,000 followers as of October 2019, with a gender distribution slightly skewed towards male (58% vs. 42% female). Over half of these followers live in Mexico and Spain according to Twitter analytics. The newer NASA_ES Instagram account targets a younger demographic, with 50% of its over 33,000 followers under 25 years of age as of October 2019. The gender distribution on Instagram is almost balanced (47% women, 53% men), and almost half of the followers are in Colombia, Mexico, Spain, Argentina and Chile.",
+    "relevant_chunk_ids": ["20190032337.pdf_29"]
+  },
+  {
+    "id": 95,
+    "question": "What is MEDPRAT and how does it assist in medical resource planning for space missions?",
+    "expected_answer": "MEDPRAT (Medical Extensible Dynamic Probabilistic Risk Assessment Tool) is a tool suite that helps optimize medical resource allocation for space missions. It can identify a nearly optimal set of medical resources that meets notional targets for a given Design Reference Mission (DRM) while balancing crew health and safety against limited resource capabilities during long-duration spaceflight. The tool can perform systematic trade study evaluations and inform research priorities by identifying which medical capabilities provide the greatest possible risk reduction benefit. It enables human health and performance to be considered early in mission planning and vehicle design, allowing for full integration into architectures as they are conceptualized, developed, and adopted.",
+    "relevant_chunk_ids": ["20200001532.pdf_17", "20200001532.pdf_19", "20200001532.pdf_20"]
+  },
+  {
+    "id": 96,
+    "question": "How does MEDPRAT evaluate technology development trades for medical equipment?",
+    "expected_answer": "MEDPRAT evaluates technology development trades through a four-part simulation approach: 1) The item(s) under consideration are left at 100% footprint, and the set-selector includes/excludes them based on cost/benefit merit; 2) A simulation is run with the items at their original benefit but zero mass and volume, defining maximum achievable benefit possible with any technology development; 3) The set-selector is run with the footprint reduced to a user-specified target amount and the items are forced to be included; 4) The previous simulation is repeated with the set selector given the option to include/exclude based on merit. By comparing outcomes of all four simulations, one can determine the worth of pursuing technology development to reduce the footprint of heavier items. In the Phase II Pilot Project, this approach was applied to blood pressure/electrocardiogram monitor and ultrasound machine.",
+    "relevant_chunk_ids": ["20200001532.pdf_17", "20200001532.pdf_18"]
+  },
+  {
+    "id": 97,
+    "question": "What is the significance of the MEDPRAT tool suite for NASA's exploration missions?",
+    "expected_answer": "The MEDPRAT tool suite is significant for NASA's exploration missions as it supports systematic trade study evaluations and informs research priorities. It assists the ExMC Element in identifying which medical capabilities provide the greatest possible risk reduction benefit, increasing the likelihood of their inclusion in exploration medical systems. It informs NASA mission developers regarding the prioritization of research and technology development for deep space medical capability. Most importantly, the tool suite enables human health and performance to be considered early in mission planning and vehicle design, allowing for full integration into architectures as they are conceptualized, developed, and adopted.",
+    "relevant_chunk_ids": ["20200001532.pdf_20"]
+  },
+  {
+    "id": 98,
+    "question": "What is Cold Sky Calibration (CSC) and why is it important for SMAP?",
+    "expected_answer": "Cold Sky Calibration (CSC) is an important part of determining the absolute accuracy and long-term temporal stability of the L-band (1.4 GHz) radiometer on SMAP (Soil Moisture Active Passive satellite). The celestial sky serves as an excellent calibration reference at L-band because it is well-known, temporally stable, and spatially homogeneous over regions large compared to the resolution of the SMAP antenna. Starting in April 2015, CSC maneuvers have been conducted monthly to evaluate and improve radiometer accuracy and temporal stability. In May 2021, the procedure was revised to include two maneuvers per month, instead of one previously, to sample both ascending and descending orbit passes every month, allowing better characterization of the radiometer temporal drift.",
+    "relevant_chunk_ids": ["Dinnat IGARSS 2022 Kuala Lumpur_final 1.pdf_2"]
+  },
+  {
+    "id": 99,
+    "question": "How is a Cold Sky Calibration maneuver performed for SMAP?",
+    "expected_answer": "During a Cold Sky Calibration (CSC) maneuver, the SMAP spacecraft is pitched 110° to point toward the celestial sky. The spacecraft is kept inverted for a few minutes, and the difference between observed and simulated antenna temperatures (TA) is averaged over the duration of the CSC to reduce radiometric noise. This TA difference, computed every 5° in scan angle, provides the calibration bias for that particular CSC date. The monthly CSCs allow the assessment of the temporal drift of the calibration, which can be assessed separately for different scan angles. Since May 2021, both ascending and descending orbits are analyzed separately.",
+    "relevant_chunk_ids": ["Dinnat IGARSS 2022 Kuala Lumpur_final 1.pdf_2"]
+  },
+  {
+    "id": 100,
+    "question": "What improvements have been made to the SMAP Cold Sky Calibration procedure?",
+    "expected_answer": "The SMAP Cold Sky Calibration (CSC) procedure was improved in May 2021 to include two maneuvers per month, instead of one previously, to sample both ascending and descending orbit passes every month. This change was motivated by temporal drift estimates over ocean scenes that showed seasonal swings varying significantly between ascending and descending orbits. Additionally, model improvements have been made to increase the accuracy of the calibration. These include accounting for reflector emissivity, which has a significant impact, reducing the bias in vertical and horizontal polarizations by ~2.5K, and adjusting the antenna gain front/back power ratio to mitigate the residual scan angle dependency of the cold sky bias.",
+    "relevant_chunk_ids": ["Dinnat IGARSS 2022 Kuala Lumpur_final 1.pdf_2", "Dinnat IGARSS 2022 Kuala Lumpur_final 1.pdf_3", "Dinnat IGARSS 2022 Kuala Lumpur_final 1.pdf_4"]
+  },
+  {
+    "id": 101,
+    "question": "What results have been observed from the SMAP Cold Sky Calibration maneuvers?",
+    "expected_answer": "The SMAP Cold Sky Calibration (CSC) maneuvers have shown excellent temporal stability of the calibrated radiometer, with stability within ~0.2K. Analysis of ascending and descending temporal drift shows different behavior between the two. Accounting for reflector emissivity has a significant impact, reducing the bias in vertical and horizontal polarizations by ~2.5K, though it also introduces larger seasonal fluctuations with mid-year drops of approximately 0.2K. Adjusting the antenna gain front/back power ratio has enabled mitigation of the residual scan angle dependency of the cold sky bias, with significant improvements found in H-pol and Stokes 3, while V-pol still needs improvements. The correction to the scan angle dependence also brings scan-averaged cold sky bias close to 0 in V- and H-pol.",
+    "relevant_chunk_ids": ["Dinnat IGARSS 2022 Kuala Lumpur_final 1.pdf_3", "Dinnat IGARSS 2022 Kuala Lumpur_final 1.pdf_4"]
+  },
+  {
+    "id": 102,
+    "question": "What is the purpose of NASA's Spanish-language social media initiatives?",
+    "expected_answer": "NASA's Spanish-language social media initiatives aim to promote scientific content from Ciencia (NASA's Spanish-language website on scientific discoveries) and engage with Spanish-speaking audiences worldwide. These initiatives include Twitter (@NASA_ES), YouTube, and Instagram accounts that share content on Earth science, the Universe, research on the International Space Station, and NASA Hispanic employees. The social media accounts serve to reach diverse demographics, with Twitter appealing to a broader audience (particularly in Mexico and Spain) and Instagram targeting younger users (50% under 25 years old, with strong followings in Colombia, Mexico, Spain, Argentina, and Chile). These platforms help NASA distribute educational content, promote Hispanic representation in space science, and build positive engagement with Spanish-speaking communities globally.",
+    "relevant_chunk_ids": ["20190032337.pdf_28", "20190032337.pdf_29"]
+  },
+  {
+    "id": 103,
+    "question": "What types of content are most successful on NASA's Spanish-language social media accounts?",
+    "expected_answer": "Content that works particularly well on NASA's Spanish-language social media accounts includes: posts focusing on a person or country (such as a tweet about Costa Rican engineer Sandra Cauffman that was retweeted by Costa Rica's president); content related to anniversaries; posts that include striking images; and content shared from NASA's flagship account. A particularly successful campaign was a collaboration with popular Latina singer Karol G to promote NASA's Spanish-language social media presence, which brought in thousands of new followers and received significant coverage by entertainment media. This content is often distributed by U.S. embassies in Spanish-speaking countries, and anecdotal evidence suggests that the tone of replies received in response to this content is more positive than that of some other NASA social media accounts.",
+    "relevant_chunk_ids": ["20190032337.pdf_29"]
+  },
+  {
+    "id": 104,
+    "question": "How does the MEDPRAT tool suite balance crew health with resource constraints for space missions?",
+    "expected_answer": "The MEDPRAT tool suite balances crew health with resource constraints by using a cost-benefit approach to optimize medical resource allocation. It evaluates medical resources based on their mass, volume, and benefit in treating various conditions that might occur during a mission. The tool can identify a nearly optimal set of medical resources that meets notional targets for a given Design Reference Mission while working within strict mass and volume constraints. It enables mission planners to make informed decisions about which medical capabilities provide the greatest possible risk reduction benefit relative to their resource costs. This approach recognizes that the very worthwhile objective of maintaining crew health and safety must be balanced against the realities of limited resource capabilities during long duration spaceflight.",
+    "relevant_chunk_ids": ["20200001532.pdf_17", "20200001532.pdf_19"]
+  },
+  {
+    "id": 105,
+    "question": "What motivated the expansion of SMAP's Cold Sky Calibration procedure in 2021?",
+    "expected_answer": "The expansion of SMAP's Cold Sky Calibration (CSC) procedure in May 2021 to include two maneuvers per month instead of one was motivated by temporal drift estimates over ocean scenes. Time series of the global average of the difference between observed and simulated antenna temperatures (TA) over oceans showed seasonal swings that varied significantly between ascending and descending orbits. Since previous CSC maneuvers until April 2021 were only for descending orbits, this precluded the analysis of the difference in drift between ascending and descending orbits. The expanded procedure allows both ascending and descending orbit passes to be sampled every month, enabling better characterization of the radiometer temporal drift and understanding of the differences between ascending and descending passes.",
+    "relevant_chunk_ids": ["Dinnat IGARSS 2022 Kuala Lumpur_final 1.pdf_2"]
+  },
+  {
+    "id": 106,
+    "question": "How does the reflector emissivity affect SMAP's Cold Sky Calibration?",
+    "expected_answer": "The reflector emissivity has a significant impact on SMAP's Cold Sky Calibration. Including it in the calibration model reduces the bias in vertical and horizontal polarizations by approximately 2.5K. However, it also introduces larger seasonal fluctuations with mid-year drops of approximately 0.2K. This demonstrates the importance of accounting for all physical components in the calibration model to achieve the highest possible accuracy in radiometer measurements.",
+    "relevant_chunk_ids": ["Dinnat IGARSS 2022 Kuala Lumpur_final 1.pdf_3"]
+  },
+  {
+    "id": 107,
+    "question": "What is the benefit function used in the MEDPRAT tool for medical resource allocation?",
+    "expected_answer": "The benefit function used in the MEDPRAT tool for medical resource allocation is: Benefit = CLOCL × LOCL + CQTL × QTL + CRTDC × RTDC, where CLOCL = 1, CQTL = 1, and CRTDC = 0. This function evaluates the benefit of medical resources based on their contribution to different aspects of crew health management during space missions.",
+    "relevant_chunk_ids": ["20200001532.pdf_17"]
+  },
+  {
+    "id": 108,
+    "question": "What are the key findings from the SMAP Cold Sky Calibration analysis?",
+    "expected_answer": "Key findings from the SMAP Cold Sky Calibration analysis include: 1) The radiometer shows excellent temporal stability within ~0.2K; 2) Ascending and descending temporal drift shows different behavior, requiring more work to understand these differences; 3) Accounting for reflector emissivity significantly reduces bias in vertical and horizontal polarizations by ~2.5K but introduces larger seasonal fluctuations; 4) Adjusting the antenna gain front/back power ratio mitigates the residual scan angle dependency of the cold sky bias, with significant improvements in H-pol and Stokes 3, while V-pol still needs improvements; 5) The correction to the scan angle dependence brings scan-averaged cold sky bias close to 0 in V- and H-pol.",
+    "relevant_chunk_ids": ["Dinnat IGARSS 2022 Kuala Lumpur_final 1.pdf_3", "Dinnat IGARSS 2022 Kuala Lumpur_final 1.pdf_4"]
+  },
+  {
+    "id": 109,
+    "question": "How does NASA's CineSpace competition engage international audiences?",
+    "expected_answer": "NASA's CineSpace competition engages international audiences by offering filmmakers worldwide the opportunity to create short films using NASA footage. Since its inception in 2015, more than 1700 films have been submitted from over 60 countries, including dozens from Latin America and Spain. The competition has become so popular that CineSpace films with Spanish subtitles have been presented during film festivals in several Mexican cities, where NASA representatives address audiences and answer questions about the films, space, technology, and NASA programs. This outreach encourages students and the public to pursue careers in STEM fields. Many of the films are used in schools, museums, and other institutions for educational purposes globally, showcasing unique space imagery and helping spread NASA's message internationally.",
+    "relevant_chunk_ids": ["20190032337.pdf_27"]
+  },
+  {
+    "id": 110,
+    "question": "What is the significance of the AztechSat-1 CubeSat collaboration between NASA and AEM?",
+    "expected_answer": "The AztechSat-1 CubeSat collaboration between NASA and AEM (Mexican Space Agency) is significant as it exemplifies bilateral collaboration between the agencies. It provides NASA with a valuable opportunity to test economical, commercial off-the-shelf components that may be useful in future space missions. For AEM, it offers the opportunity to develop requirements, manufacture a prototype, ground test the prototype, deliver a flight certified unit, lead mission operations, and share flight data with NASA. This type of Space Act Agreement demonstrates how international partnerships can benefit both agencies while advancing space technology development and testing.",
+    "relevant_chunk_ids": ["20190032337.pdf_26"]
+  },
+  {
+    "id": 111,
+    "question": "What is the celestial sky's importance as a calibration reference for L-band radiometers?",
+    "expected_answer": "The celestial sky is an excellent calibration reference at L-band (1.4 GHz) because it is well-known, temporally stable, and spatially homogeneous over regions large compared to the resolution of satellite antennas like SMAP's. This makes it ideal for determining the absolute accuracy and long-term temporal stability of L-band radiometers. The celestial sky provides a consistent reference point that allows scientists to evaluate and improve radiometer accuracy over the lifetime of the mission.",
+    "relevant_chunk_ids": ["Dinnat IGARSS 2022 Kuala Lumpur_final 1.pdf_2"]
+  },
+  {
+    "id": 112,
+    "question": "How does the MEDPRAT tool evaluate the cost of medical resources for space missions?",
+    "expected_answer": "The MEDPRAT tool evaluates the cost of medical resources using a function that considers both mass and volume: Cost = Cmass × Mass + Cvolume × Volume, where Cmass = 1 and Cvolume = 4. This weighting reflects the premium placed on volume in spacecraft design, where volume constraints are often more limiting than mass constraints. The cost function allows the tool to balance the physical footprint of medical resources against their potential benefits when optimizing medical resource allocation for space missions.",
+    "relevant_chunk_ids": ["20200001532.pdf_17"]
+  },
+  {
+    "id": 113,
+    "question": "What are the challenges in predicting turbulent fluid flows according to NASA research?",
+    "expected_answer": "According to NASA research, accurate prediction of turbulent fluid flows remains one of the key challenges in fluid dynamics. The most often used approach, solving the Reynolds-averaged Navier-Stokes (RANS) equations with associated turbulence models, yields good results for attached flows but typically fails for separated flows and free shear flows. Scale resolving simulations like large-eddy simulation (LES) and direct numerical simulation (DNS) offer improved accuracy but at a significant increase in simulation time and cost. For this reason, RANS approaches are expected to remain the primary solution technique for years to come, with LES and DNS reserved for cases where their increased accuracy is needed and cost is not an issue.",
+    "relevant_chunk_ids": ["20170007700.pdf_2"]
+  },
+  {
+    "id": 114,
+    "question": "What are the unclosed terms in the Reynolds-averaged Navier-Stokes equations?",
+    "expected_answer": "The Reynolds-averaged Navier-Stokes equations have undetermined terms in both the momentum and energy equations that must be 'closed' with a model. The turbulence model is typically developed for the unclosed momentum terms, the turbulent Reynolds stresses. These models vary in complexity from simple algebraic relations to seven equation full Reynolds stress models. The vast majority of analyses use one- or two-equation models based on the Boussinesq approximation, which relates the Reynolds stress tensor to the mean strain rate tensor through a turbulent eddy viscosity. The unclosed term in the energy equation is the turbulent heat flux vector, which is typically modeled using the gradient diffusion assumption.",
+    "relevant_chunk_ids": ["20170007700.pdf_2", "20170007700.pdf_3"]
+  },
+  {
+    "id": 115,
+    "question": "How does the density weighted time averaging procedure work in compressible RANS equations?",
+    "expected_answer": "The Reynolds-averaged Navier-Stokes equations in compressible form are derived from the standard form of the equations by a density weighted time averaging procedure. This procedure, known as Favre averaging, defines the time-averaged velocity as ûi = (1/ρτ)∫(ρui)dt, where the integration is performed over a time interval τ. The instantaneous variables are decomposed into a mean and fluctuating part, such as velocity being decomposed as ui = ûi + u'i. This density-weighted approach helps handle the additional complexity that arises in compressible flows compared to incompressible flows.",
+    "relevant_chunk_ids": ["20170007700.pdf_3"]
+  },
+  {
+    "id": 116,
+    "question": "What experimental set points were computed in the NASA jet flow study?",
+    "expected_answer": "Three cases from the experimental test matrix were computed corresponding to set points (SP) 3, 23, and 27. Set points 3 and 23 represent a cold and hot jet at the same acoustic Mach number (Ma = Uj/a∞) of 0.5, and exit velocity of 558 ft/s. Set point 27 represents a higher speed jet (Ma = 0.9) at the same temperature ratio as set point 23. The ambient conditions were set to standard atmospheric pressure and temperature, with a small forward velocity, M = 0.05, used to maintain well-posed farfield boundary conditions.",
+    "relevant_chunk_ids": ["20170007700.pdf_6"]
+  },
+  {
+    "id": 117,
+    "question": "How is a characteristic time unit defined in jet flow simulations?",
+    "expected_answer": "A characteristic time unit in jet flow simulations is defined as t* = (tDj)/Uj. This represents the time it takes for a particle of fluid moving at the jet velocity to traverse one jet diameter. In the NASA study, the solution was initialized to the ambient state and then run for approximately 60t* to establish a fully turbulent jet flow, free of initial transients.",
+    "relevant_chunk_ids": ["20170007700.pdf_6"]
+  },
+  {
+    "id": 118,
+    "question": "What is the purpose of infiltration in material testing as described in NASA research?",
+    "expected_answer": "Infiltration in material testing is used to determine material properties by filling the porous structure with a fluid (in this case, water). The process removes the dependence on infiltrant density in the measurements. In the NASA research described, infiltration was performed under vacuum to avoid trapping air within the sample, which could affect the accuracy of the measurements.",
+    "relevant_chunk_ids": ["20180000909.pdf_75"]
+  },
+  {
+    "id": 119,
+    "question": "What were the findings from the density measurements of through thickness and in-plane samples?",
+    "expected_answer": "The density measurements of through thickness and in-plane samples showed that the data are generally linear as predicted, except for two potential outliers. Both through thickness and in-plane samples appeared to follow the same linear trend, though they were grouped by density. Through thickness samples possessed lower densities than the in-plane samples. This was likely a result of taking like samples from the same region of the felt.",
+    "relevant_chunk_ids": ["20180000909.pdf_76"]
+  },
+  {
+    "id": 120,
+    "question": "What optical setup is used for detector array testing in the NASA study?",
+    "expected_answer": "The optical setup for detector array testing uses a simple combination of lens, mirrors, and filters. The spot optics are arranged to provide an on-axis sub-10 micron spot on the detector array by imaging a minified image of a 25 micron sized pinhole located at the exit port of the second integrating sphere. The optics are held at a fixed distance and normal to the detector plane in a baffled and sealed U channel to minimize scattered light. The side port optics are designed to provide an image of one of the windowed ports of the vacuum chamber when a mirror is in place. With the U channel design, researchers can switch between uniform illumination (no optics), spot illumination, or side port imaging mode by simply switching out the top of the U channel.",
+    "relevant_chunk_ids": ["20190002334.pdf_9"]
+  },
+  {
+    "id": 121,
+    "question": "What was observed when testing the H4RG-10 detector at room temperature?",
+    "expected_answer": "When testing the H4RG-10 detector at room temperature on the bench, all outputs were understandably saturated. However, researchers performed a difference between two subsequent reads to form a correlated double sample. The resulting image showed the 32 output channel pattern was readily visible, but the dominant features were from the electronics and out-of-range saturated pixel values.",
+    "relevant_chunk_ids": ["20190002334.pdf_10"]
+  },
+  {
+    "id": 122,
+    "question": "What are the planned tests for the H4RG-10 detector test bed?",
+    "expected_answer": "The planned tests for the H4RG-10 detector test bed include a series of exposures varying flux to allow sensitive measurements of reciprocity failure and persistence, and to explore the relationship between the two. These data will supplement previous work that found a new way to potentially calibrate infrared arrays using Legendre polynomials as an orthogonal basis, helping to tease out the dependence of different Legendre coefficients on detector characteristics. The second generation of tests will use optics to examine interpixel capacitance and other pixel-level effects.",
+    "relevant_chunk_ids": ["20190002334.pdf_11"]
+  },
+  {
+    "id": 123,
+    "question": "What information sets are included in the UAV operations monitoring framework?",
+    "expected_answer": "The UAV operations monitoring framework accommodates multiple information sets, including: 1) Operational variables such as a flight plan defined by way-points and corresponding estimated times of arrival (ETAs), and vehicle's basic mass and geometric properties; 2) Measurements of system's variables, which at minimum include position coordinates of the vehicle during flight (from either raw GPS measurements or filtered estimations); and 3) External variables like environmental conditions, changes in operational plans, or external factors that may affect vehicle dynamics or its capability to operate in the airspace (wind field, temperature, weather conditions, obstacles, etc.). The framework also includes an input model with a trajectory generation module that transforms the flight plan into kinematic profiles.",
+    "relevant_chunk_ids": ["20190027599.pdf_3"]
+  },
+  {
+    "id": 124,
+    "question": "What reference frames are used for UAV position monitoring?",
+    "expected_answer": "The reference frames used for UAV position monitoring are based on the WGS84 ellipsoid and include: 1) The geodetic reference frame using latitude (φ), longitude (λ), and altitude (ζ) coordinates; 2) The Earth-centric, Earth-fixed (ECEF) frame with origin at the center of the Earth; and 3) The local tangent plane (also called local, Earth-fixed ENU Cartesian frame). The geodetic and Cartesian frames are linked to each other through the ECEF frame, with equations allowing conversion of position coordinates between the different reference systems.",
+    "relevant_chunk_ids": ["20190027599.pdf_4"]
+  },
+  {
+    "id": 125,
+    "question": "How is the UAV modeled in the 6 DoF dynamic simulation?",
+    "expected_answer": "The UAV is modeled using a simple, 6 degrees of freedom (DoF) dynamic model described through Newton-Euler equations. The model is accurate enough to reproduce the fundamental dynamics of the vehicle and provide predictions of the vehicle's kinematics (position, speed, and acceleration) and thrust requirements. The UAV inertia is described by lumped masses, with a central body sphere and arms extending radially to the rotors, and the controller is a simplified linear quadratic regulator (LQR). This approach requires minimal tuning and is suitable for implementation in generalized monitoring frameworks for various UAV types.",
+    "relevant_chunk_ids": ["20190027599.pdf_5"]
+  },
+  {
+    "id": 126,
+    "question": "What is the purpose of NASA's Ciencia website?",
+    "expected_answer": "Ciencia is a Spanish-language website focused on NASA's scientific discoveries. It provides new weekly content on Earth science, the Universe, research conducted on board the International Space Station, and NASA Hispanic employees. The website also serves as a hub for finding other NASA pages in Spanish, making NASA's scientific content more accessible to Spanish-speaking audiences worldwide.",
+    "relevant_chunk_ids": ["20190032337.pdf_28"]
+  },
+  {
+    "id": 127,
+    "question": "How does NASA use social media to engage Spanish-speaking audiences?",
+    "expected_answer": "NASA engages Spanish-speaking audiences through multiple social media platforms. The agency launched its first Spanish social media account, Twitter account @NASA_ES, in 2011, followed by YouTube in September 2018 and Instagram in July 2019. The Twitter account has been particularly successful with 442,000 followers as of October 2019. NASA shares content that focuses on people or countries, anniversaries, striking images, and material from NASA's flagship account. The agency has also collaborated with popular figures like Latina singer Karol G to promote its Spanish-language social media presence. Content is often distributed by U.S. embassies in Spanish-speaking countries, and the tone of replies tends to be more positive than on some other NASA accounts.",
+    "relevant_chunk_ids": ["20190032337.pdf_29"]
+  },
+  {
+    "id": 128,
+    "question": "What are the demographics of NASA's Spanish-language Instagram account?",
+    "expected_answer": "NASA's Spanish-language Instagram account (NASA_ES) targets a younger demographic. As of October 2, 2019, 50% of its over 33,000 followers were under 25 years of age. The gender distribution of these followers was almost balanced (47% women, 53% men), and almost half of them were located in Colombia, Mexico, Spain, Argentina, and Chile.",
+    "relevant_chunk_ids": ["20190032337.pdf_29"]
+  },
+  {
+    "id": 129,
+    "question": "How does the MEDPRAT tool suite assist in medical resource planning for space missions?",
+    "expected_answer": "The MEDPRAT tool suite assists in medical resource planning for space missions by enabling systematic trade study evaluations and informing research priorities. For a given Design Reference Mission (DRM) and list of available medical resources, it can identify a nearly optimal set of medical resources that meets notional targets while balancing crew health and safety against limited resource capabilities. The tool can evaluate technology development trades to determine if reducing the footprint of heavier items would be beneficial. It helps identify which medical capabilities provide the greatest risk reduction benefit, informs prioritization of research and technology development, and enables human health considerations to be integrated early in mission planning and vehicle design.",
+    "relevant_chunk_ids": ["20200001532.pdf_17", "20200001532.pdf_19", "20200001532.pdf_20"]
+  },
+  {
+    "id": 130,
+    "question": "What is the four-part simulation approach used by MEDPRAT for technology development trades?",
+    "expected_answer": "MEDPRAT uses a four-part simulation approach for technology development trades: 1) The item(s) under consideration are left at 100% footprint, and the set-selector includes/excludes them based on cost/benefit merit; 2) A simulation is run with the items at original benefit but zero mass and volume, defining maximum achievable benefit with any technology development; 3) The set-selector is run with footprint reduced to a user-specified target amount and items forced to be included; 4) The previous simulation is repeated with the set selector given the option to include/exclude based on merit. By comparing outcomes of all four simulations, one can determine the worth of pursuing technology development to reduce the footprint of heavier items.",
+    "relevant_chunk_ids": ["20200001532.pdf_17"]
+  },
+  {
+    "id": 131,
+    "question": "What was the solution implemented to reduce fuel system oscillations during the startup phase of the Space Shuttle Main Engine?",
+    "expected_answer": "Fuel system oscillations during the startup phase of the Space Shuttle Main Engine (SSME) were reduced by issuing a 10% 'notch' closing command to the fuel preburner oxidizer valve (FPOV) at a specified time in the startup sequence. After the main fuel valve starts to open, three oxidizer valves in the SSME are separately subjected to a series of position commands to precisely control oxidizer system priming times. The FPOV is the first valve commanded, and after a 0.100 second delay, it is ramped to 56 percent open at its maximum skew rate. At 0.72 seconds, the FPOV is given this 'notch' command to close about 10%, which helps reduce the two-cycle-per-second oscillations in the fuel system.",
+    "relevant_chunk_ids": ["https://llis.nasa.gov/lesson/966"]
+  },
+  {
+    "id": 132,
+    "question": "What were the significant flaws in the Orbital Space Plane (OSP) Program's implementation approach regarding safety?",
+    "expected_answer": "The significant flaws in the OSP Program's implementation approach regarding safety included: 1) Misunderstanding of the S&MA organizational authority, with confusion created by having a senior S&MA expert on the Program staff reporting to the Program Manager; 2) De-emphasizing S&MA products as contract deliverables due to program acceleration, with these products not being part of formal review at the SDR for baselining; 3) Inadequate S&MA requirements in the Level 2 requirements document and insufficient attention to S&MA data requirements in contracts; 4) Contractors' inability to develop appropriate Level 3 and 4 S&MA requirements due to inadequate Level 2 requirements; and 5) Incomplete understanding of the Government's human space flight expectations by the Contractor workforce, with no discipline working groups to provide a forum for mutual understanding of S&MA requirements and processes.",
+    "relevant_chunk_ids": ["https://llis.nasa.gov/lesson/1511"]
+  },
+  {
+    "id": 133,
+    "question": "What safety hazard was identified with the Weller Model TCP12P Soldering Iron?",
+    "expected_answer": "Two previously undocumented failure modes were observed with the Weller Model TCP12P Soldering Iron. The worst of these involves the mechanical temperature control switch sticking in the 'Full On' mode, causing the soldering iron to go into a 'Thermal Runaway' condition. This allows the iron to reach temperatures of approximately 1200°F at the heater/tip interface, which could result in possible fire, injury, and/or damage to any article being processed. The second, more minor failure mode involves the Ferromagnetic Switch sticking in a 'Full Off' mode, meaning the tool will not heat at all. NASA issued a Government Industry Data Exchange Program (GIDEP) ALERT, #H1-A-04-01 regarding this hazard.",
+    "relevant_chunk_ids": ["https://llis.nasa.gov/lesson/1389"]
+  },
+  {
+    "id": 134,
+    "question": "What incident occurred with an incorrectly installed fitting and what was the lesson learned?",
+    "expected_answer": "On July 12, 1999, a mechanic was performing a verification leak test using a 2900 psig gaseous nitrogen pressure source on a 1/2\" hand valve when an incorrect fitting blew out. The mechanic erroneously installed a 1/2\" AN male fitting into the 1/2\" NPT female port of the valve body. The fitting was attached to a high pressure flex hose when the failure occurred. Fortunately, the flex hose had Kellum restraints that prevented damage to equipment and injury to personnel. The lesson learned was that identification and installation of fittings requires detailed attention. During the investigation, it was found that the appearance of the 1/2\" NPT female port was tapered, with a tapered/finished area on the port face very similar to an AN port face, making it easy to confuse. Careful inspection of the fitting and port is required to prevent such incidents.",
+    "relevant_chunk_ids": ["https://llis.nasa.gov/lesson/636"]
+  },
+  {
+    "id": 135,
+    "question": "What approach did NASA use for testing Space Shuttle Main Engine components and why was it effective?",
+    "expected_answer": "NASA used an Integrated Subsystem Test Bed approach for testing Space Shuttle Main Engine (SSME) components instead of individual component testing. While the SSME components were originally planned to be tested on a 'bobtail' engine, NASA decided to add a shortened version of the thrust chamber (with an area ratio of 35:1 versus the flight configuration requirements of 77.5 to 1) to provide integrated testing that takes into account component interactions. This approach speeds up the development process and produces a high reliability engine by accounting for subsystem interactions. The test engine could throttle to 50% without requiring a vacuum chamber. The process involved establishing component design through analysis, engineering design, and interface engineering, then building an integrated test bed engine that takes into account all environmental, interface, and operational factors, followed by meticulously planning and conducting integrated engine test bed firings.",
+    "relevant_chunk_ids": ["https://llis.nasa.gov/lesson/960"]
+  },
+  {
+    "id": 136,
+    "question": "What design improvement was made to the Solid Rocket Motor case-to-nozzle joint after the Challenger accident?",
+    "expected_answer": "After the Challenger accident, a pressurizing slot was designed and implemented in the case-to-nozzle joints in large solid propellant rocket motors between nozzle and case insulation joints. This improvement involved providing a circumferential slot in case insulation near the interface between case and nozzle insulation. A circumferential flow baffle was installed in this slot to prevent insulation erosion, and a stress-relieving radius former was placed at the base of this slot to prevent potential insulation cracking. This design change addressed the potential weakness and flow paths for hot gases through the case-to-nozzle joint that could cause a catastrophic event similar to that encountered in Challenger. Since this implementation, 86 Solid Rocket Motors have flown successfully and 10 full-scale test motors have been tested with no failures and no evidence of joint deterioration or burn-through.",
+    "relevant_chunk_ids": ["https://llis.nasa.gov/lesson/946"]
+  },
+  {
+    "id": 137,
+    "question": "What sealing improvement was made to the Solid Rocket Motor nozzle internal joints after the Challenger accident?",
+    "expected_answer": "After the Challenger accident, dual 'O' ring seals with leak check ports in between were implemented for all internal nozzle joints in the Solid Rocket Motor. This design provides a primary and secondary seal for all internal nozzle joints, with a leak check port in between the two seals to confirm seal integrity. This improvement addressed the potential weakness and flow paths for hot gases through the joints that could cause a catastrophic event similar to that encountered in Challenger. Since this implementation, 86 Solid Rocket Motors have flown successfully and 10 full-scale test motors have been tested with no failures and no evidence of joint deterioration or burn-through, indicating that the recurrence control has been successful.",
+    "relevant_chunk_ids": ["https://llis.nasa.gov/lesson/957"]
+  },
+  {
+    "id": 138,
+    "question": "What issue was identified with B-nuts in fluid systems on Skylab and what was the recommendation?",
+    "expected_answer": "A coolant leak developed on Skylab which was attributed to B-nuts. The investigation found that B-nuts are difficult to torque properly and are prone to leakage. The recommendation was to avoid the use of B-nuts in fluid systems altogether. The lesson learned states that 'If B-nuts are not used, there is no B-nut problem' and that other connection methods have been shown to be superior.",
+    "relevant_chunk_ids": ["https://llis.nasa.gov/lesson/323"]
+  },
+  {
+    "id": 139,
+    "question": "What issue was identified with Management Reserve in the Constellation Program and how should it have been handled?",
+    "expected_answer": "The Constellation Program (CxP) provided direction that there would be no Management Reserve (MR) maintained by their projects, which contradicted the CxP Earned Value Management (EVM) System Description definition and use of MR. Instead, CxP maintained reserves at the Program level, requiring Projects to request additional budget for any changes within scope to the Project but out of scope to the Project Control Accounts. In reality, CxP maintained a funding reserve, not a budget reserve. This direction violated project management best practices and the guidelines of the ANSI/EIA-748 Earned Value Management Systems. The lesson learned was that all projects have some element of risk and should identify an MR contingency account for unplanned activity within the project scope. Projects should budget for and report MR to manage project risks and comply with the ANSI/EIA-748. This allows for handling unanticipated control account scope such as changes in rates or schedules that may make budgets assigned to a Project Control Account Manager inadequate.",
+    "relevant_chunk_ids": ["https://llis.nasa.gov/lesson/3616"]
+  },
+  {
+    "id": 140,
+    "question": "What was the recommendation for Safety and Mission Assurance (S&MA) involvement in NASA programs based on the Orbital Space Plane experience?",
+    "expected_answer": "Based on the Orbital Space Plane experience, the recommendation was that safety must be NASA's highest priority, and S&MA managers and support personnel should be involved at the onset of program development. Staffing projections should be commensurate with the roles and responsibilities as defined by the program requirements. The lesson emphasized that the absence of clearly defined success criteria for Program reviews is detrimental to the Program end products and potentially provides a negative impact to safety. It warned against overlooking S&MA requirements and noted that without functioning working groups, contractors' interpretation and implementation of S&MA requirements were questioned and debated at each program review.",
+    "relevant_chunk_ids": ["https://llis.nasa.gov/lesson/1511"]
+  },
+  {
+    "id": 141,
+    "question": "What safety controls should be implemented when using soldering irons based on NASA's experience?",
+    "expected_answer": "Based on NASA's experience with soldering iron failures, appropriate hazard controls should be in place to prevent a catastrophic event in case a thermal runaway condition occurs. For flight systems that may be potentially affected by this hazard, additional controls should be implemented, including material testing which includes verification by inducing a thermal runaway failure and recording results. A tool holder that surrounds the heated portion of the soldering iron is available, and with this holder in place, the overheat condition should be generally harmless to the working environment. The lesson emphasizes that soldering irons can experience undocumented failure modes that result in significant damage, including the potential for serious fires, so proper precautions are essential.",
+    "relevant_chunk_ids": ["https://llis.nasa.gov/lesson/1389"]
+  },
+  {
+    "id": 142,
+    "question": "What training was recommended after the incident with the incorrectly installed fitting?",
+    "expected_answer": "After the incident where a mechanic erroneously installed a 1/2\" AN male fitting into a 1/2\" NPT female port causing a blowout during a high-pressure test, the recommendation was to retrain all technicians in the identification and installation of pressure fittings. Additionally, it was recommended to review the close call at the next safety meeting to ensure all personnel were aware of the potential hazard and how to avoid it. The lesson emphasized that careful inspection of fittings and ports is required due to the similar appearance of different types of fittings.",
+    "relevant_chunk_ids": ["https://llis.nasa.gov/lesson/636"]
+  },
+  {
+    "id": 143,
+    "question": "What was the key benefit of using an Integrated Subsystem Test Bed for the Space Shuttle Main Engine?",
+    "expected_answer": "The key benefit of using an Integrated Subsystem Test Bed for the Space Shuttle Main Engine was that it took into account component interactions, which speeds up the development process and produces a high reliability engine. This approach was superior to individual component testing because it considered all the environmental, interface, and operational factors that affect how components work together as a system. The Space Shuttle Main Engines operated successfully in over 68 flights, with over 200 flight performances of individual engines, demonstrating the effectiveness of this integrated testing approach in sustaining reliable performance.",
+    "relevant_chunk_ids": ["https://llis.nasa.gov/lesson/960"]
+  },
+  {
+    "id": 144,
+    "question": "How did the design changes to the Solid Rocket Motor after the Challenger accident improve safety?",
+    "expected_answer": "The design changes to the Solid Rocket Motor after the Challenger accident improved safety by addressing potential weaknesses and flow paths for hot gases through the joints that could cause catastrophic failures. Specifically, a pressurizing slot with a circumferential flow baffle was added to the case-to-nozzle joint to prevent insulation erosion, and a stress-relieving radius former was placed at the base of this slot to prevent potential insulation cracking. Additionally, dual 'O' ring seals with leak check ports in between were implemented for all internal nozzle joints to provide redundancy and allow for seal integrity verification. These improvements have proven effective, as 86 Solid Rocket Motors have flown successfully and 10 full-scale test motors have been tested since Challenger with no failures and no evidence of joint deterioration or burn-through.",
+    "relevant_chunk_ids": ["https://llis.nasa.gov/lesson/946", "https://llis.nasa.gov/lesson/957"]
+  },
+  {
+    "id": 145,
+    "question": "What is the proper way to handle Management Reserve in NASA projects according to the lesson learned?",
+    "expected_answer": "According to the lesson learned, the proper way to handle Management Reserve (MR) in NASA projects is to establish and maintain MR outside the Performance Measurement Baseline (PMB) to provide budget for unknown-unknowns or known-unknowns. All projects have some element of risk and should identify an MR contingency account for unplanned activity within the project scope. Projects should budget for and report MR to manage project risks and comply with the ANSI/EIA-748 Earned Value Management Systems standards. The Agency's EVM System Description Document should clearly define MR and Undistributed Budget (UB) to include their uses. Personnel should be trained on the difference between project budget management reserve, Unallocated Future Expenses, and funding reserves. Project budget logs should accurately reflect the budget traceability for all budgets inclusive of MR and agree with the authorized Project Budget Base, and project EVM reports should reflect MR trends and explain uses.",
+    "relevant_chunk_ids": ["https://llis.nasa.gov/lesson/3616"]
+  },
+  {
+    "id": 146,
+    "question": "What was the role of the special engineering and management team in the Space Shuttle Main Engine testing?",
+    "expected_answer": "The role of the special engineering and management team in the Space Shuttle Main Engine testing was to integrate the components and to plan the test program. This team was responsible for establishing component design through analysis, engineering design, and interface engineering, then building an integrated test bed engine that takes into account all environmental, interface, and operational factors. They also meticulously planned and conducted integrated engine test bed firings. Their work was crucial to the success of the Integrated Subsystem Test Bed approach, which produced a high reliability engine by accounting for subsystem interactions rather than testing components individually.",
+    "relevant_chunk_ids": ["https://llis.nasa.gov/lesson/960"]
+  },
+  {
+    "id": 147,
+    "question": "What was the significance of the Kellum restraints in the incorrectly installed fitting incident?",
+    "expected_answer": "In the incident where a mechanic erroneously installed a 1/2\" AN male fitting into a 1/2\" NPT female port of a valve body, the Kellum restraints on the high pressure flex hose played a crucial safety role. When the incorrect fitting blew out during a verification leak test using a 2900 psig gaseous nitrogen pressure source, these restraints prevented damage to equipment and injury to personnel. This highlights the importance of using appropriate safety devices like Kellum restraints when working with high-pressure systems, as they can mitigate the consequences of failures even when human errors occur in fitting installation.",
+    "relevant_chunk_ids": ["https://llis.nasa.gov/lesson/636"]
+  },
+  {
+    "id": 148,
+    "question": "What was the specific design of the test engine used in the Space Shuttle Main Engine Integrated Subsystem Test Bed?",
+    "expected_answer": "The Space Shuttle Main Engine Integrated Subsystem Test Bed used a test engine that was originally planned as a 'bobtail' engine for component testing. However, to provide integrated testing that takes into account component interactions, NASA decided to add a shortened version of the thrust chamber. This shortened version had an area ratio of 35:1 versus the flight configuration requirements of 77.5 to 1. This design allowed the test engine to throttle to 50% without requiring a vacuum chamber, making it practical for ground testing while still providing valuable data on how the engine components would interact in an integrated system.",
+    "relevant_chunk_ids": ["https://llis.nasa.gov/lesson/960"]
+  },
+  {
+    "id": 149,
+    "question": "What was the timing sequence for the fuel preburner oxidizer valve (FPOV) during Space Shuttle Main Engine startup?",
+    "expected_answer": "During Space Shuttle Main Engine startup, after the main fuel valve starts to open, the fuel preburner oxidizer valve (FPOV) is the first of three oxidizer valves to be commanded. After a delay of 0.100 seconds, the FPOV is ramped to 56 percent open at its maximum skew rate. At 0.72 seconds, the FPOV is given a 'notch' command to close about 10%. Just prior to the third fuel system oscillation, a second 'notch' command is given. This precisely controlled sequence helps reduce the two-cycle-per-second oscillations in the fuel system during the startup phase.",
+    "relevant_chunk_ids": ["https://llis.nasa.gov/lesson/966"]
+  },
+  {
+    "id": 150,
+    "question": "What was the impact of the Challenger accident on the design review process for the Solid Rocket Motor?",
+    "expected_answer": "The Challenger accident (Space Shuttle Flight #51L) triggered a detailed review of all of the joints in the Solid Rocket Motor. Analyses showed potential weaknesses and flow paths for hot gases through the case-to-nozzle joint that could cause a catastrophic event similar to that encountered in Challenger. This led to significant design improvements, including adding a pressurizing slot with a circumferential flow baffle in the case-to-nozzle joints and implementing dual 'O' ring seals with leak check ports for all internal nozzle joints. These design changes have proven effective, as 86 Solid Rocket Motors have flown successfully and 10 full-scale test motors have been tested since Challenger with no failures and no evidence of joint deterioration or burn-through.",
+    "relevant_chunk_ids": ["https://llis.nasa.gov/lesson/946", "https://llis.nasa.gov/lesson/957"]
+  }
+]

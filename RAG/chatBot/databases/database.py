@@ -1,5 +1,4 @@
 import sqlite3
-from supporting_functions import *
 
 ######################### SETUP FUNCTIONS ############################################################
 

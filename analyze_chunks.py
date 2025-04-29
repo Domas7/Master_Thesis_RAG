@@ -12,7 +12,7 @@ os.makedirs('statistics', exist_ok=True)
 # Load multiple JSON files
 json_files = [
     'reprocessed_section_chunks/reprocessed_section_chunks_final.json',
-    'reprocessed_section_chunks_2/reprocessed_section_chunks_2_final2.json',
+    'reprocessed_section_chunks_2/reprocessed_section_chunks_2_final.json',
     'reprocessed_section_chunks_3/reprocessed_section_chunks_3_final.json'
 ]
 
@@ -205,30 +205,114 @@ fig.suptitle('Distribution of Chunk Lengths in Tokens', fontsize=16)
 for i, (file_key, lengths) in enumerate(chunk_lengths_by_file.items()):
     # Convert to tokens
     token_lengths = [length / 4 for length in lengths]  # Estimate tokens (4 chars ≈ 1 token)
-    token_cap = 2000
-    capped_token_lengths = [min(length, token_cap) for length in token_lengths]
+    
+    # Filter out chunks with fewer than 50 tokens (likely errors)
+    filtered_token_lengths = [length for length in token_lengths if length >= 50]
+    
+    # Filter to only include tokens up to 2000 (instead of capping)
+    displayed_token_lengths = [length for length in filtered_token_lengths if length <= 2000]
+    
+    # Count how many were above the cap
+    above_cap_count = len(filtered_token_lengths) - len(displayed_token_lengths)
     
     # Plot on the corresponding subplot
-    axes[i].hist(capped_token_lengths, bins=20, alpha=0.7, color='teal')
-    axes[i].set_xlabel('Estimated Tokens (capped at 2,000)')
+    axes[i].hist(displayed_token_lengths, bins=20, alpha=0.7, color='teal')
+    axes[i].set_xlabel('Estimated Tokens (up to 2,000)')
     axes[i].set_ylabel('Frequency')
     axes[i].set_title(f'File {i+1}: {file_key}')
     axes[i].grid(True, alpha=0.3)
+    
+    # Add text showing how many chunks were filtered
+    filtered_count = len(token_lengths) - len(filtered_token_lengths)
+    if filtered_count > 0 or above_cap_count > 0:
+        filter_text = []
+        if filtered_count > 0:
+            filter_text.append(f"Filtered out {filtered_count} chunks with <50 tokens")
+        if above_cap_count > 0:
+            filter_text.append(f"Not shown: {above_cap_count} chunks with >2000 tokens")
+        
+        axes[i].text(0.05, 0.95, "\n".join(filter_text), 
+                    transform=axes[i].transAxes, fontsize=9, 
+                    verticalalignment='top', bbox=dict(boxstyle='round', facecolor='white', alpha=0.7))
 
 # Process combined data for the last subplot
 token_lengths = [length / 4 for length in chunk_lengths]  # Estimate tokens (4 chars ≈ 1 token)
-token_cap = 2000
-capped_token_lengths = [min(length, token_cap) for length in token_lengths]
+
+# Filter out chunks with fewer than 10 tokens (likely errors)
+filtered_token_lengths = [length for length in token_lengths if length >= 50]
+
+# Filter to only include tokens up to 2000 (instead of capping)
+displayed_token_lengths = [length for length in filtered_token_lengths if length <= 2000]
+
+# Count how many were above the cap
+above_cap_count = len(filtered_token_lengths) - len(displayed_token_lengths)
 
 # Plot on the last subplot
-axes[3].hist(capped_token_lengths, bins=20, alpha=0.7, color='teal')
-axes[3].set_xlabel('Estimated Tokens (capped at 2,000)')
+axes[3].hist(displayed_token_lengths, bins=20, alpha=0.7, color='teal')
+axes[3].set_xlabel('Estimated Tokens (up to 2,000)')
 axes[3].set_ylabel('Frequency')
 axes[3].set_title('All Files Combined')
 axes[3].grid(True, alpha=0.3)
 
+# Add text showing how many chunks were filtered
+filtered_count = len(token_lengths) - len(filtered_token_lengths)
+if filtered_count > 0 or above_cap_count > 0:
+    filter_text = []
+    if filtered_count > 0:
+        filter_text.append(f"Filtered out {filtered_count} chunks with <50 tokens")
+    if above_cap_count > 0:
+        filter_text.append(f"Not shown: {above_cap_count} chunks with >2000 tokens")
+    
+    axes[3].text(0.05, 0.95, "\n".join(filter_text), 
+                transform=axes[3].transAxes, fontsize=9, 
+                verticalalignment='top', bbox=dict(boxstyle='round', facecolor='white', alpha=0.7))
+
 plt.tight_layout(rect=[0, 0, 1, 0.95])  # Adjust for the suptitle
 plt.savefig('statistics/chunk_token_distribution_combined.png')
+plt.close()
+
+# Create additional figures for combined data with different token caps
+token_caps = [500, 1000, 1500, 2000]
+token_lengths = [length / 4 for length in chunk_lengths]  # Estimate tokens (4 chars ≈ 1 token)
+filtered_token_lengths = [length for length in token_lengths if length >= 50]
+
+# Create a figure with 4 subplots for different token caps
+plt.figure(figsize=(20, 12))
+fig, axes = plt.subplots(2, 2, figsize=(20, 12))
+fig.suptitle('Distribution of Chunk Lengths in Tokens (All Files Combined)', fontsize=16)
+
+# Flatten axes for easier iteration
+axes = axes.flatten()
+
+for i, cap in enumerate(token_caps):
+    # Filter to only include tokens up to the current cap
+    displayed_token_lengths = [length for length in filtered_token_lengths if length <= cap]
+    
+    # Count how many were above the cap
+    above_cap_count = len(filtered_token_lengths) - len(displayed_token_lengths)
+    
+    # Plot on the corresponding subplot
+    axes[i].hist(displayed_token_lengths, bins=20, alpha=0.7, color='teal')
+    axes[i].set_xlabel(f'Estimated Tokens (up to {cap})')
+    axes[i].set_ylabel('Frequency')
+    axes[i].set_title(f'Token Cap: {cap}')
+    axes[i].grid(True, alpha=0.3)
+    
+    # Add text showing how many chunks were filtered
+    filtered_count = len(token_lengths) - len(filtered_token_lengths)
+    if filtered_count > 0 or above_cap_count > 0:
+        filter_text = []
+        if filtered_count > 0:
+            filter_text.append(f"Filtered out {filtered_count} chunks with <50 tokens")
+        if above_cap_count > 0:
+            filter_text.append(f"Not shown: {above_cap_count} chunks with >{cap} tokens")
+        
+        axes[i].text(0.05, 0.95, "\n".join(filter_text), 
+                    transform=axes[i].transAxes, fontsize=9, 
+                    verticalalignment='top', bbox=dict(boxstyle='round', facecolor='white', alpha=0.7))
+
+plt.tight_layout(rect=[0, 0, 1, 0.95])  # Adjust for the suptitle
+plt.savefig('statistics/chunk_token_distribution_different_caps.png')
 plt.close()
 
 # Create a summary dataframe for more detailed analysis

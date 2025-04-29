@@ -19,6 +19,8 @@ from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain.globals import set_llm_cache
 from langchain.cache import InMemoryCache
 from langchain_openai import OpenAIEmbeddings, ChatOpenAI
+import requests
+import openai
 
 # Set up logging configuration
 logging.basicConfig(
@@ -38,7 +40,7 @@ logger.info("Environment variables loaded")
 # Initialize cache
 set_llm_cache(InMemoryCache())
 
-# Define the NASA documents prompt template
+# Define the NASA documents prompt template with source citation
 nasa_prompt = ChatPromptTemplate.from_template("""
 You are an expert in analyzing NASA documents and mission data. Based on the following context, please provide concise answers derived from the context.
 
@@ -50,17 +52,26 @@ Format:
 1. Brief Answer
 2. Key Points
 3. Relevant Mission Details (if applicable)
+
+DO NOT include a Sources section in your response. The system will add this automatically based on the actual documents used.
 """)
 
 class RAGModel:
-    def __init__(self, chunks_dir="reprocessed_section_chunks", index_dir="RAG/chatBot/vector_indices"):
-        self.chunks_dir = chunks_dir
-        self.index_dir = index_dir
+    def __init__(self, chunks_dir=["../../reprocessed_section_chunks", 
+                                  "../../reprocessed_section_chunks_2", 
+                                  "../../reprocessed_section_chunks_3"],
+                 lessons_learned_path="../../RAG/NASA_Lessons_Learned/nasa_lessons_learned_centers_1.csv",
+                 index_dir="vector_indices"):
+        # Convert relative paths to absolute paths based on the current file location
+        current_dir = Path(__file__).parent.absolute()
+        self.chunks_dirs = [Path(current_dir) / dir_path for dir_path in chunks_dir]
+        self.lessons_learned_path = Path(current_dir) / lessons_learned_path
+        self.index_dir = Path(current_dir) / index_dir
         self.db = None
         self.retriever = None
         
         # Create index directory if it doesn't exist
-        Path(index_dir).mkdir(parents=True, exist_ok=True)
+        self.index_dir.mkdir(parents=True, exist_ok=True)
         
         # Initialize embeddings model
         self.embed = HuggingFaceEmbeddings(
@@ -68,56 +79,127 @@ class RAGModel:
             model_kwargs={'device': 'cpu'}
         )
         
+        logger.info(f"Looking for chunks in: {self.chunks_dirs}")
+        
         # Load or create vector store
         self._load_or_create_vector_store()
     
     def _load_chunks(self):
-        """Load document chunks from JSON files"""
-        logger.info("Loading document chunks...")
+        """Load document chunks from JSON files and CSV files"""
+        logger.info(f"Loading document chunks from multiple sources...")
         chunks = []
         
-        # Get all JSON files in the chunks directory
-        json_files = list(Path(self.chunks_dir).glob("**/*.json*"))
-        
-        if not json_files:
-            logger.warning(f"No JSON files found in {self.chunks_dir}")
-            return chunks
-        
-        # Process each JSON file
-        for json_file in json_files:
-            try:
-                with open(json_file, 'r') as f:
-                    data = json.load(f)
-                    
-                    # Handle both single objects and arrays
-                    if isinstance(data, list):
-                        items = data
-                    else:
-                        items = [data]
-                    
-                    for item in items:
-                        if 'content' in item and 'title' in item:
-                            # Create document with content and metadata
-                            doc = Document(
-                                page_content=item['content'],
-                                metadata={
+        # Process JSON files from all directories
+        for chunks_dir in self.chunks_dirs:
+            logger.info(f"Processing directory: {chunks_dir}")
+            # Get all JSON files in the chunks directory
+            json_files = list(chunks_dir.glob("**/*.json*"))
+            
+            if not json_files:
+                logger.warning(f"No JSON files found in {chunks_dir}")
+                # List directory contents to help debug
+                try:
+                    logger.info(f"Directory contents: {list(chunks_dir.iterdir())}")
+                except Exception as e:
+                    logger.error(f"Could not list directory contents: {e}")
+                continue
+                
+            logger.info(f"Found {len(json_files)} JSON files in {chunks_dir}")
+            
+            # Process each JSON file
+            for json_file in json_files:
+                try:
+                    with open(json_file, 'r') as f:
+                        data = json.load(f)
+                        
+                        # Handle both single objects and arrays
+                        if isinstance(data, list):
+                            items = data
+                        else:
+                            items = [data]
+                        
+                        for item in items:
+                            if 'content' in item and 'title' in item:
+                                # Extract metadata properly
+                                metadata_dict = {
                                     'title': item['title'],
                                     'chunk_id': item.get('chunk_id', ''),
                                     'page_number': item.get('page_number', ''),
                                     'section_level': item.get('section_level', ''),
-                                    'file_name': item.get('metadata', {}).get('file_name', '')
+                                    'file_name': item.get('metadata', {}).get('file_name', ''),
+                                    'source_type': 'pdf'
                                 }
-                            )
-                            chunks.append(doc)
-            except Exception as e:
-                logger.error(f"Error loading {json_file}: {e}")
+                                
+                                # Add download_url directly to the metadata
+                                if 'metadata' in item and 'download_url' in item['metadata']:
+                                    metadata_dict['download_url'] = item['metadata']['download_url']
+                                
+                                # Create document with content and metadata
+                                doc = Document(
+                                    page_content=item['content'],
+                                    metadata=metadata_dict
+                                )
+                                chunks.append(doc)
+                except Exception as e:
+                    logger.error(f"Error loading {json_file}: {e}")
         
-        logger.info(f"Loaded {len(chunks)} document chunks")
+        # Process NASA Lessons Learned CSV file
+        if self.lessons_learned_path.exists():
+            logger.info(f"Processing NASA Lessons Learned from {self.lessons_learned_path}")
+            try:
+                import pandas as pd
+                df = pd.read_csv(self.lessons_learned_path)
+                
+                # Process each row in the CSV
+                for _, row in df.iterrows():
+                    # Skip header row if it got included
+                    if row.get('url') == 'url':
+                        continue
+                        
+                    # Combine relevant fields into content
+                    content_parts = []
+                    
+                    if not pd.isna(row.get('subject')):
+                        content_parts.append(f"Subject: {row['subject']}")
+                    
+                    if not pd.isna(row.get('abstract')) and row['abstract'] != 'None':
+                        content_parts.append(f"Abstract: {row['abstract']}")
+                    
+                    if not pd.isna(row.get('driving_event')) and row['driving_event'] != 'None':
+                        content_parts.append(f"Driving Event: {row['driving_event']}")
+                    
+                    if not pd.isna(row.get('lessons_learned')) and row['lessons_learned'] != 'None':
+                        content_parts.append(f"Lessons Learned: {row['lessons_learned']}")
+                    
+                    if not pd.isna(row.get('recommendations')) and row['recommendations'] != 'None':
+                        content_parts.append(f"Recommendations: {row['recommendations']}")
+                    
+                    content = "\n\n".join(content_parts)
+                    
+                    # Create metadata
+                    metadata_dict = {
+                        'title': row.get('subject', 'NASA Lesson Learned'),
+                        'url': row.get('url', ''),
+                        'source_type': 'lessons_learned',
+                        'mission_directorate': row.get('mission_directorate', '')
+                    }
+                    
+                    # Create document
+                    doc = Document(
+                        page_content=content,
+                        metadata=metadata_dict
+                    )
+                    chunks.append(doc)
+                    
+            except Exception as e:
+                logger.error(f"Error processing NASA Lessons Learned CSV: {e}")
+        
+        logger.info(f"Loaded {len(chunks)} total document chunks")
         return chunks
     
     def _load_or_create_vector_store(self):
         """Load existing vector store or create a new one"""
-        index_path = Path(self.index_dir) / "nasa_docs_index"
+        index_path = self.index_dir / "nasa_docs_index"
         
         if index_path.exists():
             logger.info("Loading existing vector store...")
@@ -135,7 +217,7 @@ class RAGModel:
         else:
             logger.info("Creating new vector store...")
             self._create_vector_store()
-        
+        print("7")
         # Create retriever
         if self.db:
             self.retriever = self.db.as_retriever(
@@ -144,7 +226,7 @@ class RAGModel:
                     "score_threshold": 0.7
                 }
             )
-    
+        print("8")
     def _create_vector_store(self):
         """Create a new vector store from document chunks"""
         chunks = self._load_chunks()
@@ -167,16 +249,17 @@ class RAGModel:
             
             if i == 0:
                 self.db = FAISS.from_documents(batch, self.embed)
+                print("9")
             else:
                 self.db.add_documents(batch)
-            
+                print("10")
             batch_duration = time.time() - batch_start_time
             docs_per_second = len(batch) / batch_duration
             logger.info(f"Batch {i+1}/{total_batches} completed in {batch_duration:.2f} seconds ({docs_per_second:.2f} docs/second)")
         
         # Save the vector store
         if self.db:
-            self.db.save_local(str(Path(self.index_dir) / "nasa_docs_index"))
+            self.db.save_local(str(self.index_dir / "nasa_docs_index"))
             logger.info("Vector store created and saved successfully")
     
     def query(self, question, model_name="openai"):
@@ -189,27 +272,96 @@ class RAGModel:
         query_start_time = time.time()
         
         try:
+            # Retrieve documents first (for both models)
+            if model_name.lower() == "llama":
+                # Retrieve fewer documents for Llama
+                self.retriever.search_kwargs["k"] = 4
+            else:
+                # More documents for OpenAI
+                self.retriever.search_kwargs["k"] = 4
+            
+            # Get documents
+            retrieved_docs = self.retriever.get_relevant_documents(question)
+            
+            # Print document metadata for debugging
+            for i, doc in enumerate(retrieved_docs):
+                logger.info(f"Document {i+1} metadata: {doc.metadata}")
+            
             # Initialize the appropriate LLM based on model_name
             if model_name.lower() == "llama":
+                # Use mistral for better quality while maintaining reasonable speed
                 llm = OllamaLLM(
-                    model='llama3.1',
-                    temperature=0.1,
-                    num_ctx=2048,
-                    request_timeout=30.0
+                    model='phi',       # More advanced model
+                    temperature=0.1,       # Slightly higher temperature for better quality
+                    num_ctx=1024,          # Increased context window
+                    request_timeout=120.0, # Longer timeout for more complex processing
+                    num_predict=512,       # Increased token generation
+                    num_thread=8,          # Use multiple threads
+                    stop=["4. Sources"]    # Stop generation before sources
                 )
+                
+                # Use the same NASA prompt for consistency with OpenAI
+                combine_docs_chain = create_stuff_documents_chain(llm, nasa_prompt)
+                
             else:  # Default to OpenAI
                 llm = ChatOpenAI(
                     model="gpt-4o-mini",
-                    temperature=0.1
+                    temperature=0.1,
+                    max_tokens=1024
                 )
+                
+                # Use the full NASA prompt for OpenAI
+                combine_docs_chain = create_stuff_documents_chain(llm, nasa_prompt)
             
-            # Create the chain
-            combine_docs_chain = create_stuff_documents_chain(llm, nasa_prompt)
+            # Create retrieval chain
             retrieval_chain = create_retrieval_chain(self.retriever, combine_docs_chain)
             
             # Execute the query
             result = retrieval_chain.invoke({'input': question})
             answer = result["answer"]
+            
+            # Add source information
+            sources = []
+            for doc in retrieved_docs:
+                source_type = doc.metadata.get("source_type", "unknown")
+                
+                if source_type == "pdf":
+                    file_name = doc.metadata.get("file_name", "Unknown")
+                    
+                    # Extract download_url directly from metadata
+                    download_url = doc.metadata.get("download_url", "No URL available")
+                    
+                    # If not found, try to find it in the JSON file
+                    if download_url == "No URL available":
+                        try:
+                            chunk_id = doc.metadata.get("chunk_id", "")
+                            if chunk_id:
+                                # Extract the PDF name from chunk_id
+                                pdf_name = chunk_id.split("_")[0] if "_" in chunk_id else chunk_id
+                                # Look for the JSON file with this PDF name
+                                for chunks_dir in self.chunks_dirs:
+                                    for json_file in chunks_dir.glob("**/*.json*"):
+                                        with open(json_file, 'r') as f:
+                                            data = json.load(f)
+                                            if isinstance(data, list):
+                                                for item in data:
+                                                    if item.get("chunk_id", "").startswith(pdf_name):
+                                                        if "metadata" in item and "download_url" in item["metadata"]:
+                                                            download_url = item["metadata"]["download_url"]
+                                                            logger.info(f"Found download URL for {pdf_name}: {download_url}")
+                                                            break
+                        except Exception as e:
+                            logger.error(f"Error finding download URL: {e}")
+                    
+                    sources.append(f"- {file_name}: {download_url}")
+                
+                elif source_type == "lessons_learned":
+                    url = doc.metadata.get("url", "No URL available")
+                    title = doc.metadata.get("title", "NASA Lesson Learned")
+                    sources.append(f"- NASA Lesson Learned - {title}: {url}")
+            
+            # Always add sources section
+            answer += "\n\n4. Sources:\n" + "\n".join(sources)
             
             query_duration = time.time() - query_start_time
             logger.info(f"Query completed in {query_duration:.2f} seconds")
