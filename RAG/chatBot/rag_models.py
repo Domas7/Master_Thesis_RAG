@@ -89,16 +89,16 @@ class RAGModel:
         # Initialize embeddings model
         try:
             self.embed = HuggingFaceEmbeddings(
-                model_name="all-MiniLM-L6-v2",
+                model_name="sentence-transformers/all-MiniLM-L6-v2",
                 model_kwargs={'device': 'cpu'},
                 encode_kwargs={'normalize_embeddings': True}
             )
         except Exception as e:
             logger.error(f"Error initializing HuggingFaceEmbeddings: {e}")
             # Fallback to a simpler embedding model
-            from langchain_community.embeddings import HuggingFaceInstructEmbeddings
-            self.embed = HuggingFaceInstructEmbeddings(
-                model_name="hkunlp/instructor-base",
+            from langchain_community.embeddings import HuggingFaceEmbeddings
+            self.embed = HuggingFaceEmbeddings(
+                model_name="sentence-transformers/paraphrase-MiniLM-L3-v2",
                 model_kwargs={'device': 'cpu'}
             )
         
