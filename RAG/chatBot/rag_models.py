@@ -140,7 +140,20 @@ class RAGModel:
             logger.info("Starting background model loading...")
             self.model_loading = True
             try:
+                # Get Ollama service URL from environment or use default
+                ollama_base_url = os.getenv('OLLAMA_BASE_URL', 'http://localhost:11434')
+                logger.info(f"Connecting to Ollama at: {ollama_base_url}")
+                
+                # Test connection to Ollama
+                try:
+                    response = requests.get(f"{ollama_base_url}/api/tags")
+                    if response.status_code != 200:
+                        raise Exception(f"Ollama API returned status code: {response.status_code}")
+                except requests.exceptions.RequestException as e:
+                    raise Exception(f"Could not connect to Ollama service at {ollama_base_url}: {str(e)}")
+                
                 self.llm = OllamaLLM(
+                    base_url=ollama_base_url,
                     model="mistral",
                     temperature=0.1,
                     num_ctx=512,
@@ -156,6 +169,7 @@ class RAGModel:
             except Exception as e:
                 logger.error(f"Error loading Mistral model in background: {e}")
                 self.llm = None
+                # Don't fall back to OpenAI, just set llm to None
             finally:
                 self.model_loading = False
         
