@@ -57,6 +57,19 @@ if openai_api_key:
 if langchain_api_key:
     os.environ['LANGCHAIN_API_KEY'] = langchain_api_key
 
+# Set up logging configuration
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler(f"rag_logs_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"),
+        logging.StreamHandler()
+    ]
+)
+logger = logging.getLogger(__name__)
+
+# Load environment variables
+load_dotenv()
 logger.info("Environment variables loaded")
 
 # Initialize cache
@@ -84,20 +97,11 @@ class RAGModel:
                                   "../../reprocessed_section_chunks_3"],
                  lessons_learned_path="../../RAG/NASA_Lessons_Learned/nasa_lessons_learned_centers_1.csv",
                  index_dir="vector_indices"):
-        # Get the absolute path of the current file
+        # Convert relative paths to absolute paths based on the current file location
         current_dir = Path(__file__).parent.absolute()
-        
-        # For vector indices, use a path relative to the current file
-        self.index_dir = current_dir / index_dir
-        
-        # For chunks and lessons learned, use paths relative to the project root
-        # First, find the project root (where the RAG directory is)
-        project_root = current_dir.parent.parent  # Go up two levels from chatBot to RAG to project root
-        
-        # Now construct the absolute paths
-        self.chunks_dirs = [project_root / dir_path for dir_path in chunks_dir]
-        self.lessons_learned_path = project_root / lessons_learned_path
-        
+        self.chunks_dirs = [Path(current_dir) / dir_path for dir_path in chunks_dir]
+        self.lessons_learned_path = Path(current_dir) / lessons_learned_path
+        self.index_dir = Path(current_dir) / index_dir
         self.db = None
         self.retriever = None
         self.llm = None
@@ -108,27 +112,14 @@ class RAGModel:
         self.index_dir.mkdir(parents=True, exist_ok=True)
         
         # Initialize embeddings model
-        try:
-            self.embed = HuggingFaceEmbeddings(
-                model_name="sentence-transformers/all-MiniLM-L6-v2",
-                model_kwargs={'device': 'cpu'},
-                encode_kwargs={'normalize_embeddings': True}
-            )
-        except Exception as e:
-            logger.error(f"Error initializing HuggingFaceEmbeddings: {e}")
-            # Fallback to a simpler embedding model
-            from langchain_community.embeddings import HuggingFaceEmbeddings
-            self.embed = HuggingFaceEmbeddings(
-                model_name="sentence-transformers/paraphrase-MiniLM-L3-v2",
-                model_kwargs={'device': 'cpu'}
-            )
+        self.embed = HuggingFaceEmbeddings(
+            model_name="all-MiniLM-L6-v2",
+            model_kwargs={'device': 'cpu'}
+        )
         
         # Start model loading in background
         self._start_background_model_loading()
         
-        logger.info(f"Current directory: {current_dir}")
-        logger.info(f"Project root: {project_root}")
-        logger.info(f"Index directory: {self.index_dir}")
         logger.info(f"Looking for chunks in: {self.chunks_dirs}")
         
         # Load or create vector store
@@ -140,39 +131,22 @@ class RAGModel:
             logger.info("Starting background model loading...")
             self.model_loading = True
             try:
-                # Try to connect to Ollama
-                response = requests.get("http://localhost:11434/api/tags")
-                if response.status_code == 200:
-                    self.llm = OllamaLLM(
-                        model="wizardlm2",
-                        temperature=0.1,
-                        num_ctx=512,
-                        request_timeout=60.0,
-                        num_predict=256,
-                        num_thread=4,
-                        stop=["4. Sources"]
-                    )
-                    # Make a dummy call to ensure model is loaded
-                    self.llm.invoke("Hello")
-                    self.model_loaded = True
-                    logger.info("Mistral model loaded successfully in background")
-                else:
-                    logger.warning("Ollama is not available, falling back to OpenAI")
-                    self.llm = ChatOpenAI(
-                        model="gpt-3.5-turbo",
-                        temperature=0.1,
-                        max_tokens=1024
-                    )
-                    self.model_loaded = True
-            except Exception as e:
-                logger.error(f"Error loading model in background: {e}")
-                logger.warning("Falling back to OpenAI")
-                self.llm = ChatOpenAI(
-                    model="gpt-3.5-turbo",
+                self.llm = OllamaLLM(
+                    model="mistral",
                     temperature=0.1,
-                    max_tokens=1024
+                    num_ctx=512,
+                    request_timeout=60.0,
+                    num_predict=256,
+                    num_thread=4,
+                    stop=["4. Sources"]
                 )
+                # Make a dummy call to ensure model is loaded
+                self.llm.invoke("Hello")
                 self.model_loaded = True
+                logger.info("Mistral model loaded successfully in background")
+            except Exception as e:
+                logger.error(f"Error loading Mistral model in background: {e}")
+                self.llm = None
             finally:
                 self.model_loading = False
         
@@ -299,7 +273,7 @@ class RAGModel:
         index_path = self.index_dir / "nasa_docs_index"
         
         if index_path.exists():
-            logger.info(f"Loading existing vector store from: {index_path}")
+            logger.info("Loading existing vector store...")
             try:
                 self.db = FAISS.load_local(
                     str(index_path),
@@ -307,22 +281,23 @@ class RAGModel:
                     allow_dangerous_deserialization=True
                 )
                 logger.info("Vector store loaded successfully")
-                
-                # Initialize retriever after loading vector store
-                self.retriever = self.db.as_retriever(
-                    search_type="similarity",
-                    search_kwargs={"k": 4, "score_threshold": 0.7}
-                )
-                logger.info("Retriever initialized successfully")
             except Exception as e:
                 logger.error(f"Error loading vector store: {e}")
                 logger.info("Creating new vector store...")
                 self._create_vector_store()
         else:
-            logger.info(f"Vector store not found at: {index_path}")
             logger.info("Creating new vector store...")
             self._create_vector_store()
-    
+        print("7")
+        # Create retriever
+        if self.db:
+            self.retriever = self.db.as_retriever(
+                search_kwargs={
+                    "k": 5,
+                    "score_threshold": 0.7
+                }
+            )
+        print("8")
     def _create_vector_store(self):
         """Create a new vector store from document chunks"""
         chunks = self._load_chunks()
@@ -345,9 +320,10 @@ class RAGModel:
             
             if i == 0:
                 self.db = FAISS.from_documents(batch, self.embed)
+                print("9")
             else:
                 self.db.add_documents(batch)
-            
+                print("10")
             batch_duration = time.time() - batch_start_time
             docs_per_second = len(batch) / batch_duration
             logger.info(f"Batch {i+1}/{total_batches} completed in {batch_duration:.2f} seconds ({docs_per_second:.2f} docs/second)")
@@ -356,29 +332,12 @@ class RAGModel:
         if self.db:
             self.db.save_local(str(self.index_dir / "nasa_docs_index"))
             logger.info("Vector store created and saved successfully")
-            
-            # Initialize retriever after creating vector store
-            self.retriever = self.db.as_retriever(
-                search_type="similarity",
-                search_kwargs={"k": 4, "score_threshold": 0.7}
-            )
-            logger.info("Retriever initialized successfully")
     
     def query(self, question, model_name="openai"):
         """Query the RAG model with a question"""
         if not self.retriever:
             logger.error("Retriever not initialized")
-            # Try to initialize retriever if db exists
-            if self.db:
-                logger.info("Attempting to initialize retriever...")
-                self.retriever = self.db.as_retriever(
-                    search_type="similarity",
-                    search_kwargs={"k": 4, "score_threshold": 0.7}
-                )
-                if not self.retriever:
-                    return "Error: Retriever not initialized. Please try again later."
-            else:
-                return "Error: Vector store not loaded. Please try again later."
+            return "Error: Retriever not initialized. Please try again later."
         
         logger.info(f"Processing question with {model_name}: {question}")
         query_start_time = time.time()
@@ -412,7 +371,7 @@ class RAGModel:
                 
                 # Create a more concise prompt for faster processing
                 llama_prompt = ChatPromptTemplate.from_template("""
-                Answer the question based on the context. Be concise.
+                Based on the context, provide a concise answer to the question.
 
                 Context: {context}
                 Question: {input}
