@@ -21,6 +21,7 @@ from langchain.cache import InMemoryCache
 from langchain_openai import OpenAIEmbeddings, ChatOpenAI
 import requests
 import openai
+import threading
 
 # Set up logging configuration
 logging.basicConfig(
@@ -69,6 +70,9 @@ class RAGModel:
         self.index_dir = Path(current_dir) / index_dir
         self.db = None
         self.retriever = None
+        self.llm = None
+        self.model_loading = False
+        self.model_loaded = False
         
         # Create index directory if it doesn't exist
         self.index_dir.mkdir(parents=True, exist_ok=True)
@@ -79,10 +83,43 @@ class RAGModel:
             model_kwargs={'device': 'cpu'}
         )
         
+        # Start model loading in background
+        self._start_background_model_loading()
+        
         logger.info(f"Looking for chunks in: {self.chunks_dirs}")
         
         # Load or create vector store
         self._load_or_create_vector_store()
+    
+    def _start_background_model_loading(self):
+        """Start loading the Mistral model in a background thread"""
+        def load_model():
+            logger.info("Starting background model loading...")
+            self.model_loading = True
+            try:
+                self.llm = OllamaLLM(
+                    model="mistral",
+                    temperature=0.1,
+                    num_ctx=512,
+                    request_timeout=60.0,
+                    num_predict=256,
+                    num_thread=4,
+                    stop=["4. Sources"]
+                )
+                # Make a dummy call to ensure model is loaded
+                self.llm.invoke("Hello")
+                self.model_loaded = True
+                logger.info("Mistral model loaded successfully in background")
+            except Exception as e:
+                logger.error(f"Error loading Mistral model in background: {e}")
+                self.llm = None
+            finally:
+                self.model_loading = False
+        
+        # Start the loading thread
+        thread = threading.Thread(target=load_model)
+        thread.daemon = True  # Thread will be killed when main program exits
+        thread.start()
     
     def _load_chunks(self):
         """Load document chunks from JSON files and CSV files"""
@@ -274,8 +311,9 @@ class RAGModel:
         try:
             # Retrieve documents first (for both models)
             if model_name.lower() == "llama":
-                # Retrieve fewer documents for Llama
-                self.retriever.search_kwargs["k"] = 4
+                # Optimize for Llama
+                self.retriever.search_kwargs["k"] = 4  # Reduce number of documents
+                self.retriever.search_kwargs["score_threshold"] = 0.8  # Higher threshold for better quality
             else:
                 # More documents for OpenAI
                 self.retriever.search_kwargs["k"] = 4
@@ -289,19 +327,28 @@ class RAGModel:
             
             # Initialize the appropriate LLM based on model_name
             if model_name.lower() == "llama":
-                # Use mistral for better quality while maintaining reasonable speed
-                llm = OllamaLLM(
-                    model='phi',       # More advanced model
-                    temperature=0.1,       # Slightly higher temperature for better quality
-                    num_ctx=1024,          # Increased context window
-                    request_timeout=120.0, # Longer timeout for more complex processing
-                    num_predict=512,       # Increased token generation
-                    num_thread=8,          # Use multiple threads
-                    stop=["4. Sources"]    # Stop generation before sources
-                )
+                if self.llm is None:
+                    if self.model_loading:
+                        return "The model is still loading. Please try again in a few moments."
+                    else:
+                        # Start loading the model if it hasn't been loaded yet
+                        self._start_background_model_loading()
+                        return "The model is being loaded. Please try again in a few moments."
                 
-                # Use the same NASA prompt for consistency with OpenAI
-                combine_docs_chain = create_stuff_documents_chain(llm, nasa_prompt)
+                # Create a more concise prompt for faster processing
+                llama_prompt = ChatPromptTemplate.from_template("""
+                Based on the context, provide a concise answer to the question.
+
+                Context: {context}
+                Question: {input}
+
+                Format your response as:
+                1. Brief Answer
+                2. Key Points
+                """)
+                
+                # Use the concise prompt for faster processing
+                combine_docs_chain = create_stuff_documents_chain(self.llm, llama_prompt)
                 
             else:  # Default to OpenAI
                 llm = ChatOpenAI(
@@ -313,12 +360,22 @@ class RAGModel:
                 # Use the full NASA prompt for OpenAI
                 combine_docs_chain = create_stuff_documents_chain(llm, nasa_prompt)
             
-            # Create retrieval chain
-            retrieval_chain = create_retrieval_chain(self.retriever, combine_docs_chain)
+            # Create retrieval chain with optimized parameters
+            retrieval_chain = create_retrieval_chain(
+                self.retriever,
+                combine_docs_chain
+            )
             
-            # Execute the query
-            result = retrieval_chain.invoke({'input': question})
-            answer = result["answer"]
+            # Execute the query with timeout
+            try:
+                result = retrieval_chain.invoke(
+                    {'input': question},
+                    config={"timeout": 60}  # Add timeout to prevent hanging
+                )
+                answer = result["answer"]
+            except Exception as e:
+                logger.error(f"Query timeout or error: {e}")
+                return "The query took too long to process. Please try again or use a different model."
             
             # Add source information
             sources = []

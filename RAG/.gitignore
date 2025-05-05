@@ -27,3 +27,7 @@ skipped_filed_chunking.log
 ../section_chunking_DONE.log
 /temp_skipped/
 /temp_skipped_chunks/
+
+TEST_DATABASE.json
+TEST_DATABASE_2.json
+TEST_DATABASE_2_WRONG.json

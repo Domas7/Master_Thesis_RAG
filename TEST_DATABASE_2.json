@@ -1,0 +1,302 @@
+[
+    {
+      "id": 1,
+      "question": "What was the most efficient sweeping jet actuator configuration for controlling flow separation?",
+      "expected_answer": "The actuator with the largest jet deflection angle, at the pressure ratios investigated, was the most efficient at controlling flow separation on the flap of the model. Oil flow visualization studies revealed that the flow field controlled by the sweeping jets was more three-dimensional than expected.",
+      "relevant_chunk_ids": ["20160010108.pdf_2"]
+    },
+    {
+      "id": 2,
+      "question": "What is the definition of the turbulent heat flux vector in the context of RANS equations?",
+      "expected_answer": "Within the context of the RANS equations, the turbulent heat flux vector is defined as qjT and must be modeled. This is typically done by relating the heat flux to a thermal diffusivity and the mean thermal gradient, much like the Boussinesq approximation relates the Reynolds' stress to the eddy viscosity and the mean velocity gradient.",
+      "relevant_chunk_ids": ["20160010069.pdf_7", "20160010069.pdf_8"]
+    },
+    {
+      "id": 3,
+      "question": "How do zero-equation models relate eddy diffusivity to turbulent viscosity?",
+      "expected_answer": "Many zero-equation (i.e., algebraic) models relate the eddy diffusivity to the turbulent viscosity and a turbulent Prandtl number. The simplest expression for the turbulent Prandtl number is to prescribe a constant value, with 0.9 being common for boundary layers, while a value as low as 0.5 is more appropriate in free shear flows.",
+      "relevant_chunk_ids": ["20160010069.pdf_8", "20160010069.pdf_9"]
+    },
+    {
+      "id": 4,
+      "question": "What issue was discovered with the ILT radiator during the CALIPSO satellite-level thermal vacuum test?",
+      "expected_answer": "The results of the satellite-level thermal vacuum test showed sizing of the ILT (Integrated Lidar Transmitter) radiator to be too large, because power dissipation within the lasers was lower than expected. At the original laser radiator size, the operational heater (at 20.7 W) used to maintain the operating laser's pedestal temperature at the desired 17°C set point would be undersized. Based on this result, a resizing of the ILT radiator was explored through analysis.",
+      "relevant_chunk_ids": ["20070021525.pdf_11"]
+    },
+    {
+      "id": 5,
+      "question": "What was identified as an important factor in the success of the CALIPSO mission's thermal control?",
+      "expected_answer": "One of the most important factors in the success of the CALIPSO mission has been the high degree of cooperation among all parties responsible for the various thermal control aspects of CALIPSO. This cooperative nature was particularly evident in the development of a solution to the potentially mission-ending laser radiator issue.",
+      "relevant_chunk_ids": ["20070021525.pdf_12"]
+    },
+    {
+      "id": 6,
+      "question": "What lesson was learned from the Cassini reaction wheel bearing cage instability?",
+      "expected_answer": "After two and one-half years of operational use, a bearing cage instability trend developed in a bearing in one of three Cassini reaction wheels. The lesson learned was to manage reaction wheel assemblies as a limited resource: track RWA performance beginning with acceptance test and throughout mission operations to identify potential limitations on reaction wheel lifespan, take measures to mitigate mission impact, use software tools to manage reaction wheel biasing events, and implement a reaction wheel drag torque estimator in flight software to identify anomalous bearing drag conditions.",
+      "relevant_chunk_ids": ["ttps://llis.nasa.gov/lesson/1598"]
+    },
+    {
+      "id": 7,
+      "question": "What caused the ATMOS instrument laser failure on Spacelab 3?",
+      "expected_answer": "After some two days of flight aboard Spacelab 3, the Atmospheric Trace Molecule Spectroscopy (ATMOS) instrument failed when the laser did not turn on for occultation 75. The laser failed due to a high voltage arc-over, which resulted from a pressure loss in the laser housing. Investigation revealed that the pressure loss was caused by use of machine screws of excessive length. The housing had been modified, based on a Material Review Board decision, which resulted in threaded holes of a different length than the original design drawings.",
+      "relevant_chunk_ids": ["https://llis.nasa.gov/lesson/393"]
+    },
+    {
+      "id": 8,
+      "question": "What issue occurred with the Viking Orbiter-1 pressure regulator and what design corrective measures were recommended?",
+      "expected_answer": "The pressure regulator in the Viking Orbiter-1 Propulsion Subsystem leaked when it was brought back on-line by the opening of an explosive valve which had isolated the regulator and propellant tanks from the pressurant tanks. Design corrective measures recommended for propulsion pressurization subsystems included: using separate regulators for the fuel and oxidizer sides, incorporating a bellows in the pyro valve to eliminate blowby, and adding an isolation valve between the regulator and propellant tank to minimize propellant migration into the regulator.",
+      "relevant_chunk_ids": ["https://llis.nasa.gov/lesson/420"]
+    },
+    {
+      "id": 9,
+      "question": "What damage occurred to the Magellan spacecraft due to a violation of electrical interfacing and grounding requirements?",
+      "expected_answer": "In an effort to take advantage of spare telemetry channels in the Command and Data System (CDS) hardware, the Attitude Reference Unit (ARU) motor current telemetry was added to the CDS analog telemetry channels of the Magellan Spacecraft. This addition violated the VRM 2-260 'Electrical Grounding and Interfacing' specification without obtaining a waiver. Subsequent failure of the chassis ground path, caused by a poor mechanical connection at the attitude and articulation control subsystem single point ground, resulted in substantial damage to the MGN CDS analog telemetry circuitry, requiring rework of the CDS and resulting in a late delivery to the spacecraft at Kennedy Space Center.",
+      "relevant_chunk_ids": ["https://llis.nasa.gov/lesson/379"]
+    },
+    {
+      "id": 10,
+      "question": "What variables are included in the nomenclature for the RANS equations related to sweeping jet actuators?",
+      "expected_answer": "The nomenclature includes: Ajet (sweeping jet orifice area), b (wing span), c (airfoil chord), CL (lift coefficient), Cµ (SWJ actuator momentum coefficient), Cp (pressure coefficient), Cp,TE (model trailing edge Cp), C⇡ (Power coefficient), m˙ (mass flow rate), njet (total number of sweeping jet actuators), P (pressure), Pa (ambient pressure), Pr (pressure ratio), Ps (actuator plenum static pressure), Q (Volume flow rate), q (freestream dynamic pressure), Rec (Reynolds number based on chord), s (wing semispan length), Sref (reference surface area), U and V (velocity components), Ujet (theoretical sweeping jet actuator orifice velocity), U1 (average streamwise velocity), α (angle of attack), δf (flap deflection angle), and ρ (density).",
+      "relevant_chunk_ids": ["20160010108.pdf_3"]
+    },
+    {
+      "id": 11,
+      "question": "What is the Wassel and Catton model for turbulent Prandtl number?",
+      "expected_answer": "Wassel and Catton developed a model for the turbulent Prandtl number expressed as: PrT = C3[1 - exp(-C2/((µT/µL)Pr))]^-1, where a value of 0.9 is common for boundary layers, while a value as low as 0.5 is more appropriate in free shear flows.",
+      "relevant_chunk_ids": ["20160010069.pdf_9"]
+    },
+    {
+      "id": 12,
+      "question": "How did the CALIPSO payload thermal system perform after launch?",
+      "expected_answer": "Shortly after launch, the payload thermal team performed an evaluation of pre-launch predictions of performance for many subsystems. Both during SHM and data acquisition mode (DAQ), the CALIPSO Satellite and the payload in particular performed well within defined thermal boundary conditions with appropriate margin. In PL Standby Ready, Standby Thermal-Stabilization, and Safe modes, the PL thermal system performed well and was again within allotted power budget. After stabilizing in SHM, the payload's survival heaters were able to maintain the correct temperature set points and do so within the bounding amount.",
+      "relevant_chunk_ids": ["20070021525.pdf_10"]
+    },
+    {
+      "id": 13,
+      "question": "What variables are defined in the nomenclature section related to time derivatives and generalized forces?",
+      "expected_answer": "The nomenclature defines q̇j as the first time derivative of qj, Qj as the jth generalized force, ⃗v*n as the absolute velocity of point mass dm inside body n, ⃗a*n as the absolute acceleration of dm inside body n, qn as the flexible DOF of body n, q̇n as the first time derivative of qn, q̈n as the second time derivative of qn, and various mass matrices including Mrr,n (rigid-rigid mass matrix of body n), Mre,n (rigid-elastic mass matrix of body n), Mer,n (elastic-rigid mass matrix of body n), and Mee,n (elastic-elastic mass matrix of body n).",
+      "relevant_chunk_ids": ["20070021569.pdf_1"]
+    },
+    {
+      "id": 14,
+      "question": "What is the purpose of active flow control (AFC) in the context of the NACA 0015 semi-span wing experiment?",
+      "expected_answer": "Active flow control (AFC) was used to investigate how the output produced by a sweeping jet interacts with separated flow and the mechanisms by which flow separation is controlled. In the experiment, three sweeping jet actuator configurations with the same orifice size but different internal geometries were installed on the flap shoulder of an unswept, NACA 0015 semi-span wing. The flow separation was generated by deflecting the wing's 30% chord trailing edge flap to produce an adverse pressure gradient.",
+      "relevant_chunk_ids": ["20160010108.pdf_2", "20160010108.pdf_4"]
+    },
+    {
+      "id": 15,
+      "question": "What references are cited in the CALIPSO thermal control paper?",
+      "expected_answer": "The references cited are: [1] F. Douillet and P. Landiech, Overview of PROTEUS SmallSat Family, IAC-02-U.4.05; [2] M. Valentini and P. Arfi, PROTEUS Small Sat Family: Multi-Mission Thermal Control Design and Performances, 06ICES-329; [3] J. Thomas, CALIPSO Thermal Design and Analysis Report, CALIPSO Systems Engineering Report SER-SYS-2481A (2003); [4] L. Fantano and W. Ousley, CALIPSO Payload Satellite Thermal Balance Test Report, CALIPSO Procedure Document, PC-SAT-673 (2005); and [5] Gasbarre, J.F., ILT Radiator Resizing Parametric Analysis, CALIPSO Systems Engineering Report PCSER-JFG-004B (2005).",
+      "relevant_chunk_ids": ["20070021525.pdf_13"]
+    },
+    {
+      "id": 16,
+      "question": "What is the affiliation of Leslie J. Quiocho?",
+      "expected_answer": "Leslie J. Quiocho is affiliated with NASA Johnson Space Center, Automation, Robotics, & Simulation Division, Houston, Texas 77058.",
+      "relevant_chunk_ids": ["20070021569.pdf_0"]
+    },
+    {
+      "id": 17,
+      "question": "What abbreviations are listed in the nomenclature section of the sweeping jet actuator paper?",
+      "expected_answer": "The abbreviations listed are: 2D (two dimensional), 3D (three dimensional), AFC (active flow control), BART (Basic Aerodynamics Research Tunnel), CHL (Conventional High Lift), CRM (Common Research Model), FAST-MAC (Fundamental Aerodynamics Subsonic/Transonic-Modular Active Control), LaRC (Langley Research Center), NTF (National Transonic Facility), PIV (Particle Image Velocimetry), SLA (stereolithography), SHL (Simplified High Lift), and SWJ (sweeping jet).",
+      "relevant_chunk_ids": ["20160010108.pdf_3"]
+    },
+    {
+      "id": 18,
+      "question": "What recommendations were made for sealed flight equipment requiring container integrity based on the ATMOS laser failure?",
+      "expected_answer": "Sealed flight equipment requiring container integrity should be designed to provide continuous passive indication of leaks by pressurizing above atmospheric pressure and monitoring with pressure transducers to provide evidence of proper pressure and seal integrity. When modifying equipment, care should be taken to ascertain that the as-built configuration is understood. Equipment can be modified by Engineering Change Notices or corrective actions based on Material Review Board decisions.",
+      "relevant_chunk_ids": ["https://llis.nasa.gov/lesson/393"]
+    },
+    {
+      "id": 19,
+      "question": "What lesson was learned from the violation of Magellan electrical and grounding specification?",
+      "expected_answer": "Violations of electrical interfacing and grounding requirements can have serious consequences and should not be undertaken lightly or without a formal project waiver. Care must be taken to ensure that design changes are properly reviewed.",
+      "relevant_chunk_ids": ["https://llis.nasa.gov/lesson/379"]
+    },
+    {
+      "id": 20,
+      "question": "What data types were acquired to assess the performance of the three sweeping jet actuator configurations?",
+      "expected_answer": "Steady and unsteady pressure data, Particle Image Velocimetry data, and force and moment data were acquired to assess the performance of the three actuator configurations. Additionally, oil flow visualization studies were conducted which revealed that the flow field controlled by the sweeping jets was more three-dimensional than expected.",
+      "relevant_chunk_ids": ["20160010108.pdf_2"]
+    },
+    {
+      "id": 21,
+      "question": "What is the relationship between the turbulent Prandtl number and boundary layers versus free shear flows?",
+      "expected_answer": "The simplest expression for the turbulent Prandtl number is to prescribe a constant value. A value of 0.9 is common for boundary layers, while a value as low as 0.5 is more appropriate in free shear flows. In applying a constant value of PrT, an analogy is assumed between the turbulent heat and momentum transfer.",
+      "relevant_chunk_ids": ["20160010069.pdf_9"]
+    },
+    {
+      "id": 22,
+      "question": "What was the primary objective of the CALIPSO satellite-level thermal vacuum test?",
+      "expected_answer": "One primary objective of the satellite-level thermal vacuum test was to demonstrate positive thermal control of all payload components within their required temperature limits under simulated hot and cold flight environments while operating the payload in a flight configuration.",
+      "relevant_chunk_ids": ["20070021525.pdf_11"]
+    },
+    {
+      "id": 23,
+      "question": "What symbols are used to represent force and moment in the nomenclature of the NASA Johnson Space Center paper?",
+      "expected_answer": "The symbols used to represent force and moment include: Fnp (Force and moment of body p acting on body n), Fns (Force and moment of body s acting on body n), Er,n (External rigid forces and moments acting on body n), Ee,n (External elastic forces and moments acting on body n), Fn (Force and moment from body p (previous body to n) acting at joint n), and Fs (Force and moment from body n (previous body to s) acting at joint s).",
+      "relevant_chunk_ids": ["20070021569.pdf_1"]
+    },
+    {
+      "id": 24,
+      "question": "What measures did the Cassini project take to control reaction wheel performance degradation?",
+      "expected_answer": "The Cassini project took the following steps to control reaction wheel performance degradation: 1) Kept RWA use to an absolute minimum during the outer Solar cruise phase to ensure RWA availability for science operations during the primary mission, 2) Used a JPL-developed Reaction Wheel Bias Optimization Tool (RBOT) to analyze optimal RWA bias rates so that the total RWA dwell time inside the problematic low-rpm region can be minimized, and 3) Continued to monitor and trend the performance of the reaction wheels (including RWA-3, which now serves as the backup).",
+      "relevant_chunk_ids": ["ttps://llis.nasa.gov/lesson/1598"]
+    },
+    {
+      "id": 25,
+      "question": "What is the significance of the Active Thermal Control (CTA) subsystem for the CALIPSO payload shortly after launch?",
+      "expected_answer": "The platform-controlled Active Thermal Control (CTA) subsystem for the payload was of particular interest shortly after launch because it was instrumental in keeping the payload safe while the platform was being activated. After the platform activation was complete, the payload subsystems were activated one by one, with the last subsystem to be activated, the Integrated Lidar Transmitter (ILT), being heavily dependent on the thermal subsystem to allow it to operate properly.",
+      "relevant_chunk_ids": ["20070021525.pdf_10"]
+    },
+    {
+      "id": 26,
+      "question": "What is the purpose of the Kee,n variable in the NASA Johnson Space Center paper's nomenclature?",
+      "expected_answer": "In the nomenclature, Kee,n represents the elastic stiffness matrix of body n.",
+      "relevant_chunk_ids": ["20070021569.pdf_1"]
+    },
+    {
+      "id": 27,
+      "question": "What was the failure mechanism that led to bearing cage instability in the Cassini reaction wheels?",
+      "expected_answer": "Bearing cage instability is typically heralded by audible noise, a significant spontaneous increase in the bearing drag torque, and excessive drag torque 'roughness.' The failure mechanism promotes energetic vibration of the retaining cage that leads to localized heating and polymerization of bearing lubricant (i.e., 'gelled' oil) and, ultimately, premature bearing failure.",
+      "relevant_chunk_ids": ["ttps://llis.nasa.gov/lesson/1598"]
+    },
+    {
+      "id": 28,
+      "question": "What was the conclusion about the actuator spacing in the sweeping jet experiment?",
+      "expected_answer": "The results presented showed that the actuator spacing was appropriate for the pressure ratios examined.",
+      "relevant_chunk_ids": ["20160010108.pdf_2"]
+    },
+    {
+      "id": 29,
+      "question": "What is the relationship between the heat flux and thermal diffusivity in turbulence modeling?",
+      "expected_answer": "The heat flux is typically related to a thermal diffusivity and the mean thermal gradient, much like the Boussinesq approximation relates the Reynolds' stress to the eddy viscosity and the mean velocity gradient. The equation is expressed as qjT = -ρᾱT ∂T/∂xj, where models for heat transfer must provide an expression for the thermal diffusivity.",
+      "relevant_chunk_ids": ["20160010069.pdf_8"]
+    },
+    {
+      "id": 30,
+      "question": "What was the timeline of the Cassini bearing cage instability issue?",
+      "expected_answer": "The Cassini reaction wheels were first used for spacecraft attitude control in March 2000. Beginning in October 2002, after two and one-half years of operation, a bearing cage instability trend developed in at least one of the two bearings in Cassini reaction wheel assembly No. 3 (RWA-3). When the data showed a 9-month period of intermittent RWA-3 bearing cage instability, this reaction wheel was replaced with the backup (RWA-4) in July 2003.",
+      "relevant_chunk_ids": ["ttps://llis.nasa.gov/lesson/1598"]
+    },
+    {
+        "id": 31,
+        "question": "What is the purpose of calibrating individual components in Ground Support Equipment (GSE) systems?",
+        "expected_answer": "Individual components in Ground Support Equipment (GSE) systems should be calibrated because validating the system as a whole is not sufficient. As demonstrated in the Space Shuttle Main Engine (SSME) Shop incident, when a power supply malfunctioned, it was discovered that two power monitors were not calibrated. The system had been validated every year, but the individual power monitoring components had not been calibrated. It's important for system validation to document that individual component calibrations are up to date, and a mechanism should be in place to ensure components are scheduled and sent for calibrations as required.",
+        "relevant_chunk_ids": ["https://llis.nasa.gov/lesson/3763"]
+      },
+      {
+        "id": 32,
+        "question": "What safety issue was identified with dry well transducer installations in Hypergol systems?",
+        "expected_answer": "Dry well transducer installations in Hypergol systems were found to be susceptible to inadvertent removal, which could lead to major fuel spills. In one incident, a Hypergol technician erroneously removed a temperature transducer from a 3-inch Hypergol line at the pad 'A' fuel farm. While the dry well installation design allows for transducer removal without opening the fluid volume, it was inadequate to prevent an untrained or careless technician from inadvertently removing the dry well itself from the Hypergol propellant line. This oversight could release hazardous materials like MMH liquid.",
+        "relevant_chunk_ids": ["https://llis.nasa.gov/lesson/299"]
+      },
+      {
+        "id": 33,
+        "question": "What are the two main functions of an Uninterruptable Power Supply (UPS) system?",
+        "expected_answer": "An Uninterruptable Power Supply (UPS) typically does two things: (1) It either provides power to enable the safe shutdown of equipment and saving data to a nonvolatile medium, or (2) it provides continuous power to critical equipment until personnel can move to another area. Additionally, UPS can provide filtered AC power to equipment and eliminate disturbances such as spikes, undervoltages, outage flicker, and transient noise which can affect system performance.",
+        "relevant_chunk_ids": ["https://llis.nasa.gov/lesson/662"]
+      },
+      {
+        "id": 34,
+        "question": "What issue was identified with using vinyl tape during clamping procedures?",
+        "expected_answer": "Vinyl tape was found to act as a lubricant, preventing the secure clamping of an object to a workstation. In one mishap, technicians secured a T-shaped mounting fixture with only one C-clamp to an access platform's kick plate that had vinyl tape on both sides. The C-clamp was improperly used to prevent rotation, and the vinyl tape acted as a lubricant between the clamped surfaces. These conditions allowed the offset weight of the mounting fixture/thruster assembly to overcome the clamping force, rotate about the single C-clamp, and fall, potentially resulting in damage to the object.",
+        "relevant_chunk_ids": ["https://llis.nasa.gov/lesson/43"]
+      },
+      {
+        "id": 35,
+        "question": "What safety concern exists with NASA Standard Initiators (NSI) in relation to radio frequency fields?",
+        "expected_answer": "NASA Standard Initiators (NSI) cannot be protected against inadvertent detonation while in excessive radio frequency fields. NSIs are used to ignite a charge of boron potassium nitrate pellets, which begin the solid rocket booster (SRB) ignition sequence. The electromagnetic interference may cause a premature firing of an NSI, possibly resulting in personnel injury/loss of life and damage to flight hardware or ground support equipment. During pyrotechnic operations/post-landing safing, NSIs are unprotected against excessive radio frequency (RF) fields, which may result in injury/damage.",
+        "relevant_chunk_ids": ["https://llis.nasa.gov/lesson/35"]
+      },
+      {
+        "id": 36,
+        "question": "What lesson was learned about cryogenic line sizing in the Space Shuttle Program?",
+        "expected_answer": "A major lesson learned was that cryogenic lines should be oversized during initial design to accommodate potential future increased flow rate requirements. This was demonstrated when Extended Duration Operations (EDO) pallets were added to the Shuttle Program several years after its start. These pallets included additional tanks of liquid hydrogen and liquid oxygen, but full loading of the pallets was often not achieved because the original vent tubing was not sized to accommodate the increased flow from additional tanks. If the lines had been sized with excess capacity during initial design, this modification might have been better supported, avoiding back-pressure buildup that affected the ability to service and deservice the vehicle.",
+        "relevant_chunk_ids": ["https://llis.nasa.gov/lesson/4618"]
+      },
+      {
+        "id": 37,
+        "question": "What caused the thread failure during the SRB holddown stud detensioning operation?",
+        "expected_answer": "The thread failure during the SRB holddown stud detensioning operation was caused by failure to fully engage the puller bar prior to detensioning. During the operation, while pressure of approximately 8K to 10K lbs was being applied, a loud 'bang' was heard and pressure on the tensioner fell to zero. With only 8 threads engaged (instead of full engagement), the shear stresses increased to 96,000 psi, which was very close to the 98,000 psi shear strength of the stud. Examination revealed that 8 threads sheared on a 135 degree circumferential segment of the holddown stud.",
+        "relevant_chunk_ids": ["https://llis.nasa.gov/lesson/80"]
+      },
+      {
+        "id": 38,
+        "question": "What safety issue occurred during the GN2 system pressurization test at the Multi Payload Processing Facility?",
+        "expected_answer": "During a pressurization test of the Gaseous Nitrogen (GN2) system at the Multi Payload Processing Facility (MPPF), four panels that were part of the unmodified heritage portion of the GN2 system were inadvertently pressurized. The intent of the test was to pressurize only the new or modified parts of the GN2 system as part of Verification and Validation (V&V). This unintended pressurization could have caused an oxygen deficient atmosphere within the interstitial walls of the facility and/or the high bay and airlock areas if there had been any disconnected lines or leaks in the tubing assemblies. The incident was classified as a 'Close Call' and was caused by inadequate understanding of the actual configuration of the system.",
+        "relevant_chunk_ids": ["https://llis.nasa.gov/lesson/17601"]
+      },
+      {
+        "id": 39,
+        "question": "What is the Helium Signature Test and why was it developed for the Space Shuttle?",
+        "expected_answer": "The Helium Signature Test is an end-to-end leak check of the entire Main Propulsion System (MPS) that serves as a final validation of flightworthiness. It was initially developed to find the source of a massive hydrogen leak detected during the Flight Readiness Firing of the orbiter Challenger before its first flight. The test works by pressurizing the MPS propellant systems with helium and sampling the aft fuselage atmosphere using the Hazardous Gas Detection System (HGDS). Any helium leaking from the MPS would mix with the air in the aft fuselage and be detected as an increase in helium concentration. By measuring this change and knowing the air purge flow rate, a total system leak rate can be calculated. The test was later refined to become an important preflight leak test and can be used for any enclosed hazardous system with a control volume to ensure overall system integrity.",
+        "relevant_chunk_ids": ["https://llis.nasa.gov/lesson/3177"]
+      },
+      {
+        "id": 40,
+        "question": "What hazard can occur with pressurized cans in automobiles during hot weather?",
+        "expected_answer": "Pressurized cans stored in automobiles during hot weather can explode when the interior temperature exceeds their maximum storage temperature of 120 degrees F. In one incident, a civilian car owner placed a pressurized can in an automobile during hot weather, and when the interior of the closed car heated up beyond the can's maximum storage temperature, the can exploded with enough force to blow out the rear window. Almost all pressurized cans have a maximum storage temperature of 120 degrees F, which can easily be exceeded in a car exposed to the sun in hot weather.",
+        "relevant_chunk_ids": ["https://llis.nasa.gov/lesson/1337"]
+      },
+      {
+        "id": 41,
+        "question": "What is the primary scientific objective of the LiteBIRD mission?",
+        "expected_answer": "LiteBIRD (Lite satellite for the study of B-mode polarization and Inflation from cosmic background Radiation Detection) is a JAXA-led Strategic Large-Class mission aimed at mapping the cosmic microwave background (CMB) polarized emission over the full sky at large angular scales. As the fourth generation of CMB space missions, LiteBIRD is specifically targeting the measurement of the CMB B-mode signals, which are the best probe of primordial gravitational waves generated during the first period of our Universe's history, as predicted by the cosmological inflation theory. The detection of these B-modes would allow scientists to test major inflationary models and directly access the energy of inflation.",
+        "relevant_chunk_ids": ["20210000323 Overview of the mediumand high frequency telescopes-Wollack.pdf_2"]
+      },
+      {
+        "id": 42,
+        "question": "What are the technical requirements for the MHFT in the LiteBIRD mission?",
+        "expected_answer": "The technical requirements of the Medium and High Frequency Telescope (MHFT) are derived from the scientific high-level requirements on the tensor-to-scalar ratio r, with a total uncertainty δr < 0.001. This total error budget is distributed equally over three main contributions at a level of 5.7 × 10^-4 each: statistical uncertainty, systematic uncertainty, and margin. The statistical uncertainty requirement is strongly driven by the global sensitivity of the instrument and implies stringent constraints on the 1/f noise component and mitigation of foreground contaminants. The systematics uncertainty budget is driven by the level of knowledge of the instruments, with the goal to keep the uncertainty on r smaller than 5.7 × 10^-6 for each source of instrumental systematic.",
+        "relevant_chunk_ids": ["20210000323 Overview of the mediumand high frequency telescopes-Wollack.pdf_3"]
+      },
+      {
+        "id": 43,
+        "question": "Why did the LiteBIRD mission choose to include a continuously-rotating half-wave plate (HWP) in its design?",
+        "expected_answer": "The LiteBIRD mission included a continuously-rotating half-wave plate (HWP) as the first optical element for all telescopes to effectively suppress 1/f noise. The presence of this continuously-rotating HWP allows the instrument to distinguish between the instrumental polarized signal and the sky signal, which is modulated at 4fHWP. A detailed trade-off analysis, including the polarization effects induced by the HWP itself, showed that performance would be degraded by a factor of about 2 without the HWP, with degradation scaling as the ratio of fknee over the spin rate of the satellite. Both the Medium Frequency Telescope (MFT) and High Frequency Telescope (HFT) are equipped with a levitating continuously-rotating HWP to minimize the heat load impact.",
+        "relevant_chunk_ids": ["20210000323 Overview of the mediumand high frequency telescopes-Wollack.pdf_4"]
+      },
+      {
+        "id": 44,
+        "question": "Why did the LiteBIRD mission split the 89-448 GHz frequency range into two telescopes?",
+        "expected_answer": "The split of the 89-448 GHz frequency range into two telescopes (Medium Frequency Telescope and High Frequency Telescope) was motivated by a trade-off analysis between reflective versus refractive options. After studies conducted in the framework of the ESA CDF study and subsequent optimization, the fully refractive option was selected as the baseline for the MHFT. This design choice provides a very simple and compact design that takes advantage of strong heritage from ground-based and balloon-borne experiments such as BICEP2, Keck, SPIDER, LSPE, and Simons Observatory. Furthermore, the split between middle and high frequencies facilitates the design of the filtering scheme and the calibration strategy.",
+        "relevant_chunk_ids": ["20210000323 Overview of the mediumand high frequency telescopes-Wollack.pdf_4"]
+      },
+      {
+        "id": 45,
+        "question": "What fatigue crack growth life prediction method was used in the NASA study of surface cracks in aluminum plates?",
+        "expected_answer": "Fatigue crack growth life predictions were performed using NASGRO® version 8.1, assuming that Linear Elastic Fracture Mechanics (LEFM) is applicable. The study analyzed a surface crack in a 3-inch-wide flat plate of 6061-T6 aluminum, using the SC 30 stress intensity factor solution for this configuration. In the first set of analyses, the plate was subjected to a remote tensile stress of 20 ksi with a stress ratio (R = Smin/Smax) of 0.1. The lives of the crack shown in the figures are the lives for each of the interpolated initial crack size aspect ratios up to the point when the crack transitions from a Part Through Crack (PTC) to a Through Crack (TC).",
+        "relevant_chunk_ids": ["20170001222.pdf_15"]
+      },
+      {
+        "id": 46,
+        "question": "What are the two procedures described for determining crack a and c sizes for analysis in the NASA fracture mechanics study?",
+        "expected_answer": "Two procedures are described for determining crack a and c sizes for analysis. In the first procedure, intermediate points on a straight line connecting the a and c values of the endpoints are read off as aj and cj, or alternatively, the linear equation for the line connecting the a, c endpoints may be used to compute intermediate points. The corresponding aspect ratio is computed as (aj/cj). In the second procedure, for obtaining round (a/c) numbers, simple algebra is used to transform the linear relationship of a and c into relationships between c and a/c and a and a/c. For any given value of (a/c)k, the values of ck can be calculated using the derived equation with the slope m and intercept r, and the corresponding value of ak can be calculated using a = (a/c)*c.",
+        "relevant_chunk_ids": ["20170001222.pdf_16"]
+      },
+      {
+        "id": 47,
+        "question": "How do different combinations of tensile and bending loadings affect crack life in the NASA fracture mechanics study?",
+        "expected_answer": "The study found that pure tensile loading has a much shorter life than cases consisting partly of bending stress. Four different remote loadings were analyzed: (A) St=20 ksi tensile loading, (B) St=15 ksi tensile plus Sb=5 ksi bending loadings, (C) St=10 ksi tensile plus Sb=10 ksi bending loadings, and (D) St=0 tensile with Sb=20 ksi bending loading. These stress loadings were selected to have the same maximum stress acting on the outer surface and the crack c-tip. As expected, the pure tensile loading had a lower life for most aspect ratio crack configurations compared to combined tensile and bending loadings.",
+        "relevant_chunk_ids": ["20170001222.pdf_17"]
+      },
+      {
+        "id": 48,
+        "question": "What is the Laplace equilibrium equation for a satellite in circular orbit around an asteroid?",
+        "expected_answer": "For a satellite in circular orbit around an asteroid, the Laplace equilibrium equation (assuming zero SRP terms) is: ω² (p̂·ĥ)(p̃̂·ĥ) + ωs(Hs·ĥ)(H̃s̃·ĥ) = 0. This equilibrium can be put in terms of the obliquity and Laplace angle, such that the Laplace angle can explicitly be solved: ω² sin 2φ + ωs sin 2(φ - ε) = 0. The Laplace angle φ is an azimuthal angle measured from the body's spin axis that defines the orbit to lie in-between the equator and the orbital plane such that as a goes to 0, φ goes to 0 and when a goes to ∞, φ goes to ε.",
+        "relevant_chunk_ids": ["20180003465.pdf_5"]
+      },
+      {
+        "id": 49,
+        "question": "How does Solar Radiation Pressure (SRP) affect the Laplace angle of a satellite orbiting an asteroid?",
+        "expected_answer": "Solar Radiation Pressure (SRP) increases the Laplace angle for the same radii as the SRP increases. With the inclusion of SRP perturbation terms, the modified Laplace equilibrium equation becomes: ω² sin 2φ + ωs sin 2(φ - ε) + 2ωsrp sin(φ - ε) = 0. The study compared mass-to-area ratios of b = 100 kg/m², b = 1000 kg/m², and no SRP, finding that for an increase in the mass-to-area ratio (i.e., less SRP effect), the bisection of the Laplace angle occurs at a smaller semi-major axis. For reference, a natural satellite with a mass-to-area ratio of 100 kg/m² and 1000 kg/m² is 0.075 m and 0.75 m respectively.",
+        "relevant_chunk_ids": ["20180003465.pdf_5", "20180003465.pdf_6"]
+      },
+      {
+        "id": 50,
+        "question": "What is the Kozai resonance and how does it affect satellite orbits around asteroids?",
+        "expected_answer": "The Kozai resonance occurs in a three-body system when the satellite has negligible mass compared to the other two bodies (asteroid and Sun), and the distance between the primary (asteroid) and the satellite is much closer than that of the primary to the Sun. It is caused by the orbit's argument of periapsis librating due to perturbations from the Sun. In this scenario, there is a conserved quantity: the angular momentum of the satellite's orbit in the Sun-asteroid orbit plane, expressed as Hz = √(1-e²)cos i. Therefore, as the inclination increases, the eccentricity will decrease and vice versa. The Kozai resonance most likely occurs further out from the asteroid where spherical harmonics don't significantly perturb the system. At certain high inclinations, the Kozai resonance can cause instability since the eccentricity will increase to the point of either collision with the asteroid or escape outside of the Hill sphere at apoapsis.",
+        "relevant_chunk_ids": ["20180003465.pdf_6"]
+      }
+]

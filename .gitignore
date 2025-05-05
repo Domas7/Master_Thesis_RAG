@@ -7,6 +7,9 @@ __pycache__
 *.pyd
 *.pyw
 
+TEST_DATABASE.json
+TEST_DATABASE_2.json
+TEST_DATABASE_2_WRONG.json
 reprocessed_section_chunks/
 reprocessed_section_chunks_2/
 reprocessed_section_chunks_3/

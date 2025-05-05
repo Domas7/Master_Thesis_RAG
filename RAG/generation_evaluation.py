@@ -5,6 +5,7 @@ from bert_score import score as bert_score
 from transformers import AutoTokenizer, AutoModel
 import torch
 import numpy as np
+from rouge_score import rouge_scorer
 
 def evaluate_generation(rag_model, test_questions, reference_answers, model_name="openai"):
     """
@@ -24,12 +25,16 @@ def evaluate_generation(rag_model, test_questions, reference_answers, model_name
         'semantic_similarity': [],
         'answer_relevance': [],
         'factual_accuracy': [],
-        'groundedness': []
+        'groundedness': [],
+        'rouge_scores': []
     }
     
     # Initialize MPNet model for both semantic similarity and BERTScore
     sentence_model_name = 'sentence-transformers/all-mpnet-base-v2'
     sentence_model = SentenceTransformer(sentence_model_name)
+    
+    # Initialize ROUGE scorer
+    rouge_scorer_instance = rouge_scorer.RougeScorer(['rouge1', 'rouge2', 'rougeL'], use_stemmer=True)
     
     for question in test_questions:
         print(f"Evaluating generation for question: {question} with {model_name}")
@@ -72,6 +77,19 @@ def evaluate_generation(rag_model, test_questions, reference_answers, model_name
         ref_embedding = sentence_model.encode(reference_answer)
         similarity = cosine_similarity([gen_embedding], [ref_embedding])[0][0]
         
+        # Calculate ROUGE scores
+        try:
+            rouge_scores = rouge_scorer_instance.score(reference_answer, generated_answer)
+            rouge_results = {
+                'rouge1': rouge_scores['rouge1'].fmeasure,
+                'rouge2': rouge_scores['rouge2'].fmeasure,
+                'rougeL': rouge_scores['rougeL'].fmeasure
+            }
+            print(f"  ROUGE Scores - R1: {rouge_results['rouge1']:.2f}, R2: {rouge_results['rouge2']:.2f}, RL: {rouge_results['rougeL']:.2f}")
+        except Exception as e:
+            print(f"  Error calculating ROUGE scores: {e}")
+            rouge_results = {'rouge1': 0.0, 'rouge2': 0.0, 'rougeL': 0.0}
+        
         # Get retrieved documents for groundedness evaluation.
         retrieved_docs = rag_model.retriever.get_relevant_documents(question)
         
@@ -94,6 +112,7 @@ def evaluate_generation(rag_model, test_questions, reference_answers, model_name
         results['answer_relevance'].append(relevance)
         results['factual_accuracy'].append(accuracy)
         results['groundedness'].append(groundedness)
+        results['rouge_scores'].append(rouge_results)
         
         print(f"  BERTScore F1: {bert_f1:.2f}, Similarity: {similarity:.2f}")
         print(f"  Relevance: {relevance:.2f}, Accuracy: {accuracy:.2f}, Groundedness: {groundedness:.2f}")
@@ -105,6 +124,10 @@ def evaluate_generation(rag_model, test_questions, reference_answers, model_name
             final_results['bert_precision'] = sum(s['precision'] for s in results[metric]) / len(results[metric])
             final_results['bert_recall'] = sum(s['recall'] for s in results[metric]) / len(results[metric])
             final_results['bert_f1'] = sum(s['f1'] for s in results[metric]) / len(results[metric])
+        elif metric == 'rouge_scores':
+            final_results['rouge1'] = sum(s['rouge1'] for s in results[metric]) / len(results[metric])
+            final_results['rouge2'] = sum(s['rouge2'] for s in results[metric]) / len(results[metric])
+            final_results['rougeL'] = sum(s['rougeL'] for s in results[metric]) / len(results[metric])
         else:
             final_results[metric] = sum(results[metric]) / len(results[metric])
     
