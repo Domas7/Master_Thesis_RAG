@@ -38,11 +38,24 @@ logger = logging.getLogger(__name__)
 # Load environment variables from .env file if it exists
 load_dotenv()
 
-# Set API keys from Streamlit secrets
-if 'OPENAI_API_KEY' in st.secrets:
-    os.environ['OPENAI_API_KEY'] = st.secrets['OPENAI_API_KEY']
-if 'LANGCHAIN_API_KEY' in st.secrets:
-    os.environ['LANGCHAIN_API_KEY'] = st.secrets['LANGCHAIN_API_KEY']
+# Try to get API keys from environment variables first
+openai_api_key = os.getenv('OPENAI_API_KEY')
+langchain_api_key = os.getenv('LANGCHAIN_API_KEY')
+
+# If not found in environment, try to get from Streamlit secrets
+try:
+    if not openai_api_key and 'OPENAI_API_KEY' in st.secrets:
+        openai_api_key = st.secrets['OPENAI_API_KEY']
+    if not langchain_api_key and 'LANGCHAIN_API_KEY' in st.secrets:
+        langchain_api_key = st.secrets['LANGCHAIN_API_KEY']
+except Exception as e:
+    logger.warning(f"Could not access Streamlit secrets: {e}")
+
+# Set the API keys if found
+if openai_api_key:
+    os.environ['OPENAI_API_KEY'] = openai_api_key
+if langchain_api_key:
+    os.environ['LANGCHAIN_API_KEY'] = langchain_api_key
 
 logger.info("Environment variables loaded")
 
@@ -294,6 +307,13 @@ class RAGModel:
                     allow_dangerous_deserialization=True
                 )
                 logger.info("Vector store loaded successfully")
+                
+                # Initialize retriever after loading vector store
+                self.retriever = self.db.as_retriever(
+                    search_type="similarity",
+                    search_kwargs={"k": 4, "score_threshold": 0.7}
+                )
+                logger.info("Retriever initialized successfully")
             except Exception as e:
                 logger.error(f"Error loading vector store: {e}")
                 logger.info("Creating new vector store...")
@@ -336,12 +356,29 @@ class RAGModel:
         if self.db:
             self.db.save_local(str(self.index_dir / "nasa_docs_index"))
             logger.info("Vector store created and saved successfully")
+            
+            # Initialize retriever after creating vector store
+            self.retriever = self.db.as_retriever(
+                search_type="similarity",
+                search_kwargs={"k": 4, "score_threshold": 0.7}
+            )
+            logger.info("Retriever initialized successfully")
     
     def query(self, question, model_name="openai"):
         """Query the RAG model with a question"""
         if not self.retriever:
             logger.error("Retriever not initialized")
-            return "Error: Retriever not initialized. Please try again later."
+            # Try to initialize retriever if db exists
+            if self.db:
+                logger.info("Attempting to initialize retriever...")
+                self.retriever = self.db.as_retriever(
+                    search_type="similarity",
+                    search_kwargs={"k": 4, "score_threshold": 0.7}
+                )
+                if not self.retriever:
+                    return "Error: Retriever not initialized. Please try again later."
+            else:
+                return "Error: Vector store not loaded. Please try again later."
         
         logger.info(f"Processing question with {model_name}: {question}")
         query_start_time = time.time()
