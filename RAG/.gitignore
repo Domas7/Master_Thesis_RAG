@@ -19,7 +19,6 @@ __pycache__
 /Verified_Logs/
 /NASA_Technical_Server/
 /chatBot/keys.py
-/chatBot/vector_indices
 
 /OpenAI+Llama/private_key.py
 /../temp_skipped_chunks

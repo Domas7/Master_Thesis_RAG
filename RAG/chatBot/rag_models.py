@@ -58,23 +58,24 @@ DO NOT include a Sources section in your response. The system will add this auto
 """)
 
 class RAGModel:
-    def __init__(self, chunks_dir=["reprocessed_section_chunks", 
-                                  "reprocessed_section_chunks_2", 
-                                  "reprocessed_section_chunks_3"],
-                 lessons_learned_path="RAG/NASA_Lessons_Learned/nasa_lessons_learned_centers_1.csv",
+    def __init__(self, chunks_dir=["../../reprocessed_section_chunks", 
+                                  "../../reprocessed_section_chunks_2", 
+                                  "../../reprocessed_section_chunks_3"],
+                 lessons_learned_path="../../RAG/NASA_Lessons_Learned/nasa_lessons_learned_centers_1.csv",
                  index_dir="vector_indices"):
-        # Get the base directory (where the app is running)
-        self.base_dir = Path(os.getcwd())
+        # Get the absolute path of the current file
+        current_dir = Path(__file__).parent.absolute()
         
-        # Convert paths to be relative to the base directory
-        self.chunks_dirs = [self.base_dir / dir_path for dir_path in chunks_dir]
-        self.lessons_learned_path = self.base_dir / lessons_learned_path
-        self.index_dir = self.base_dir / index_dir
+        # For vector indices, use a path relative to the current file
+        self.index_dir = current_dir / index_dir
         
-        # Create necessary directories
-        for dir_path in self.chunks_dirs:
-            dir_path.mkdir(parents=True, exist_ok=True)
-        self.index_dir.mkdir(parents=True, exist_ok=True)
+        # For chunks and lessons learned, use paths relative to the project root
+        # First, find the project root (where the RAG directory is)
+        project_root = current_dir.parent.parent  # Go up two levels from chatBot to RAG to project root
+        
+        # Now construct the absolute paths
+        self.chunks_dirs = [project_root / dir_path for dir_path in chunks_dir]
+        self.lessons_learned_path = project_root / lessons_learned_path
         
         self.db = None
         self.retriever = None
@@ -82,8 +83,8 @@ class RAGModel:
         self.model_loading = False
         self.model_loaded = False
         
-        logger.info(f"Base directory: {self.base_dir}")
-        logger.info(f"Looking for chunks in: {self.chunks_dirs}")
+        # Create index directory if it doesn't exist
+        self.index_dir.mkdir(parents=True, exist_ok=True)
         
         # Initialize embeddings model
         self.embed = HuggingFaceEmbeddings(
@@ -94,6 +95,11 @@ class RAGModel:
         # Start model loading in background
         self._start_background_model_loading()
         
+        logger.info(f"Current directory: {current_dir}")
+        logger.info(f"Project root: {project_root}")
+        logger.info(f"Index directory: {self.index_dir}")
+        logger.info(f"Looking for chunks in: {self.chunks_dirs}")
+        
         # Load or create vector store
         self._load_or_create_vector_store()
     
@@ -103,7 +109,6 @@ class RAGModel:
             logger.info("Starting background model loading...")
             self.model_loading = True
             try:
-                # Try to connect to Ollama with a shorter timeout
                 self.llm = OllamaLLM(
                     model="wizardlm2",
                     temperature=0.1,
@@ -111,22 +116,21 @@ class RAGModel:
                     request_timeout=60.0,
                     num_predict=256,
                     num_thread=4,
-                    stop=["4. Sources"],
-                    base_url="http://localhost:11434"  # Explicitly set Ollama URL
+                    stop=["4. Sources"]
                 )
                 # Make a dummy call to ensure model is loaded
                 self.llm.invoke("Hello")
                 self.model_loaded = True
-                logger.info("Model loaded successfully in background")
+                logger.info("Mistral model loaded successfully in background")
             except Exception as e:
-                logger.error(f"Error loading model in background: {e}")
+                logger.error(f"Error loading Mistral model in background: {e}")
                 self.llm = None
             finally:
                 self.model_loading = False
         
         # Start the loading thread
         thread = threading.Thread(target=load_model)
-        thread.daemon = True
+        thread.daemon = True  # Thread will be killed when main program exits
         thread.start()
     
     def _load_chunks(self):
@@ -247,7 +251,7 @@ class RAGModel:
         index_path = self.index_dir / "nasa_docs_index"
         
         if index_path.exists():
-            logger.info("Loading existing vector store...")
+            logger.info(f"Loading existing vector store from: {index_path}")
             try:
                 self.db = FAISS.load_local(
                     str(index_path),
@@ -260,18 +264,10 @@ class RAGModel:
                 logger.info("Creating new vector store...")
                 self._create_vector_store()
         else:
+            logger.info(f"Vector store not found at: {index_path}")
             logger.info("Creating new vector store...")
             self._create_vector_store()
-        print("7")
-        # Create retriever
-        if self.db:
-            self.retriever = self.db.as_retriever(
-                search_kwargs={
-                    "k": 5,
-                    "score_threshold": 0.7
-                }
-            )
-        print("8")
+    
     def _create_vector_store(self):
         """Create a new vector store from document chunks"""
         chunks = self._load_chunks()
@@ -294,10 +290,9 @@ class RAGModel:
             
             if i == 0:
                 self.db = FAISS.from_documents(batch, self.embed)
-                print("9")
             else:
                 self.db.add_documents(batch)
-                print("10")
+            
             batch_duration = time.time() - batch_start_time
             docs_per_second = len(batch) / batch_duration
             logger.info(f"Batch {i+1}/{total_batches} completed in {batch_duration:.2f} seconds ({docs_per_second:.2f} docs/second)")
