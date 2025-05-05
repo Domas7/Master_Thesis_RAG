@@ -7,6 +7,7 @@ from pathlib import Path
 import faiss
 import numpy as np
 from dotenv import load_dotenv
+import streamlit as st
 from langchain_community.document_loaders import JSONLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_ollama import OllamaEmbeddings, OllamaLLM
@@ -34,8 +35,15 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# Load environment variables
+# Load environment variables from .env file if it exists
 load_dotenv()
+
+# Set API keys from Streamlit secrets
+if 'OPENAI_API_KEY' in st.secrets:
+    os.environ['OPENAI_API_KEY'] = st.secrets['OPENAI_API_KEY']
+if 'LANGCHAIN_API_KEY' in st.secrets:
+    os.environ['LANGCHAIN_API_KEY'] = st.secrets['LANGCHAIN_API_KEY']
+
 logger.info("Environment variables loaded")
 
 # Initialize cache
