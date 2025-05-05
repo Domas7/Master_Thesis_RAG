@@ -1,5 +1,4 @@
 import streamlit as st
-from main import *
 import pandas as pd
 from databases.database import *
 from prompt import get_chat_completion1, get_chat_completion2

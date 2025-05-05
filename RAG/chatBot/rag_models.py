@@ -98,7 +98,7 @@ class RAGModel:
             self.model_loading = True
             try:
                 self.llm = OllamaLLM(
-                    model="mistral",
+                    model="wizardlm2",
                     temperature=0.1,
                     num_ctx=512,
                     request_timeout=60.0,
@@ -337,7 +337,7 @@ class RAGModel:
                 
                 # Create a more concise prompt for faster processing
                 llama_prompt = ChatPromptTemplate.from_template("""
-                Based on the context, provide a concise answer to the question.
+                Answer the question based on the context. Be concise.
 
                 Context: {context}
                 Question: {input}
