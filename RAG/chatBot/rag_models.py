@@ -87,10 +87,20 @@ class RAGModel:
         self.index_dir.mkdir(parents=True, exist_ok=True)
         
         # Initialize embeddings model
-        self.embed = HuggingFaceEmbeddings(
-            model_name="all-MiniLM-L6-v2",
-            model_kwargs={'device': 'cpu'}
-        )
+        try:
+            self.embed = HuggingFaceEmbeddings(
+                model_name="all-MiniLM-L6-v2",
+                model_kwargs={'device': 'cpu'},
+                encode_kwargs={'normalize_embeddings': True}
+            )
+        except Exception as e:
+            logger.error(f"Error initializing HuggingFaceEmbeddings: {e}")
+            # Fallback to a simpler embedding model
+            from langchain_community.embeddings import HuggingFaceInstructEmbeddings
+            self.embed = HuggingFaceInstructEmbeddings(
+                model_name="hkunlp/instructor-base",
+                model_kwargs={'device': 'cpu'}
+            )
         
         # Start model loading in background
         self._start_background_model_loading()
@@ -109,22 +119,39 @@ class RAGModel:
             logger.info("Starting background model loading...")
             self.model_loading = True
             try:
-                self.llm = OllamaLLM(
-                    model="wizardlm2",
-                    temperature=0.1,
-                    num_ctx=512,
-                    request_timeout=60.0,
-                    num_predict=256,
-                    num_thread=4,
-                    stop=["4. Sources"]
-                )
-                # Make a dummy call to ensure model is loaded
-                self.llm.invoke("Hello")
-                self.model_loaded = True
-                logger.info("Mistral model loaded successfully in background")
+                # Try to connect to Ollama
+                response = requests.get("http://localhost:11434/api/tags")
+                if response.status_code == 200:
+                    self.llm = OllamaLLM(
+                        model="wizardlm2",
+                        temperature=0.1,
+                        num_ctx=512,
+                        request_timeout=60.0,
+                        num_predict=256,
+                        num_thread=4,
+                        stop=["4. Sources"]
+                    )
+                    # Make a dummy call to ensure model is loaded
+                    self.llm.invoke("Hello")
+                    self.model_loaded = True
+                    logger.info("Mistral model loaded successfully in background")
+                else:
+                    logger.warning("Ollama is not available, falling back to OpenAI")
+                    self.llm = ChatOpenAI(
+                        model="gpt-3.5-turbo",
+                        temperature=0.1,
+                        max_tokens=1024
+                    )
+                    self.model_loaded = True
             except Exception as e:
-                logger.error(f"Error loading Mistral model in background: {e}")
-                self.llm = None
+                logger.error(f"Error loading model in background: {e}")
+                logger.warning("Falling back to OpenAI")
+                self.llm = ChatOpenAI(
+                    model="gpt-3.5-turbo",
+                    temperature=0.1,
+                    max_tokens=1024
+                )
+                self.model_loaded = True
             finally:
                 self.model_loading = False
         
