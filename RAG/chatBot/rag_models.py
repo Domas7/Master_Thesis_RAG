@@ -58,24 +58,32 @@ DO NOT include a Sources section in your response. The system will add this auto
 """)
 
 class RAGModel:
-    def __init__(self, chunks_dir=["../../reprocessed_section_chunks", 
-                                  "../../reprocessed_section_chunks_2", 
-                                  "../../reprocessed_section_chunks_3"],
-                 lessons_learned_path="../../RAG/NASA_Lessons_Learned/nasa_lessons_learned_centers_1.csv",
+    def __init__(self, chunks_dir=["reprocessed_section_chunks", 
+                                  "reprocessed_section_chunks_2", 
+                                  "reprocessed_section_chunks_3"],
+                 lessons_learned_path="RAG/NASA_Lessons_Learned/nasa_lessons_learned_centers_1.csv",
                  index_dir="vector_indices"):
-        # Convert relative paths to absolute paths based on the current file location
-        current_dir = Path(__file__).parent.absolute()
-        self.chunks_dirs = [Path(current_dir) / dir_path for dir_path in chunks_dir]
-        self.lessons_learned_path = Path(current_dir) / lessons_learned_path
-        self.index_dir = Path(current_dir) / index_dir
+        # Get the base directory (where the app is running)
+        self.base_dir = Path(os.getcwd())
+        
+        # Convert paths to be relative to the base directory
+        self.chunks_dirs = [self.base_dir / dir_path for dir_path in chunks_dir]
+        self.lessons_learned_path = self.base_dir / lessons_learned_path
+        self.index_dir = self.base_dir / index_dir
+        
+        # Create necessary directories
+        for dir_path in self.chunks_dirs:
+            dir_path.mkdir(parents=True, exist_ok=True)
+        self.index_dir.mkdir(parents=True, exist_ok=True)
+        
         self.db = None
         self.retriever = None
         self.llm = None
         self.model_loading = False
         self.model_loaded = False
         
-        # Create index directory if it doesn't exist
-        self.index_dir.mkdir(parents=True, exist_ok=True)
+        logger.info(f"Base directory: {self.base_dir}")
+        logger.info(f"Looking for chunks in: {self.chunks_dirs}")
         
         # Initialize embeddings model
         self.embed = HuggingFaceEmbeddings(
@@ -86,8 +94,6 @@ class RAGModel:
         # Start model loading in background
         self._start_background_model_loading()
         
-        logger.info(f"Looking for chunks in: {self.chunks_dirs}")
-        
         # Load or create vector store
         self._load_or_create_vector_store()
     
@@ -97,6 +103,7 @@ class RAGModel:
             logger.info("Starting background model loading...")
             self.model_loading = True
             try:
+                # Try to connect to Ollama with a shorter timeout
                 self.llm = OllamaLLM(
                     model="wizardlm2",
                     temperature=0.1,
@@ -104,21 +111,22 @@ class RAGModel:
                     request_timeout=60.0,
                     num_predict=256,
                     num_thread=4,
-                    stop=["4. Sources"]
+                    stop=["4. Sources"],
+                    base_url="http://localhost:11434"  # Explicitly set Ollama URL
                 )
                 # Make a dummy call to ensure model is loaded
                 self.llm.invoke("Hello")
                 self.model_loaded = True
-                logger.info("Mistral model loaded successfully in background")
+                logger.info("Model loaded successfully in background")
             except Exception as e:
-                logger.error(f"Error loading Mistral model in background: {e}")
+                logger.error(f"Error loading model in background: {e}")
                 self.llm = None
             finally:
                 self.model_loading = False
         
         # Start the loading thread
         thread = threading.Thread(target=load_model)
-        thread.daemon = True  # Thread will be killed when main program exits
+        thread.daemon = True
         thread.start()
     
     def _load_chunks(self):
