@@ -97,11 +97,20 @@ class RAGModel:
                                   "../../reprocessed_section_chunks_3"],
                  lessons_learned_path="../../RAG/NASA_Lessons_Learned/nasa_lessons_learned_centers_1.csv",
                  index_dir="vector_indices"):
-        # Convert relative paths to absolute paths based on the current file location
+        # Get the absolute path of the current file
         current_dir = Path(__file__).parent.absolute()
-        self.chunks_dirs = [Path(current_dir) / dir_path for dir_path in chunks_dir]
-        self.lessons_learned_path = Path(current_dir) / lessons_learned_path
-        self.index_dir = Path(current_dir) / index_dir
+        
+        # For vector indices, use a path relative to the current file
+        self.index_dir = current_dir / index_dir
+        
+        # For chunks and lessons learned, use paths relative to the project root
+        # First, find the project root (where the RAG directory is)
+        project_root = current_dir.parent.parent  # Go up two levels from chatBot to RAG to project root
+        
+        # Now construct the absolute paths
+        self.chunks_dirs = [project_root / dir_path for dir_path in chunks_dir]
+        self.lessons_learned_path = project_root / lessons_learned_path
+
         self.db = None
         self.retriever = None
         self.llm = None
