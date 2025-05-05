@@ -140,36 +140,41 @@ class RAGModel:
             logger.info("Starting background model loading...")
             self.model_loading = True
             try:
-                # Get Ollama service URL from environment or use default
-                ollama_base_url = os.getenv('OLLAMA_BASE_URL', 'http://localhost:11434')
-                logger.info(f"Connecting to Ollama at: {ollama_base_url}")
-                
-                # Test connection to Ollama
-                try:
-                    response = requests.get(f"{ollama_base_url}/api/tags")
-                    if response.status_code != 200:
-                        raise Exception(f"Ollama API returned status code: {response.status_code}")
-                except requests.exceptions.RequestException as e:
-                    raise Exception(f"Could not connect to Ollama service at {ollama_base_url}: {str(e)}")
-                
-                self.llm = OllamaLLM(
-                    base_url=ollama_base_url,
-                    model="mistral",
-                    temperature=0.1,
-                    num_ctx=512,
-                    request_timeout=60.0,
-                    num_predict=256,
-                    num_thread=4,
-                    stop=["4. Sources"]
-                )
-                # Make a dummy call to ensure model is loaded
-                self.llm.invoke("Hello")
-                self.model_loaded = True
-                logger.info("Mistral model loaded successfully in background")
+                # Try to connect to Ollama
+                response = requests.get("http://localhost:11434/api/tags")
+                if response.status_code == 200:
+                    self.llm = OllamaLLM(
+                        model="wizardlm2",
+                        temperature=0.1,
+                        num_ctx=512,
+                        request_timeout=60.0,
+                        num_predict=256,
+                        num_thread=4,
+                        stop=["4. Sources"]
+                    )
+                    # Make a dummy call to ensure model is loaded
+                    self.llm.invoke("Hello")
+                    self.model_loaded = True
+                    logger.info("Using Ollama model (wizardlm2) for responses")
+                else:
+                    logger.warning("Ollama is not available, falling back to OpenAI")
+                    self.llm = ChatOpenAI(
+                        model="gpt-4o-mini",
+                        temperature=0.1,
+                        max_tokens=1024
+                    )
+                    self.model_loaded = True
+                    logger.info("Using OpenAI model (gpt-4o-mini) for responses")
             except Exception as e:
-                logger.error(f"Error loading Mistral model in background: {e}")
-                self.llm = None
-                # Don't fall back to OpenAI, just set llm to None
+                logger.error(f"Error loading model in background: {e}")
+                logger.warning("Falling back to OpenAI")
+                self.llm = ChatOpenAI(
+                    model="gpt-4o-mini",
+                    temperature=0.1,
+                    max_tokens=1024
+                )
+                self.model_loaded = True
+                logger.info("Using OpenAI model (gpt-4o-mini) for responses")
             finally:
                 self.model_loading = False
         
@@ -406,6 +411,7 @@ class RAGModel:
                 
                 # Use the concise prompt for faster processing
                 combine_docs_chain = create_stuff_documents_chain(self.llm, llama_prompt)
+                logger.info("Using Ollama model (wizardlm2) for this query")
                 
             else:  # Default to OpenAI
                 llm = ChatOpenAI(
@@ -416,6 +422,7 @@ class RAGModel:
                 
                 # Use the full NASA prompt for OpenAI
                 combine_docs_chain = create_stuff_documents_chain(llm, nasa_prompt)
+                logger.info("Using OpenAI model (gpt-40-mini) for this query")
             
             # Create retrieval chain with optimized parameters
             retrieval_chain = create_retrieval_chain(
