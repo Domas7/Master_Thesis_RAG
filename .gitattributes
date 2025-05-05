@@ -1,0 +1,6 @@
+vector_indices/**/*.index filter=lfs diff=lfs merge=lfs -text
+vector_indices/**/*.faiss filter=lfs diff=lfs merge=lfs -text
+vector_indices/**/*.pkl filter=lfs diff=lfs merge=lfs -text 
+vector_indices/** filter=lfs diff=lfs merge=lfs -text
+RAG/chatBot/vector_indices/**/*.faiss filter=lfs diff=lfs merge=lfs -text
+RAG/chatBot/vector_indices/**/*.pkl filter=lfs diff=lfs merge=lfs -text
