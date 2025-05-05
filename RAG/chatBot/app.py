@@ -1,13 +1,11 @@
 import streamlit as st
 import pandas as pd
-from databases.database import *
 from rag_models import get_rag_model
 import datetime
 import os
 import json
 
 # Initialize session state variables if they don't exist
-playlist = get_playlist_song_titles()
 if 'user_msgs' not in st.session_state:
     st.session_state.user_msgs = []
 if 'bot_msgs' not in st.session_state:
@@ -228,89 +226,6 @@ else:
         # Button container below chat
         button_container = st.container(border=True)
 
-        if prompt := st.chat_input("Say something"):
-            # Processing prompt
-            st.session_state.user_msgs.append(prompt)
-            # prompt = prompt + f"This is the playlist: {playlist}"
-            if prompt[0] != "/":
-                prompt = get_chat_completion1(prompt)
-            prompt_components = prompt.split(" ")
-            command = prompt_components[0]
-            song = " ".join(prompt_components[1:])
-
-            # Executing command
-            if command == "/add":
-                reply = add(song)
-                if isinstance(reply, list):
-                    st.session_state.show_song_selection = True
-                    st.session_state.song_options = reply
-                    st.session_state.bot_msgs.append("Multiple songs found. Please select one from the popup.")
-                else:
-                    st.session_state.bot_msgs.append(reply)
-            elif command == "/add-specific":
-                reply = add_specific(song)
-                st.session_state.bot_msgs.append(reply)
-            elif command == "/remove":
-                reply = remove(song)
-                st.session_state.bot_msgs.append(reply)
-            elif command == "/clear":
-                reply = clear()
-                st.session_state.bot_msgs.append(reply)
-            elif command == "/list":
-                st.session_state.bot_msgs.append(f"Here is the playlist:\n{playlist}")
-            elif command == "/add-many":
-                try:
-                    count = int(prompt_components[1])
-                    genre_or_mood = " ".join(prompt_components[2:])
-                    reply = add_many(count, genre_or_mood)
-                    st.session_state.bot_msgs.append(reply)
-                except (ValueError, IndexError):
-                    st.session_state.bot_msgs.append("Invalid format. Please specify count and genre/mood.")
-            else:
-                if "When was album" in prompt or "when was album" in prompt.lower():
-                    split = prompt.strip().split("album")
-                    album_comps = split[1].split(" ")    
-                    album = " ".join(album_comps[:-1])
-                    album = album.strip()
-                    response = get_album_date(album)
-                    st.session_state.bot_msgs.append(response)
-                elif "How many albums" in prompt or "how many albums" in prompt.lower():
-                    split = prompt.strip().split("has")
-                    artist_comps = split[1].split(" ")    
-                    artist = " ".join(artist_comps[:-1])
-                    artist = artist.strip()
-                    response = how_many_albums(artist)
-                    st.session_state.bot_msgs.append(response)
-                elif "Which album features song" in prompt or "which album features song" in prompt.lower():
-                    split = prompt.strip().split("song")
-                    song = split[1].strip()
-                    response = song_album_features(song)
-                    st.session_state.bot_msgs.append(response)
-                else:
-                    st.session_state.bot_msgs.append("Command not found.")
-            
-            st.rerun()
-
-
-        if st.session_state.show_song_selection:
-            with st.sidebar:
-                st.header("Select a Song")
-                for i, song_info in enumerate(st.session_state.song_options):
-                    title, artist, album = song_info
-                    st.write(f"🎵 **{title}** by {artist} from _{album}_")
-                    if st.button("Add", key=f"add_song_{i}"):
-                        add_result = add_specific(f"{title};{artist};{album}")
-                        st.session_state.user_msgs.append(f"Add specific song {title} by {artist} from album {album}")
-                        st.session_state.bot_msgs.append(add_result)
-                        st.session_state.show_song_selection = False
-                        st.session_state.song_options = []
-                        st.rerun()
-                
-                if st.button("Cancel"):
-                    st.session_state.show_song_selection = False
-                    st.session_state.song_options = []
-                    st.rerun()
-                   
         with st.sidebar:
             st.header("User Evaluation Tasks", divider="gray")
             
