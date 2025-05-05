@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 from databases.database import *
-from prompt import get_chat_completion1, get_chat_completion2
 from rag_models import get_rag_model
 import datetime
 import os
@@ -664,56 +663,6 @@ else:
                             # Show success message
                             st.success("Thank you for your feedback! Your evaluation has been submitted successfully.")
                             st.balloons()
-
-    with tab2:
-        messages = st.container(height=400)
-        messages.chat_message("assistant").write(st.session_state.bot_msgs[0])
-
-        # Only show user-bot message pairs if there are any
-        if st.session_state.user_msgs:
-            for i, (user_msg, bot_msg) in enumerate(zip(st.session_state.user_msgs, st.session_state.bot_msgs[1:])):
-                messages.chat_message("user").write(user_msg)
-                messages.chat_message("assistant").write(bot_msg)  
-
-        
-        # Get current playlist
-        current_playlist = get_playlist_song_titles()
-        
-        if not current_playlist:
-            st.warning("Add some papers you your chosen papers table to get similar recommendations")
-        else:
-            # Get recommendations
-            recommendations = get_song_recommendations(current_playlist, 7)
-            st.session_state.recommended = recommendations
-            
-            if recommendations:
-                rec_df = pd.DataFrame(
-                    recommendations,
-                    columns=["Song Title", "Artist", "Album Title", "Release Year"]
-                )
-                
-                # Display recommendations table
-                st.table(rec_df)
-            else:
-                st.info("No recommendations found. Try adding more songs to your playlist!")
-
-
-        if prompt := st.chat_input("Say something", key="recommender"):
-            st.session_state.user_msgs.append(prompt)
-
-            prompt = get_chat_completion2(prompt, str(st.session_state.recommended))
-            prompt_components = prompt.split(" ")
-            command = prompt_components[0]
-            songids = prompt_components[1].split(",")
-
-            if command == "/add-multiple":
-                response = add_multiple(songids, st.session_state.recommended)
-                st.session_state.bot_msgs.append(response)
-                st.rerun()
-
-            else:
-                st.session_state.bot_msgs.append("Command not found.")
-                st.rerun()
 
     with tab1:
         st.header("NASA Mission Knowledge Base")
