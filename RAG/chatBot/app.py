@@ -4,6 +4,8 @@ from rag_models import get_rag_model
 import datetime
 import os
 import json
+import time
+import random
 
 # Initialize session state variables if they don't exist
 if 'user_msgs' not in st.session_state:
@@ -18,15 +20,99 @@ if "recommended" not in st.session_state:
     st.session_state.recommended = []
 if "selected_model" not in st.session_state:
     st.session_state.selected_model = "openai"  # Default model
+if "last_used_model" not in st.session_state:
+    st.session_state.last_used_model = "openai"  # Track which model was last used
 if 'logged_in' not in st.session_state:
     st.session_state.logged_in = False
 if 'username' not in st.session_state:
     st.session_state.username = ""
 if 'completed_tasks' not in st.session_state:
     st.session_state.completed_tasks = set()
+if 'all_tasks_completed' not in st.session_state:
+    st.session_state.all_tasks_completed = False
 
 # Initialize the RAG model
 rag_model = get_rag_model()
+
+# Add a function to print task model mappings for debugging
+def print_task_model_mappings():
+    """Print all task model mappings for debugging"""
+    print("\n--- TASK MODEL MAPPINGS ---")
+    if 'task_model_mapping' in st.session_state:
+        for task_id, model in st.session_state.task_model_mapping.items():
+            print(f"{task_id}: {model}")
+    else:
+        print("No task model mappings exist yet.")
+    print("---------------------------\n")
+
+# UI for the RAG tab
+def render_rag_tab():
+    st.header("NASA Mission Knowledge Base")
+    
+    # Model selection
+    model_col1, model_col2 = st.columns(2)
+    with model_col1:
+        st.write("Select AI Model:")
+    with model_col2:
+        model_options = ["OpenAI", "Llama"]
+        
+        # Only allow model selection if all tasks are completed
+        if st.session_state.all_tasks_completed:
+            selected_index = 0 if st.session_state.selected_model == "openai" else 1
+            selected_model = st.selectbox(
+                "Model",
+                model_options,
+                index=selected_index,
+                label_visibility="collapsed"
+            )
+            st.session_state.selected_model = selected_model.lower()
+        else:
+            # Disabled dropdown with explanation
+            st.selectbox(
+                "Model (Randomized)",
+                model_options,
+                disabled=True,
+                label_visibility="collapsed"
+            )
+            st.info("📝 Models are being randomized by task until all evaluation tasks are completed or skipped.")
+    
+    # Chat interface for RAG
+    if 'rag_messages' not in st.session_state:
+        st.session_state.rag_messages = [
+            {"role": "assistant", "content": "I can answer questions about NASA missions and documents. What would you like to know?"}
+        ]
+    
+    # Display chat messages
+    for message in st.session_state.rag_messages:
+        with st.chat_message(message["role"]):
+            st.write(message["content"])
+            # Display model info for assistant messages (except the first welcome message)
+            if message["role"] == "assistant" and len(st.session_state.rag_messages) > 1 and message != st.session_state.rag_messages[0] and "model_used" in message:
+                st.caption(f"Answered using: {message['model_used'].capitalize()}")
+    
+    # User input
+    if rag_query := st.chat_input("Ask about NASA missions...", key="rag_input"):
+        # Add user message to chat history
+        st.session_state.rag_messages.append({"role": "user", "content": rag_query})
+        
+        # Display user message
+        with st.chat_message("user"):
+            st.write(rag_query)
+        
+        # Get response from RAG model
+        with st.spinner(f"Thinking..."):
+            response, model_used = process_rag_query(rag_query)
+        
+        # Add assistant response to chat history with model info
+        st.session_state.rag_messages.append({
+            "role": "assistant", 
+            "content": response,
+            "model_used": model_used
+        })
+        
+        # Display assistant response
+        with st.chat_message("assistant"):
+            st.write(response)
 
 # Define hardcoded credentials
 USERS = {
@@ -131,8 +217,8 @@ def evaluate_task_answer(task_id, answer):
         # Return the list of missing concepts for targeted feedback
         return False, task_concepts["feedback_correct"], missing_concepts
 
-# Function to log user answers2
-def log_user_answer(username, task_id, answer, is_correct):
+# Function to log user answers with additional information about model used and query
+def log_user_answer(username, task_id, answer, is_correct, model_used=None, query=None):
     log_dir = "user_answers"
     if not os.path.exists(log_dir):
         os.makedirs(log_dir)
@@ -145,6 +231,12 @@ def log_user_answer(username, task_id, answer, is_correct):
         "is_correct": is_correct,
         "timestamp": timestamp
     }
+    
+    # Add model and query information if provided
+    if model_used:
+        log_entry["model_used"] = model_used
+    if query:
+        log_entry["query"] = query
     
     log_file = os.path.join(log_dir, f"{username}_answers.json")
     
@@ -179,9 +271,77 @@ def log_user_evaluation(username, evaluation_data):
     
     return True
 
-def process_rag_query(query):
-    """Process a query using the RAG model with the selected model"""
-    return rag_model.query(query, st.session_state.selected_model)
+# Randomize model selection by task instead of by query
+def get_model_for_task(task_id):
+    """
+    Get the model to use for a specific task.
+    Each task always uses the same model, but the model is randomly assigned.
+    """
+    # Create a mapping of task to model if it doesn't exist
+    if 'task_model_mapping' not in st.session_state:
+        # Randomly assign models to tasks
+        models = ["openai", "llama"]
+        st.session_state.task_model_mapping = {
+            f"task{i}": random.choice(models) for i in range(1, 6)
+        }
+        # Add a default for regular queries
+        st.session_state.task_model_mapping["query"] = "openai"
+        print("Initialized new task model mapping:", st.session_state.task_model_mapping)
+    
+    # If this task doesn't have a model assigned yet, assign one
+    if task_id not in st.session_state.task_model_mapping:
+        model = random.choice(["openai", "llama"])
+        st.session_state.task_model_mapping[task_id] = model
+        print(f"Assigned new model {model} for task {task_id}")
+    
+    # Return the model for this task
+    return st.session_state.task_model_mapping.get(task_id, "openai")
+
+# Process a query using the RAG model with model selected based on task
+def process_rag_query(query, task_id="query"):
+    """Process a query using the RAG model with model selected based on task"""
+    # If all tasks are complete, use the selected model
+    if st.session_state.all_tasks_completed:
+        model = st.session_state.selected_model
+        print(f"All tasks completed: Using user-selected model: {model}")
+    else:
+        # Use task-based model selection
+        model = get_model_for_task(task_id)
+        print(f"Task-based model selection: Using {model} for task {task_id}")
+        st.session_state.last_used_model = model
+    
+    # Process the query
+    print(f"Sending query to rag_model with model_name={model}")
+    result = rag_model.query(query, model)
+    
+    # Log the query and model used
+    if st.session_state.logged_in:
+        log_user_answer(
+            st.session_state.username, 
+            "query", 
+            result, 
+            True,  # Not applicable for queries
+            model_used=model,
+            query=query
+        )
+    
+    return result, model
+
+# Check if all tasks are completed (either correct or skipped)
+def check_all_tasks_completed():
+    all_completed = True
+    for i in range(1, 6):
+        task_key = f"task{i}"
+        if task_key not in st.session_state.task_completion:
+            all_completed = False
+            break
+        task_data = st.session_state.task_completion[task_key]
+        if not task_data.get("completed", False):
+            all_completed = False
+            break
+    
+    st.session_state.all_tasks_completed = all_completed
+    return all_completed
 
 # Login form
 if not st.session_state.logged_in:
@@ -205,10 +365,45 @@ else:
     if st.sidebar.button("Logout"):
         st.session_state.logged_in = False
         st.session_state.username = ""
+        st.session_state.all_tasks_completed = False  # Reset task completion state
+        st.session_state.task_completion = {
+            "task1": {"completed": False, "correct": False, "attempts": 0},
+            "task2": {"completed": False, "correct": False, "attempts": 0},
+            "task3": {"completed": False, "correct": False, "attempts": 0},
+            "task4": {"completed": False, "correct": False, "attempts": 0},
+            "task5": {"completed": False, "correct": False, "attempts": 0}
+        }
+        st.session_state.completed_tasks = set()
+        
+        # Clear the task model mapping for a fresh start on next login
+        if 'task_model_mapping' in st.session_state:
+            del st.session_state.task_model_mapping
+        
         st.rerun()
     
     # Display current user
     st.sidebar.write(f"Logged in as: **{st.session_state.username}**")
+
+    # For admin only, show task model debugging
+    if st.session_state.username == "admin":
+        st.sidebar.write("---")
+        st.sidebar.subheader("Task Model Assignments (Admin View)")
+        # Display current task-model mappings
+        for i in range(1, 6):
+            task_key = f"task{i}"
+            if task_key in st.session_state.task_model_mapping:
+                model = st.session_state.task_model_mapping[task_key]
+                st.sidebar.write(f"Task {i}: {model.capitalize()}")
+            else:
+                st.sidebar.write(f"Task {i}: Not yet assigned")
+        
+        # Add button to regenerate task models
+        if st.sidebar.button("Reassign Task Models"):
+            for i in range(1, 6):
+                task_key = f"task{i}"
+                st.session_state.task_model_mapping[task_key] = random.choice(["openai", "llama"])
+            st.sidebar.success("Task models have been randomized!")
+            st.rerun()
     
     # Define tabs here, inside the else block
     tab1, tab2, tab3 = st.tabs(["RAG Query", "Lesson Recommender", "Explore Mission Database"])
@@ -251,96 +446,245 @@ else:
             
             task_id = f"task{selected_task[5:6]}"  # Extract task number
             
+            # Show which model is being used for this task (admin only)
+            if st.session_state.username == "admin":
+                model_used = get_model_for_task(task_id)
+                st.write(f"**Task Model:** {model_used.capitalize()}")
+
             # Display task description based on selection
             if selected_task == "Task 1: Engine Rollback Investigation":
                 st.markdown("""
                 ### Task 1: Engine Rollback Investigation
+                """)
+                # Make the task description non-copyable using HTML/CSS
+                st.markdown("""
+                <div style="user-select: none; -webkit-user-select: none; -ms-user-select: none;">
                 You're an aerospace engineer analyzing engine performance in icing conditions. Your team needs to understand what particle characteristics lead to engine rollback events. Research the Propulsion Systems Laboratory (PSL) test data findings to determine critical ice particle sizes and temperature conditions that contribute to these events.
                 
                 Expected findings should include:
                 - Analysis of Propulsion Systems Laboratory (PSL) data points on the LF11 engine model
                 - Critical particle size requirements for engine rollback (when thrust unexpectedly decreases)
                 - Relevant wet bulb temperature range in the Low Pressure Compressor (LPC) region
-                """)
+                </div>
+                """, unsafe_allow_html=True)
             elif selected_task == "Task 2: Satellite Thermal System Evaluation":
                 st.markdown("""
                 ### Task 2: Satellite Thermal System Evaluation
+                """)
+                # Make the task description non-copyable
+                st.markdown("""
+                <div style="user-select: none; -webkit-user-select: none; -ms-user-select: none;">
                 As a thermal engineer reviewing post-launch performance, you need to assess how well the Cloud-Aerosol Lidar and Infrared Pathfinder Satellite Observation (CALIPSO) payload thermal system functioned across different operational modes. Investigate the thermal performance data to prepare a brief report on system stability and margin conditions.
                 
                 Expected findings should include:
                 - Thermal boundary condition performance during System Health Monitoring (SHM) and Data Acquisition (DAQ) modes
                 - System behavior in various standby and safe modes (reduced power and emergency operations)
                 - Heater performance and temperature control effectiveness
-                """)
+                </div>
+                """, unsafe_allow_html=True)
             elif selected_task == "Task 3: Aircraft Noise Profile Assessment":
                 st.markdown("""
                 ### Task 3: Aircraft Noise Profile Assessment
+                """)
+                # Make the task description non-copyable
+                st.markdown("""
+                <div style="user-select: none; -webkit-user-select: none; -ms-user-select: none;">
                 You're working on noise reduction for a new aircraft design. Your task is to understand how engine power settings affect different noise components. Research how noise profiles vary between approach and takeoff conditions to inform your design recommendations.
                 
                 Expected findings should include:
                 - Inlet broadband component behavior (noise distributed across many frequencies) at low power settings
                 - Relationship between flight velocity and airframe noise (noise from the aircraft body)
                 - Comparative noise levels at high takeoff power
-                """)
+                </div>
+                """, unsafe_allow_html=True)
             elif selected_task == "Task 4: Critical Power System Design":
                 st.markdown("""
                 ### Task 4: Critical Power System Design
+                """)
+                # Make the task description non-copyable
+                st.markdown("""
+                <div style="user-select: none; -webkit-user-select: none; -ms-user-select: none;">
                 You're designing power systems for a new space mission with sensitive equipment. Your project manager wants recommendations on implementing Uninterruptible Power Supply (UPS) systems. Research the benefits and applications of UPS in NASA missions to justify your proposal.
                 
                 Expected findings should include:
                 - Safety benefits for personnel and equipment
                 - Critical applications for emergency operations
                 - Power quality improvement capabilities (voltage stability, frequency regulation)
-                """)
+                </div>
+                """, unsafe_allow_html=True)
             elif selected_task == "Task 5: Electronics System Safety Review":
                 st.markdown("""
                 ### Task 5: Electronics System Safety Review
+                """)
+                # Make the task description non-copyable
+                st.markdown("""
+                <div style="user-select: none; -webkit-user-select: none; -ms-user-select: none;">
                 As a systems safety engineer preparing for Critical Design Review, you need to recommend appropriate analysis techniques for a complex electro-mechanical system. Research analytical methods that can identify potential hidden circuit problems before manufacturing begins.
                 
                 Expected findings should include:
                 - Applicable system types for specialized circuit analysis (such as FMEA or fault tree analysis)
                 - Optimal implementation timing in the project lifecycle
                 - Benefits for high-criticality systems (systems where failure would be catastrophic)
-                """)
+                </div>
+                """, unsafe_allow_html=True)
             
             # Task answer submission
             st.write("Submit your findings:")
             user_answer = st.text_area("Your answer", height=150, key=f"answer_{task_id}")
             
-            if st.button("Submit Answer", key=f"submit_{task_id}"):
-                # Evaluate the answer
-                is_correct, feedback_message, missing_concepts = evaluate_task_answer(task_id, user_answer)
-                
-                # Update task completion state
-                if task_id not in st.session_state.task_completion:
-                    st.session_state.task_completion[task_id] = {"completed": False, "correct": False, "attempts": 0}
-                
-                st.session_state.task_completion[task_id]["attempts"] += 1
-                current_attempts = st.session_state.task_completion[task_id]["attempts"]
-                st.session_state.task_completion[task_id]["completed"] = True
-                st.session_state.task_completion[task_id]["correct"] = is_correct
-                
-                # Log the user's answer
-                log_user_answer(st.session_state.username, task_id, user_answer, is_correct)
-                
-                # Show feedback
-                if is_correct:
-                    st.success(f"✅ Correct! {feedback_message}")
-                    st.session_state.completed_tasks.add(task_id)
-                else:
-                    # Get the task's concept hints
-                    concept_hints = key_concepts[task_id]["concept_hints"]
+            # Create columns for submit and skip buttons
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                if st.button("Submit Answer", key=f"submit_{task_id}"):
+                    # Evaluate the answer
+                    is_correct, feedback_message, missing_concepts = evaluate_task_answer(task_id, user_answer)
                     
-                    # Select 2 missing concepts to provide hints for (or fewer if less are missing)
-                    num_hints = min(2, len(missing_concepts))
-                    selected_missing = missing_concepts[:num_hints]
+                    # Update task completion state
+                    if task_id not in st.session_state.task_completion:
+                        st.session_state.task_completion[task_id] = {"completed": False, "correct": False, "attempts": 0}
                     
-                    # Create targeted feedback
-                    hint_text = "Consider including these key elements: "
-                    for concept in selected_missing:
-                        hint_text += f"\n• {concept_hints[concept]}"
+                    st.session_state.task_completion[task_id]["attempts"] += 1
+                    current_attempts = st.session_state.task_completion[task_id]["attempts"]
+                    st.session_state.task_completion[task_id]["completed"] = True
+                    st.session_state.task_completion[task_id]["correct"] = is_correct
                     
-                    st.error(f"❌ Not quite right. Your answer needs more detail. {hint_text}")
+                    # Get the model used for this task
+                    model_used = get_model_for_task(task_id)
+                    
+                    # Log the user's answer with model information
+                    log_user_answer(
+                        st.session_state.username, 
+                        task_id, 
+                        user_answer, 
+                        is_correct,
+                        model_used=model_used, 
+                        query=None  # No specific query for task submissions
+                    )
+                    
+                    # Show feedback
+                    if is_correct:
+                        st.success(f"✅ Correct! {feedback_message}")
+                        st.session_state.completed_tasks.add(task_id)
+                        
+                        # Check if all tasks are now completed
+                        check_all_tasks_completed()
+                    else:
+                        # Get the task's concept hints
+                        concept_hints = key_concepts[task_id]["concept_hints"]
+                        
+                        # Select 2 missing concepts to provide hints for (or fewer if less are missing)
+                        num_hints = min(2, len(missing_concepts))
+                        selected_missing = missing_concepts[:num_hints]
+                        
+                        # Create targeted feedback
+                        hint_text = "Consider including these key elements: "
+                        for concept in selected_missing:
+                            hint_text += f"\n• {concept_hints[concept]}"
+                        
+                        st.error(f"❌ Not quite right. Your answer needs more detail. {hint_text}")
+            
+            with col2:
+                # Initialize skip countdown state if not exists
+                if f'skip_countdown_{task_id}' not in st.session_state:
+                    st.session_state[f'skip_countdown_{task_id}'] = 3
+                
+                if f'skipping_{task_id}' not in st.session_state:
+                    st.session_state[f'skipping_{task_id}'] = False
+                
+                if f'skip_confirmed_{task_id}' not in st.session_state:
+                    st.session_state[f'skip_confirmed_{task_id}'] = False
+                
+                if f'countdown_complete_{task_id}' not in st.session_state:
+                    st.session_state[f'countdown_complete_{task_id}'] = False
+                
+                # Skip button
+                if not st.session_state[f'skipping_{task_id}'] and not st.session_state[f'countdown_complete_{task_id}']:
+                    if st.button("Skip Task", key=f"skip_{task_id}"):
+                        st.session_state[f'skipping_{task_id}'] = True
+                
+                # If skip button was pressed, show countdown
+                if st.session_state[f'skipping_{task_id}'] and not st.session_state[f'countdown_complete_{task_id}']:
+                    # Create a nicer popup-like container for countdown without using nested columns
+                    st.markdown(f"""
+                    <div style="padding: 15px; background-color: #f0f2f6; border-radius: 10px; border: 1px solid #e0e0e0; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; margin-bottom: 15px;">
+                        <h3 style="color: #ff9800; margin-bottom: 10px;">⚠️ Skipping Task</h3>
+                        <p style="margin-bottom: 15px;">Are you sure you want to skip this task? It's better to try first.</p>
+                        <div style="font-size: 2.5rem; font-weight: bold; color: #ff5252; background-color: #ffebee; border-radius: 50%; width: 60px; height: 60px; line-height: 60px; margin: 0 auto 15px auto;">
+                            {st.session_state[f'skip_countdown_{task_id}']}
+                        </div>
+                        <p style="font-size: 0.9rem; color: #757575;">Wait for countdown to complete...</p>
+                    </div>
+                    """, unsafe_allow_html=True)
+                    
+                    # Allow cancelling the skip
+                    if st.button("Cancel Skip", key=f"cancel_skip_{task_id}"):
+                        st.session_state[f'skipping_{task_id}'] = False
+                        st.session_state[f'skip_countdown_{task_id}'] = 3
+                        st.rerun()
+                    
+                    # Auto-decrease countdown and rerun
+                    if st.session_state[f'skip_countdown_{task_id}'] > 0:
+                        st.session_state[f'skip_countdown_{task_id}'] -= 1
+                        # Wait for 1 second
+                        time.sleep(1)
+                        st.rerun()  # Rerun to update countdown
+                    else:
+                        # Countdown reached 0, show final confirmation
+                        st.session_state[f'countdown_complete_{task_id}'] = True
+                        st.session_state[f'skipping_{task_id}'] = False
+                        st.rerun()
+                
+                # Final confirmation after countdown completes
+                if st.session_state[f'countdown_complete_{task_id}'] and not st.session_state[f'skip_confirmed_{task_id}']:
+                    st.markdown(f"""
+                    <div style="padding: 15px; background-color: #fff3e0; border-radius: 10px; border: 1px solid #ffe0b2; text-align: center; margin-bottom: 15px;">
+                        <h3 style="color: #e65100; margin-bottom: 10px;">Confirm Skip</h3>
+                        <p>Click to confirm you want to skip this task.</p>
+                    </div>
+                    """, unsafe_allow_html=True)
+                    
+                    # Removed nested columns and used stacked buttons
+                    confirm_skip = st.button("Yes, Skip Task", key=f"confirm_skip_{task_id}")
+                    cancel_skip = st.button("No, I'll Try", key=f"cancel_confirm_skip_{task_id}")
+                    
+                    if confirm_skip:
+                        st.session_state[f'skip_confirmed_{task_id}'] = True
+                        
+                        # Mark task as skipped (completed but with skipped status)
+                        if task_id not in st.session_state.task_completion:
+                            st.session_state.task_completion[task_id] = {"completed": False, "correct": False, "attempts": 0}
+                        
+                        st.session_state.task_completion[task_id]["completed"] = True
+                        st.session_state.task_completion[task_id]["correct"] = True  # Mark as correct to allow progress
+                        st.session_state.task_completion[task_id]["skipped"] = True  # Add skipped status
+                        st.session_state.completed_tasks.add(task_id)
+                        
+                        # Get the model that would have been used for this task
+                        model_used = get_model_for_task(task_id)
+                        
+                        # Log the skipped task with model information
+                        log_user_answer(
+                            st.session_state.username, 
+                            task_id, 
+                            "TASK SKIPPED", 
+                            False,
+                            model_used=model_used,
+                            query=None
+                        )
+                        
+                        # Check if all tasks are now completed after skipping
+                        check_all_tasks_completed()
+                        
+                        # Show feedback
+                        st.warning(f"Task {task_id[-1]} has been skipped. You can still try other tasks.")
+                        st.session_state[f'countdown_complete_{task_id}'] = False
+                        st.rerun()
+                    
+                    if cancel_skip:
+                        st.session_state[f'countdown_complete_{task_id}'] = False
+                        st.session_state[f'skip_countdown_{task_id}'] = 3
+                        st.rerun()
             
             # Display task status summary
             st.divider()
@@ -353,6 +697,9 @@ else:
                 if not task_data["completed"]:
                     status = "⚪ Not attempted"
                     color = "gray"
+                elif task_data.get("skipped", False):
+                    status = "⏩ Skipped"
+                    color = "orange"
                 elif task_data["correct"]:
                     status = "✅ Completed successfully"
                     color = "green"
@@ -375,193 +722,117 @@ else:
                 
                 with st.container():
                     st.markdown("""
-                    ## Final Evaluation Form
-                    Please take a moment to provide feedback on your experience with the NASA Lessons Learned system.
-                    Your input helps us improve the learning experience and will be valuable for research purposes.
+                    ## Feedback Form
+                    Please tell us what you think about the NASA Lessons Learned system.
+                    Your feedback will help us improve it.
                     """)
                     
                     with st.form("evaluation_form"):
-                        # Part 1: General System Evaluation
-                        st.header("Part 1: General System Evaluation")
+                        # Part 1: System Usability Scale (SUS) Questions
+                        st.header("System Usability")
                         
-                        # System usability questions
-                        st.subheader("System Usability")
-                        usability_score = st.radio(
-                            "How would you rate the overall usability of the system?",
-                            options=["★", "★★", "★★★", "★★★★", "★★★★★"],
-                            horizontal=True
-                        )
+                        # SUS Questions - Using 5-point Likert scale
+                        sus_questions = [
+                            "I think that I would like to use this system frequently.",
+                            "I found the system unnecessarily complex.",
+                            "I thought the system was easy to use.",
+                            "I think that I would need the support of a technical person to be able to use this system.",
+                            "I found the various functions in this system were well integrated.",
+                            "I thought there was too much inconsistency in this system.",
+                            "I would imagine that most people would learn to use this system very quickly.",
+                            "I found the system very cumbersome to use.",
+                            "I felt very confident using the system.",
+                            "I needed to learn a lot of things before I could get going with this system."
+                        ]
+                        
+                        sus_responses = {}
+                        for i, question in enumerate(sus_questions, 1):
+                            sus_responses[f"sus_q{i}"] = st.radio(
+                                question,
+                                options=["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"],
+                                horizontal=True,
+                                key=f"sus_q{i}"
+                            )
                         
                         # Task difficulty questions
-                        st.subheader("Task Difficulty")
+                        st.header("Task Difficulty")
                         
                         # Create a more structured layout for task difficulty
                         task_difficulty = {}
                         for i in range(1, 6):
                             task_difficulty[f"task{i}"] = st.radio(
-                                f"Rate the difficulty of Task {i}:",
+                                f"How difficult was Task {i}?",
                                 options=["Too Easy", "Easy", "Just Right", "Challenging", "Too Difficult"],
                                 horizontal=True,
                                 key=f"difficulty_task{i}"
                             )
                         
-                        # Learning experience questions
-                        st.subheader("Learning Experience")
-                        learning_value = st.radio(
-                            "How valuable was this experience for learning about NASA missions?",
-                            options=["★", "★★", "★★★", "★★★★", "★★★★★"],
+                    
+                        
+                        # AI Assistant Performance
+                        st.header("AI Assistant Performance")
+                        
+                        ai_helpfulness = st.radio(
+                            "How helpful was the AI assistant?",
+                            options=["Not helpful", "Slightly helpful", "Moderately helpful", "Very helpful", "Extremely helpful"],
                             horizontal=True
                         )
                         
-                        knowledge_gain = st.radio(
-                            "How much did your knowledge about NASA lessons learned increase?",
-                            options=["★", "★★", "★★★", "★★★★", "★★★★★"],
+                        ai_relevance = st.radio(
+                            "How relevant were the AI's responses to your questions?",
+                            options=["Not relevant", "Somewhat relevant", "Moderately relevant", "Very relevant", "Extremely relevant"],
                             horizontal=True
                         )
                         
-                        # Part 2: RAG Chat Agent Evaluation
-                        st.header("Part 2: RAG Chat Agent Evaluation")
-                        
-                        # General RAG system feedback
-                        st.subheader("Overall AI Assistant Performance")
-                        rag_helpfulness = st.radio(
-                            "How helpful was the AI assistant in completing your tasks?",
-                            options=["★", "★★", "★★★", "★★★★", "★★★★★"],
-                            horizontal=True
-                        )
-                        
-                        # Model-specific evaluations
-                        st.subheader("Model-Specific Evaluation")
-                        
-                        # OpenAI (ChatGPT) evaluation
-                        st.markdown("**OpenAI (ChatGPT) Model**")
-                        openai_accuracy = st.radio(
-                            "How would you rate the accuracy of the OpenAI (ChatGPT) responses?",
-                            options=["★", "★★", "★★★", "★★★★", "★★★★★"],
-                            horizontal=True,
-                            key="openai_accuracy"
-                        )
-                        
-                        openai_relevance = st.radio(
-                            "How relevant were the OpenAI (ChatGPT) responses to your queries?",
-                            options=["★", "★★", "★★★", "★★★★", "★★★★★"],
-                            horizontal=True,
-                            key="openai_relevance"
-                        )
-                        
-                        openai_speed = st.radio(
-                            "How would you rate the response speed of the OpenAI (ChatGPT) model?",
-                            options=["★", "★★", "★★★", "★★★★", "★★★★★"],
-                            horizontal=True,
-                            key="openai_speed"
-                        )
-                        
-                        # Llama model evaluation
-                        st.markdown("**Llama Model**")
-                        llama_accuracy = st.radio(
-                            "How would you rate the accuracy of the Llama model responses?",
-                            options=["★", "★★", "★★★", "★★★★", "★★★★★"],
-                            horizontal=True,
-                            key="llama_accuracy"
-                        )
-                        
-                        llama_relevance = st.radio(
-                            "How relevant were the Llama model responses to your queries?",
-                            options=["★", "★★", "★★★", "★★★★", "★★★★★"],
-                            horizontal=True,
-                            key="llama_relevance"
-                        )
-                        
-                        llama_speed = st.radio(
-                            "How would you rate the response speed of the Llama model?",
-                            options=["★", "★★", "★★★", "★★★★", "★★★★★"],
-                            horizontal=True,
-                            key="llama_speed"
-                        )
-                        
-                        # Model comparison
-                        st.subheader("Model Comparison")
-                        preferred_model = st.radio(
-                            "Which model did you prefer overall?",
-                            options=["OpenAI (ChatGPT)", "Llama", "No preference"],
-                            horizontal=True
-                        )
-                        
-                        model_preference_reason = st.text_area(
-                            "Why did you prefer this model?",
-                            height=100
-                        )
-                        
-                        # Part 3: Research-Specific Questions
-                        st.header("Part 3: Research-Specific Questions")
-                        
-                        # Information retrieval effectiveness
-                        st.subheader("Information Retrieval")
+                        # Research-Specific Questions
+                        st.header("Research Features")
                         
                         retrieval_quality = st.radio(
-                            "How would you rate the quality of retrieved information?",
-                            options=["★", "★★", "★★★", "★★★★", "★★★★★"],
+                            "How would you rate the quality of information you found?",
+                            options=["Poor", "Fair", "Good", "Very Good", "Excellent"],
                             horizontal=True
                         )
                         
-                        # Comparison to traditional methods
-                        st.subheader("Comparison to Traditional Methods")
-                        
                         traditional_comparison = st.radio(
-                            "Compared to traditional document search methods, this system is:",
+                            "Compared to regular search methods (Google, Bing, etc.), this system is:",
                             options=["Much worse", "Worse", "About the same", "Better", "Much better"],
                             horizontal=True
                         )
                         
-                        time_saving = st.radio(
-                            "How much time do you think this system saved you compared to manual research?",
-                            options=["No time saved", "A little time", "Moderate time", "Significant time", "Extensive time"],
-                            horizontal=True
-                        )
                         
                         # Open-ended feedback
                         st.header("Additional Feedback")
                         
                         improvement_suggestions = st.text_area(
-                            "What suggestions do you have for improving the system?",
+                            "How can we improve this system?",
                             height=100
                         )
                         
                         favorite_feature = st.text_area(
-                            "What was your favorite feature of the system?",
+                            "What was your favorite feature?",
                             height=100
                         )
                         
                         
                         # Submit button
-                        submitted = st.form_submit_button("Submit Evaluation")
+                        submitted = st.form_submit_button("Submit Feedback")
                         
                         if submitted:
                             # Collect all evaluation data
                             evaluation_data = {
-                                # General system evaluation
-                                "usability_score": len(usability_score),
+                                # System Usability Scale responses
+                                "sus_responses": sus_responses,
+                                
+                                # Task difficulty
                                 "task_difficulty": task_difficulty,
-                                "learning_value": len(learning_value),
-                                "knowledge_gain": len(knowledge_gain),
                                 
-                                # RAG chat agent evaluation
-                                "rag_helpfulness": len(rag_helpfulness),
-                                
-                                # Model-specific evaluation
-                                "openai_accuracy": len(openai_accuracy),
-                                "openai_relevance": len(openai_relevance),
-                                "openai_speed": len(openai_speed),
-                                "llama_accuracy": len(llama_accuracy),
-                                "llama_relevance": len(llama_relevance),
-                                "llama_speed": len(llama_speed),
-                                "preferred_model": preferred_model,
-                                "model_preference_reason": model_preference_reason,
+                                # AI assistant evaluation
+                                "ai_helpfulness": ai_helpfulness,
+                                "ai_relevance": ai_relevance,
                                 
                                 # Research-specific evaluation
-                                "retrieval_quality": len(retrieval_quality),
+                                "retrieval_quality": retrieval_quality,
                                 "traditional_comparison": traditional_comparison,
-                                "time_saving": time_saving,
                                 
                                 # Open-ended feedback
                                 "improvement_suggestions": improvement_suggestions,
@@ -580,50 +851,8 @@ else:
                             st.balloons()
 
     with tab1:
-        st.header("NASA Mission Knowledge Base")
-        
-        # Model selection
-        model_col1, model_col2 = st.columns(2)
-        with model_col1:
-            st.write("Select AI Model:")
-        with model_col2:
-            model_options = ["OpenAI", "Llama"]
-            selected_index = 0 if st.session_state.selected_model == "openai" else 1
-            selected_model = st.selectbox(
-                "Model",
-                model_options,
-                index=selected_index,
-                label_visibility="collapsed"
-            )
-            st.session_state.selected_model = selected_model.lower()
-        
-        # Chat interface for RAG
-        if 'rag_messages' not in st.session_state:
-            st.session_state.rag_messages = [
-                {"role": "assistant", "content": "I can answer questions about NASA missions and documents. What would you like to know?"}
-            ]
-        
-        # Display chat messages
-        for message in st.session_state.rag_messages:
-            with st.chat_message(message["role"]):
-                st.write(message["content"])
-        
-        # User input
-        if rag_query := st.chat_input("Ask about NASA missions...", key="rag_input"):
-            # Add user message to chat history
-            st.session_state.rag_messages.append({"role": "user", "content": rag_query})
-            
-            # Display user message
-            with st.chat_message("user"):
-                st.write(rag_query)
-            
-            # Get response from RAG model
-            with st.spinner(f"Thinking using {st.session_state.selected_model.upper()}..."):
-                response = process_rag_query(rag_query)
-            
-            # Add assistant response to chat history
-            st.session_state.rag_messages.append({"role": "assistant", "content": response})
-            
-            # Display assistant response
-            with st.chat_message("assistant"):
-                st.write(response)
+        render_rag_tab()
+
+# At the top of the app, print the current mappings
+if st.session_state.logged_in:
+    print_task_model_mappings()

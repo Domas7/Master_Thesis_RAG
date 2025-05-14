@@ -21,7 +21,7 @@ def main():
     
     # Load test dataset
     print("Loading test dataset...")
-    test_db_path = Path(__file__).parent.parent / "TEST_DATABASE_2.json"
+    test_db_path = Path(__file__).parent.parent / "TEST_DATABASE_2_WRONG.json"
     with open(test_db_path, 'r') as f:
         test_data = json.load(f)
     
@@ -124,13 +124,52 @@ def generate_summary_report(results, results_dir):
     report.append("## Generation Performance")
     for model_name, gen_results in results["generation"].items():
         report.append(f"### {model_name.upper()}")
+        
+        report.append("#### Semantic Metrics")
         report.append(f"- BERTScore Precision: {gen_results['bert_precision']:.4f}")
         report.append(f"- BERTScore Recall: {gen_results['bert_recall']:.4f}")
         report.append(f"- BERTScore F1: {gen_results['bert_f1']:.4f}")
         report.append(f"- Semantic Similarity: {gen_results['semantic_similarity']:.4f}")
+        report.append("")
+        
+        report.append("#### ROUGE Metrics")
+        report.append(f"- ROUGE-1 F1: {gen_results['rouge1']:.4f}")
+        report.append(f"- ROUGE-2 F1: {gen_results['rouge2']:.4f}")
+        report.append(f"- ROUGE-L F1: {gen_results['rougeL']:.4f}")
+        report.append("")
+        
+        report.append("#### LLM-as-judge Metrics (custom implementation)")
         report.append(f"- Answer Relevance: {gen_results['answer_relevance']:.4f}")
         report.append(f"- Factual Accuracy: {gen_results['factual_accuracy']:.4f}")
         report.append(f"- Groundedness: {gen_results['groundedness']:.4f}")
+        
+        # Add GEval scores if available
+        if 'geval_score' in gen_results:
+            report.append("")
+            report.append("#### GEval Metrics (LLM-as-judge using deepeval)")
+            report.append(f"- GEval Correctness: {gen_results['geval_score']:.4f}")
+            
+            # Add the comparison metrics
+            if 'geval_relevance' in gen_results:
+                report.append(f"- GEval Relevance: {gen_results['geval_relevance']:.4f}")
+            if 'geval_accuracy' in gen_results:
+                report.append(f"- GEval Accuracy: {gen_results['geval_accuracy']:.4f}")
+            if 'geval_groundedness' in gen_results:
+                report.append(f"- GEval Groundedness: {gen_results['geval_groundedness']:.4f}")
+                
+            # Add comparison summary
+            report.append("")
+            report.append("#### Comparison between LLM evaluation methods")
+            if 'geval_relevance' in gen_results and 'answer_relevance' in gen_results:
+                diff = gen_results['geval_relevance'] - gen_results['answer_relevance']
+                report.append(f"- Relevance difference: {diff:.4f} ({'+' if diff >= 0 else ''}{diff*100:.1f}%)")
+            if 'geval_accuracy' in gen_results and 'factual_accuracy' in gen_results:
+                diff = gen_results['geval_accuracy'] - gen_results['factual_accuracy']
+                report.append(f"- Accuracy difference: {diff:.4f} ({'+' if diff >= 0 else ''}{diff*100:.1f}%)")
+            if 'geval_groundedness' in gen_results and 'groundedness' in gen_results:
+                diff = gen_results['geval_groundedness'] - gen_results['groundedness']
+                report.append(f"- Groundedness difference: {diff:.4f} ({'+' if diff >= 0 else ''}{diff*100:.1f}%)")
+            
         report.append("")
     
     # Write report to file
