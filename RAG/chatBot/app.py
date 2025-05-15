@@ -118,7 +118,32 @@ def render_rag_tab():
 USERS = {
     "user1": "password1",
     "user2": "password2",
-    "admin": "adminpass"
+    "admin": "adminpass",
+    "bruker1": "passord1",
+    "bruker2": "passord2",
+    "bruker3": "passord3",
+    "bruker4": "passord4",
+    "Snorre": "Snorre123",
+    "Martin": "Martin123",
+    "Christoffer": "Christoffer123",
+    "Marius": "Marius123",
+    "Edvard": "Edvard123",
+    "Daniel": "Daniel123",
+    "Stine": "Stine123",
+    "Eirik": "Eirik123",
+    "Fredrik": "Fredrik123",
+    "Emerson": "Emerson123",
+    "Johan": "Johan123",
+    "Dominykas": "Dominykas123",
+    "Chiran": "Chiran123",
+    "Filip": "Filip123",
+    "Sina": "Sina123",
+    "Håvard": "Håvard123",
+    "Kevin": "Kevin123",
+    "Jonathan": "Jonathan123",
+    "Tord": "Tord123",
+    "Patrik": "Patrik123",
+    "Kien": "Kien123",
 }
 
 # Define key terms/concepts that should be in correct answers - move this outside the function
