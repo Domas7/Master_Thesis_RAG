@@ -4,8 +4,6 @@ from rag_models import get_rag_model
 import datetime
 import os
 import json
-import time
-import random
 
 # Initialize session state variables if they don't exist
 if 'user_msgs' not in st.session_state:
@@ -20,99 +18,15 @@ if "recommended" not in st.session_state:
     st.session_state.recommended = []
 if "selected_model" not in st.session_state:
     st.session_state.selected_model = "openai"  # Default model
-if "last_used_model" not in st.session_state:
-    st.session_state.last_used_model = "openai"  # Track which model was last used
 if 'logged_in' not in st.session_state:
     st.session_state.logged_in = False
 if 'username' not in st.session_state:
     st.session_state.username = ""
 if 'completed_tasks' not in st.session_state:
     st.session_state.completed_tasks = set()
-if 'all_tasks_completed' not in st.session_state:
-    st.session_state.all_tasks_completed = False
 
 # Initialize the RAG model
 rag_model = get_rag_model()
-
-# Add a function to print task model mappings for debugging
-def print_task_model_mappings():
-    """Print all task model mappings for debugging"""
-    print("\n--- TASK MODEL MAPPINGS ---")
-    if 'task_model_mapping' in st.session_state:
-        for task_id, model in st.session_state.task_model_mapping.items():
-            print(f"{task_id}: {model}")
-    else:
-        print("No task model mappings exist yet.")
-    print("---------------------------\n")
-
-# UI for the RAG tab
-def render_rag_tab():
-    st.header("NASA Mission Knowledge Base")
-    
-    # Model selection
-    model_col1, model_col2 = st.columns(2)
-    with model_col1:
-        st.write("Select AI Model:")
-    with model_col2:
-        model_options = ["OpenAI", "Llama"]
-        
-        # Only allow model selection if all tasks are completed
-        if st.session_state.all_tasks_completed:
-            selected_index = 0 if st.session_state.selected_model == "openai" else 1
-            selected_model = st.selectbox(
-                "Model",
-                model_options,
-                index=selected_index,
-                label_visibility="collapsed"
-            )
-            st.session_state.selected_model = selected_model.lower()
-        else:
-            # Disabled dropdown with explanation
-            st.selectbox(
-                "Model (Randomized)",
-                model_options,
-                disabled=True,
-                label_visibility="collapsed"
-            )
-            st.info("📝 Models are being randomized by task until all evaluation tasks are completed or skipped.")
-    
-    # Chat interface for RAG
-    if 'rag_messages' not in st.session_state:
-        st.session_state.rag_messages = [
-            {"role": "assistant", "content": "I can answer questions about NASA missions and documents. What would you like to know?"}
-        ]
-    
-    # Display chat messages
-    for message in st.session_state.rag_messages:
-        with st.chat_message(message["role"]):
-            st.write(message["content"])
-            # Display model info for assistant messages (except the first welcome message)
-            if message["role"] == "assistant" and len(st.session_state.rag_messages) > 1 and message != st.session_state.rag_messages[0] and "model_used" in message:
-                st.caption(f"Answered using: {message['model_used'].capitalize()}")
-    
-    # User input
-    if rag_query := st.chat_input("Ask about NASA missions...", key="rag_input"):
-        # Add user message to chat history
-        st.session_state.rag_messages.append({"role": "user", "content": rag_query})
-        
-        # Display user message
-        with st.chat_message("user"):
-            st.write(rag_query)
-        
-        # Get response from RAG model
-        with st.spinner(f"Thinking..."):
-            response, model_used = process_rag_query(rag_query)
-        
-        # Add assistant response to chat history with model info
-        st.session_state.rag_messages.append({
-            "role": "assistant", 
-            "content": response,
-            "model_used": model_used
-        })
-        
-        # Display assistant response
-        with st.chat_message("assistant"):
-            st.write(response)
 
 # Define hardcoded credentials
 USERS = {
@@ -242,7 +156,7 @@ def evaluate_task_answer(task_id, answer):
         # Return the list of missing concepts for targeted feedback
         return False, task_concepts["feedback_correct"], missing_concepts
 
-# Function to log user answers with additional information about model used and query
+# Function to log user answers with model information
 def log_user_answer(username, task_id, answer, is_correct, model_used=None, query=None):
     log_dir = "user_answers"
     if not os.path.exists(log_dir):
@@ -296,48 +210,9 @@ def log_user_evaluation(username, evaluation_data):
     
     return True
 
-# Randomize model selection by task instead of by query
-def get_model_for_task(task_id):
-    """
-    Get the model to use for a specific task.
-    Each task always uses the same model, but the model is randomly assigned.
-    """
-    # Create a mapping of task to model if it doesn't exist
-    if 'task_model_mapping' not in st.session_state:
-        # Randomly assign models to tasks
-        models = ["openai", "llama"]
-        st.session_state.task_model_mapping = {
-            f"task{i}": random.choice(models) for i in range(1, 6)
-        }
-        # Add a default for regular queries
-        st.session_state.task_model_mapping["query"] = "openai"
-        print("Initialized new task model mapping:", st.session_state.task_model_mapping)
-    
-    # If this task doesn't have a model assigned yet, assign one
-    if task_id not in st.session_state.task_model_mapping:
-        model = random.choice(["openai", "llama"])
-        st.session_state.task_model_mapping[task_id] = model
-        print(f"Assigned new model {model} for task {task_id}")
-    
-    # Return the model for this task
-    return st.session_state.task_model_mapping.get(task_id, "openai")
-
-# Process a query using the RAG model with model selected based on task
-def process_rag_query(query, task_id="query"):
-    """Process a query using the RAG model with model selected based on task"""
-    # If all tasks are complete, use the selected model
-    if st.session_state.all_tasks_completed:
-        model = st.session_state.selected_model
-        print(f"All tasks completed: Using user-selected model: {model}")
-    else:
-        # Use task-based model selection
-        model = get_model_for_task(task_id)
-        print(f"Task-based model selection: Using {model} for task {task_id}")
-        st.session_state.last_used_model = model
-    
-    # Process the query
-    print(f"Sending query to rag_model with model_name={model}")
-    result = rag_model.query(query, model)
+def process_rag_query(query):
+    """Process a query using the RAG model with the selected model"""
+    result = rag_model.query(query, st.session_state.selected_model)
     
     # Log the query and model used
     if st.session_state.logged_in:
@@ -346,27 +221,11 @@ def process_rag_query(query, task_id="query"):
             "query", 
             result, 
             True,  # Not applicable for queries
-            model_used=model,
+            model_used=st.session_state.selected_model,
             query=query
         )
     
-    return result, model
-
-# Check if all tasks are completed (either correct or skipped)
-def check_all_tasks_completed():
-    all_completed = True
-    for i in range(1, 6):
-        task_key = f"task{i}"
-        if task_key not in st.session_state.task_completion:
-            all_completed = False
-            break
-        task_data = st.session_state.task_completion[task_key]
-        if not task_data.get("completed", False):
-            all_completed = False
-            break
-    
-    st.session_state.all_tasks_completed = all_completed
-    return all_completed
+    return result
 
 # Login form
 if not st.session_state.logged_in:
@@ -390,45 +249,10 @@ else:
     if st.sidebar.button("Logout"):
         st.session_state.logged_in = False
         st.session_state.username = ""
-        st.session_state.all_tasks_completed = False  # Reset task completion state
-        st.session_state.task_completion = {
-            "task1": {"completed": False, "correct": False, "attempts": 0},
-            "task2": {"completed": False, "correct": False, "attempts": 0},
-            "task3": {"completed": False, "correct": False, "attempts": 0},
-            "task4": {"completed": False, "correct": False, "attempts": 0},
-            "task5": {"completed": False, "correct": False, "attempts": 0}
-        }
-        st.session_state.completed_tasks = set()
-        
-        # Clear the task model mapping for a fresh start on next login
-        if 'task_model_mapping' in st.session_state:
-            del st.session_state.task_model_mapping
-        
         st.rerun()
     
     # Display current user
     st.sidebar.write(f"Logged in as: **{st.session_state.username}**")
-
-    # For admin only, show task model debugging
-    if st.session_state.username == "admin":
-        st.sidebar.write("---")
-        st.sidebar.subheader("Task Model Assignments (Admin View)")
-        # Display current task-model mappings
-        for i in range(1, 6):
-            task_key = f"task{i}"
-            if task_key in st.session_state.task_model_mapping:
-                model = st.session_state.task_model_mapping[task_key]
-                st.sidebar.write(f"Task {i}: {model.capitalize()}")
-            else:
-                st.sidebar.write(f"Task {i}: Not yet assigned")
-        
-        # Add button to regenerate task models
-        if st.sidebar.button("Reassign Task Models"):
-            for i in range(1, 6):
-                task_key = f"task{i}"
-                st.session_state.task_model_mapping[task_key] = random.choice(["openai", "llama"])
-            st.sidebar.success("Task models have been randomized!")
-            st.rerun()
     
     # Define tabs here, inside the else block
     tab1, tab2, tab3 = st.tabs(["RAG Query", "Lesson Recommender", "Explore Mission Database"])
@@ -471,11 +295,6 @@ else:
             
             task_id = f"task{selected_task[5:6]}"  # Extract task number
             
-            # Show which model is being used for this task (admin only)
-            if st.session_state.username == "admin":
-                model_used = get_model_for_task(task_id)
-                st.write(f"**Task Model:** {model_used.capitalize()}")
-
             # Display task description based on selection
             if selected_task == "Task 1: Engine Rollback Investigation":
                 st.markdown("""
@@ -557,159 +376,40 @@ else:
             st.write("Submit your findings:")
             user_answer = st.text_area("Your answer", height=150, key=f"answer_{task_id}")
             
-            # Create columns for submit and skip buttons
-            col1, col2 = st.columns(2)
-            
-            with col1:
-                if st.button("Submit Answer", key=f"submit_{task_id}"):
-                    # Evaluate the answer
-                    is_correct, feedback_message, missing_concepts = evaluate_task_answer(task_id, user_answer)
-                    
-                    # Update task completion state
-                    if task_id not in st.session_state.task_completion:
-                        st.session_state.task_completion[task_id] = {"completed": False, "correct": False, "attempts": 0}
-                    
-                    st.session_state.task_completion[task_id]["attempts"] += 1
-                    current_attempts = st.session_state.task_completion[task_id]["attempts"]
-                    st.session_state.task_completion[task_id]["completed"] = True
-                    st.session_state.task_completion[task_id]["correct"] = is_correct
-                    
-                    # Get the model used for this task
-                    model_used = get_model_for_task(task_id)
-                    
-                    # Log the user's answer with model information
-                    log_user_answer(
-                        st.session_state.username, 
-                        task_id, 
-                        user_answer, 
-                        is_correct,
-                        model_used=model_used, 
-                        query=None  # No specific query for task submissions
-                    )
-                    
-                    # Show feedback
-                    if is_correct:
-                        st.success(f"✅ Correct! {feedback_message}")
-                        st.session_state.completed_tasks.add(task_id)
-                        
-                        # Check if all tasks are now completed
-                        check_all_tasks_completed()
-                    else:
-                        # Get the task's concept hints
-                        concept_hints = key_concepts[task_id]["concept_hints"]
-                        
-                        # Select 2 missing concepts to provide hints for (or fewer if less are missing)
-                        num_hints = min(2, len(missing_concepts))
-                        selected_missing = missing_concepts[:num_hints]
-                        
-                        # Create targeted feedback
-                        hint_text = "Consider including these key elements: "
-                        for concept in selected_missing:
-                            hint_text += f"\n• {concept_hints[concept]}"
-                        
-                        st.error(f"❌ Not quite right. Your answer needs more detail. {hint_text}")
-            
-            with col2:
-                # Initialize skip countdown state if not exists
-                if f'skip_countdown_{task_id}' not in st.session_state:
-                    st.session_state[f'skip_countdown_{task_id}'] = 3
+            if st.button("Submit Answer", key=f"submit_{task_id}"):
+                # Evaluate the answer
+                is_correct, feedback_message, missing_concepts = evaluate_task_answer(task_id, user_answer)
                 
-                if f'skipping_{task_id}' not in st.session_state:
-                    st.session_state[f'skipping_{task_id}'] = False
+                # Update task completion state
+                if task_id not in st.session_state.task_completion:
+                    st.session_state.task_completion[task_id] = {"completed": False, "correct": False, "attempts": 0}
                 
-                if f'skip_confirmed_{task_id}' not in st.session_state:
-                    st.session_state[f'skip_confirmed_{task_id}'] = False
+                st.session_state.task_completion[task_id]["attempts"] += 1
+                current_attempts = st.session_state.task_completion[task_id]["attempts"]
+                st.session_state.task_completion[task_id]["completed"] = True
+                st.session_state.task_completion[task_id]["correct"] = is_correct
                 
-                if f'countdown_complete_{task_id}' not in st.session_state:
-                    st.session_state[f'countdown_complete_{task_id}'] = False
+                # Log the user's answer
+                log_user_answer(st.session_state.username, task_id, user_answer, is_correct)
                 
-                # Skip button
-                if not st.session_state[f'skipping_{task_id}'] and not st.session_state[f'countdown_complete_{task_id}']:
-                    if st.button("Skip Task", key=f"skip_{task_id}"):
-                        st.session_state[f'skipping_{task_id}'] = True
-                
-                # If skip button was pressed, show countdown
-                if st.session_state[f'skipping_{task_id}'] and not st.session_state[f'countdown_complete_{task_id}']:
-                    # Create a nicer popup-like container for countdown without using nested columns
-                    st.markdown(f"""
-                    <div style="padding: 15px; background-color: #f0f2f6; border-radius: 10px; border: 1px solid #e0e0e0; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; margin-bottom: 15px;">
-                        <h3 style="color: #ff9800; margin-bottom: 10px;">⚠️ Skipping Task</h3>
-                        <p style="margin-bottom: 15px;">Are you sure you want to skip this task? It's better to try first.</p>
-                        <div style="font-size: 2.5rem; font-weight: bold; color: #ff5252; background-color: #ffebee; border-radius: 50%; width: 60px; height: 60px; line-height: 60px; margin: 0 auto 15px auto;">
-                            {st.session_state[f'skip_countdown_{task_id}']}
-                        </div>
-                        <p style="font-size: 0.9rem; color: #757575;">Wait for countdown to complete...</p>
-                    </div>
-                    """, unsafe_allow_html=True)
+                # Show feedback
+                if is_correct:
+                    st.success(f"✅ Correct! {feedback_message}")
+                    st.session_state.completed_tasks.add(task_id)
+                else:
+                    # Get the task's concept hints
+                    concept_hints = key_concepts[task_id]["concept_hints"]
                     
-                    # Allow cancelling the skip
-                    if st.button("Cancel Skip", key=f"cancel_skip_{task_id}"):
-                        st.session_state[f'skipping_{task_id}'] = False
-                        st.session_state[f'skip_countdown_{task_id}'] = 3
-                        st.rerun()
+                    # Select 2 missing concepts to provide hints for (or fewer if less are missing)
+                    num_hints = min(2, len(missing_concepts))
+                    selected_missing = missing_concepts[:num_hints]
                     
-                    # Auto-decrease countdown and rerun
-                    if st.session_state[f'skip_countdown_{task_id}'] > 0:
-                        st.session_state[f'skip_countdown_{task_id}'] -= 1
-                        # Wait for 1 second
-                        time.sleep(1)
-                        st.rerun()  # Rerun to update countdown
-                    else:
-                        # Countdown reached 0, show final confirmation
-                        st.session_state[f'countdown_complete_{task_id}'] = True
-                        st.session_state[f'skipping_{task_id}'] = False
-                        st.rerun()
-                
-                # Final confirmation after countdown completes
-                if st.session_state[f'countdown_complete_{task_id}'] and not st.session_state[f'skip_confirmed_{task_id}']:
-                    st.markdown(f"""
-                    <div style="padding: 15px; background-color: #fff3e0; border-radius: 10px; border: 1px solid #ffe0b2; text-align: center; margin-bottom: 15px;">
-                        <h3 style="color: #e65100; margin-bottom: 10px;">Confirm Skip</h3>
-                        <p>Click to confirm you want to skip this task.</p>
-                    </div>
-                    """, unsafe_allow_html=True)
+                    # Create targeted feedback
+                    hint_text = "Consider including these key elements: "
+                    for concept in selected_missing:
+                        hint_text += f"\n• {concept_hints[concept]}"
                     
-                    # Removed nested columns and used stacked buttons
-                    confirm_skip = st.button("Yes, Skip Task", key=f"confirm_skip_{task_id}")
-                    cancel_skip = st.button("No, I'll Try", key=f"cancel_confirm_skip_{task_id}")
-                    
-                    if confirm_skip:
-                        st.session_state[f'skip_confirmed_{task_id}'] = True
-                        
-                        # Mark task as skipped (completed but with skipped status)
-                        if task_id not in st.session_state.task_completion:
-                            st.session_state.task_completion[task_id] = {"completed": False, "correct": False, "attempts": 0}
-                        
-                        st.session_state.task_completion[task_id]["completed"] = True
-                        st.session_state.task_completion[task_id]["correct"] = True  # Mark as correct to allow progress
-                        st.session_state.task_completion[task_id]["skipped"] = True  # Add skipped status
-                        st.session_state.completed_tasks.add(task_id)
-                        
-                        # Get the model that would have been used for this task
-                        model_used = get_model_for_task(task_id)
-                        
-                        # Log the skipped task with model information
-                        log_user_answer(
-                            st.session_state.username, 
-                            task_id, 
-                            "TASK SKIPPED", 
-                            False,
-                            model_used=model_used,
-                            query=None
-                        )
-                        
-                        # Check if all tasks are now completed after skipping
-                        check_all_tasks_completed()
-                        
-                        # Show feedback
-                        st.warning(f"Task {task_id[-1]} has been skipped. You can still try other tasks.")
-                        st.session_state[f'countdown_complete_{task_id}'] = False
-                        st.rerun()
-                    
-                    if cancel_skip:
-                        st.session_state[f'countdown_complete_{task_id}'] = False
-                        st.session_state[f'skip_countdown_{task_id}'] = 3
-                        st.rerun()
+                    st.error(f"❌ Not quite right. Your answer needs more detail. {hint_text}")
             
             # Display task status summary
             st.divider()
@@ -722,9 +422,6 @@ else:
                 if not task_data["completed"]:
                     status = "⚪ Not attempted"
                     color = "gray"
-                elif task_data.get("skipped", False):
-                    status = "⏩ Skipped"
-                    color = "orange"
                 elif task_data["correct"]:
                     status = "✅ Completed successfully"
                     color = "green"
@@ -792,8 +489,6 @@ else:
                                 key=f"difficulty_task{i}"
                             )
                         
-                    
-                        
                         # AI Assistant Performance
                         st.header("AI Assistant Performance")
                         
@@ -824,7 +519,6 @@ else:
                             horizontal=True
                         )
                         
-                        
                         # Open-ended feedback
                         st.header("Additional Feedback")
                         
@@ -837,7 +531,6 @@ else:
                             "What was your favorite feature?",
                             height=100
                         )
-                        
                         
                         # Submit button
                         submitted = st.form_submit_button("Submit Feedback")
@@ -876,8 +569,50 @@ else:
                             st.balloons()
 
     with tab1:
-        render_rag_tab()
-
-# At the top of the app, print the current mappings
-if st.session_state.logged_in:
-    print_task_model_mappings()
+        st.header("NASA Mission Knowledge Base")
+        
+        # Model selection
+        model_col1, model_col2 = st.columns(2)
+        with model_col1:
+            st.write("Select AI Model:")
+        with model_col2:
+            model_options = ["OpenAI", "Llama"]
+            selected_index = 0 if st.session_state.selected_model == "openai" else 1
+            selected_model = st.selectbox(
+                "Model",
+                model_options,
+                index=selected_index,
+                label_visibility="collapsed"
+            )
+            st.session_state.selected_model = selected_model.lower()
+        
+        # Chat interface for RAG
+        if 'rag_messages' not in st.session_state:
+            st.session_state.rag_messages = [
+                {"role": "assistant", "content": "I can answer questions about NASA missions and documents. What would you like to know?"}
+            ]
+        
+        # Display chat messages
+        for message in st.session_state.rag_messages:
+            with st.chat_message(message["role"]):
+                st.write(message["content"])
+        
+        # User input
+        if rag_query := st.chat_input("Ask about NASA missions...", key="rag_input"):
+            # Add user message to chat history
+            st.session_state.rag_messages.append({"role": "user", "content": rag_query})
+            
+            # Display user message
+            with st.chat_message("user"):
+                st.write(rag_query)
+            
+            # Get response from RAG model
+            with st.spinner(f"Thinking using {st.session_state.selected_model.upper()}..."):
+                response = process_rag_query(rag_query)
+            
+            # Add assistant response to chat history
+            st.session_state.rag_messages.append({"role": "assistant", "content": response})
+            
+            # Display assistant response
+            with st.chat_message("assistant"):
+                st.write(response)

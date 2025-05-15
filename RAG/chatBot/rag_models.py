@@ -367,25 +367,18 @@ class RAGModel:
             logger.error("Retriever not initialized")
             return "Error: Retriever not initialized. Please try again later."
         
-        # Ensure model_name is lowercase
-        model_name = model_name.lower()
-        
-        # Log which model was requested
-        logger.info(f"Requested model: {model_name} for question: {question}")
-        
+        logger.info(f"Processing question with {model_name}: {question}")
         query_start_time = time.time()
         
         try:
             # Retrieve documents first (for both models)
-            if model_name == "llama":
+            if model_name.lower() == "llama":
                 # Optimize for Llama
                 self.retriever.search_kwargs["k"] = 4  # Reduce number of documents
                 self.retriever.search_kwargs["score_threshold"] = 0.8  # Higher threshold for better quality
-                logger.info("Using retriever settings for Llama")
             else:
                 # More documents for OpenAI
                 self.retriever.search_kwargs["k"] = 4
-                logger.info("Using retriever settings for OpenAI")
             
             # Get documents
             retrieved_docs = self.retriever.get_relevant_documents(question)
@@ -395,34 +388,30 @@ class RAGModel:
                 logger.info(f"Document {i+1} metadata: {doc.metadata}")
             
             # Initialize the appropriate LLM based on model_name
-            if model_name == "llama":
-                # For this implementation, we'll use OpenAI but mark the response as coming from Llama
-                # This is because the actual Llama implementation might not be working as expected
-                logger.info("Using OpenAI as simulated Llama model")
-                llm = ChatOpenAI(
-                    model="gpt-4o-mini",
-                    temperature=0.1,
-                    max_tokens=1024
-                )
+            if model_name.lower() == "llama":
+                if self.llm is None:
+                    if self.model_loading:
+                        return "The model is still loading. Please try again in a few moments."
+                    else:
+                        # Start loading the model if it hasn't been loaded yet
+                        self._start_background_model_loading()
+                        return "The model is being loaded. Please try again in a few moments."
                 
-                # Use a simplified prompt for "Llama" responses
+                # Create a more concise prompt for faster processing
                 llama_prompt = ChatPromptTemplate.from_template("""
-                Simulate responses in the style of Llama model. Be slightly more concise.
-                
-                Based on the following context, provide a helpful answer:
-                
+                Based on the context, provide a concise answer to the question.
+
                 Context: {context}
                 Question: {input}
-                
-                Format:
+
+                Format your response as:
                 1. Brief Answer
                 2. Key Points
-                3. Relevant Mission Details (if applicable)
                 """)
                 
-                # Use the Llama prompt
-                combine_docs_chain = create_stuff_documents_chain(llm, llama_prompt)
-                logger.info("Using simulated Llama model for this query")
+                # Use the concise prompt for faster processing
+                combine_docs_chain = create_stuff_documents_chain(self.llm, llama_prompt)
+                logger.info("Using Ollama model (wizardlm2) for this query")
                 
             else:  # Default to OpenAI
                 llm = ChatOpenAI(
@@ -433,7 +422,7 @@ class RAGModel:
                 
                 # Use the full NASA prompt for OpenAI
                 combine_docs_chain = create_stuff_documents_chain(llm, nasa_prompt)
-                logger.info("Using OpenAI model (gpt-4o-mini) for this query")
+                logger.info("Using OpenAI model (gpt-40-mini) for this query")
             
             # Create retrieval chain with optimized parameters
             retrieval_chain = create_retrieval_chain(
@@ -496,20 +485,9 @@ class RAGModel:
             answer += "\n\n4. Sources:\n" + "\n".join(sources)
             
             query_duration = time.time() - query_start_time
-            logger.info(f"Query completed in {query_duration:.2f} seconds using {model_name} model")
+            logger.info(f"Query completed in {query_duration:.2f} seconds")
             
-            # Add a subtle marker at the beginning or end of the response to indicate which model was used
-            if model_name == "llama":
-                # Prepend a special character that won't be obvious to users
-                model_marker = "\n\n[Response generated using Llama model]"
-                # Only append this in debug mode or remove it before returning
-                logger.info("Added Llama model marker to response")
-            else:
-                # No marker for OpenAI responses
-                model_marker = ""
-                logger.info("Using standard OpenAI response")
-
-            return answer + model_marker
+            return answer
             
         except Exception as e:
             logger.error(f"Error processing query: {e}")
