@@ -4,6 +4,7 @@ from rag_models import get_rag_model
 import datetime
 import os
 import json
+import random
 
 # Initialize session state variables if they don't exist
 if 'user_msgs' not in st.session_state:
@@ -24,6 +25,16 @@ if 'username' not in st.session_state:
     st.session_state.username = ""
 if 'completed_tasks' not in st.session_state:
     st.session_state.completed_tasks = set()
+# Initialize task model assignments if not exists
+if 'task_models' not in st.session_state:
+    # Randomly assign models to tasks
+    st.session_state.task_models = {
+        f"task{i}": random.choice(["openai", "llama"]) for i in range(1, 6)
+    }
+if 'can_select_model' not in st.session_state:
+    st.session_state.can_select_model = False
+if 'current_task_id' not in st.session_state:
+    st.session_state.current_task_id = None
 
 # Initialize the RAG model
 rag_model = get_rag_model()
@@ -210,18 +221,27 @@ def log_user_evaluation(username, evaluation_data):
     
     return True
 
-def process_rag_query(query):
+def process_rag_query(query, task_id=None):
     """Process a query using the RAG model with the selected model"""
-    result = rag_model.query(query, st.session_state.selected_model)
+    # If task_id is provided, use it; otherwise use the current active task
+    task_to_use = task_id if task_id else st.session_state.current_task_id
+    
+    # If a task is active and model selection is disabled, use the assigned model for that task
+    if task_to_use and not st.session_state.can_select_model:
+        model_to_use = st.session_state.task_models[task_to_use]
+    else:
+        model_to_use = st.session_state.selected_model
+    
+    result = rag_model.query(query, model_to_use)
     
     # Log the query and model used
     if st.session_state.logged_in:
         log_user_answer(
             st.session_state.username, 
-            "query", 
+            "query" if task_to_use is None else task_to_use, 
             result, 
             True,  # Not applicable for queries
-            model_used=st.session_state.selected_model,
+            model_used=model_to_use,
             query=query
         )
     
@@ -283,6 +303,13 @@ else:
                     "task5": {"completed": False, "correct": False, "attempts": 0}
                 }
             
+            # Display which model is assigned to each task (for debugging/transparency)
+            st.subheader("Task Model Assignments")
+            for i in range(1, 6):
+                task_key = f"task{i}"
+                model_name = st.session_state.task_models[task_key].upper()
+                st.write(f"Task {i}: {model_name}")
+            
             # Task selection and submission system
             selected_task = st.selectbox(
                 "Select a task to work on:",
@@ -294,6 +321,8 @@ else:
             )
             
             task_id = f"task{selected_task[5:6]}"  # Extract task number
+            # Store the currently selected task in session state
+            st.session_state.current_task_id = task_id
             
             # Display task description based on selection
             if selected_task == "Task 1: Engine Rollback Investigation":
@@ -389,13 +418,24 @@ else:
                 st.session_state.task_completion[task_id]["completed"] = True
                 st.session_state.task_completion[task_id]["correct"] = is_correct
                 
-                # Log the user's answer
-                log_user_answer(st.session_state.username, task_id, user_answer, is_correct)
+                # Log the user's answer with the model used for this task
+                log_user_answer(
+                    st.session_state.username, 
+                    task_id, 
+                    user_answer, 
+                    is_correct,
+                    model_used=st.session_state.task_models[task_id]
+                )
                 
                 # Show feedback
                 if is_correct:
                     st.success(f"✅ Correct! {feedback_message}")
                     st.session_state.completed_tasks.add(task_id)
+                    
+                    # Check if all tasks are completed and update model selection availability
+                    all_completed = all(st.session_state.task_completion[f"task{i}"]["correct"] for i in range(1, 6))
+                    if all_completed:
+                        st.session_state.can_select_model = True
                 else:
                     # Get the task's concept hints
                     concept_hints = key_concepts[task_id]["concept_hints"]
@@ -433,6 +473,12 @@ else:
 
             # Check if all tasks are completed successfully
             all_tasks_completed = all(st.session_state.task_completion[f"task{i}"]["correct"] for i in range(1, 6))
+            
+            # Update model selection availability based on task completion
+            if all_tasks_completed and not st.session_state.can_select_model:
+                st.session_state.can_select_model = True
+                # Show message about model selection being available
+                st.success("🎉 All tasks completed! You can now choose which AI model to use.")
 
             # Show evaluation form if all tasks are completed successfully and evaluation not yet submitted
             if all_tasks_completed and 'evaluation_submitted' not in st.session_state:
@@ -571,20 +617,37 @@ else:
     with tab1:
         st.header("NASA Mission Knowledge Base")
         
-        # Model selection
+        # Model selection with conditional enabling
         model_col1, model_col2 = st.columns(2)
         with model_col1:
             st.write("Select AI Model:")
         with model_col2:
             model_options = ["OpenAI", "Llama"]
-            selected_index = 0 if st.session_state.selected_model == "openai" else 1
-            selected_model = st.selectbox(
-                "Model",
-                model_options,
-                index=selected_index,
-                label_visibility="collapsed"
-            )
-            st.session_state.selected_model = selected_model.lower()
+            
+            # Only allow model selection after all tasks are completed
+            if st.session_state.can_select_model:
+                selected_index = 0 if st.session_state.selected_model == "openai" else 1
+                selected_model = st.selectbox(
+                    "Model",
+                    model_options,
+                    index=selected_index,
+                    label_visibility="collapsed"
+                )
+                st.session_state.selected_model = selected_model.lower()
+            else:
+                # Show disabled dropdown with info message
+                st.selectbox(
+                    "Model",
+                    model_options,
+                    disabled=True,
+                    label_visibility="collapsed"
+                )
+                st.info("Complete all tasks to select a model. Currently using randomly assigned models per task.")
+        
+        # Display which model is assigned to the current task (for user awareness)
+        if not st.session_state.can_select_model and st.session_state.current_task_id:
+            current_model = st.session_state.task_models[st.session_state.current_task_id].upper()
+            st.info(f"Currently using {current_model} model for {st.session_state.current_task_id.capitalize()}")
         
         # Chat interface for RAG
         if 'rag_messages' not in st.session_state:
@@ -606,9 +669,21 @@ else:
             with st.chat_message("user"):
                 st.write(rag_query)
             
+            # Use the current task ID from session state instead of trying to determine it here
+            current_task_id = st.session_state.current_task_id
+            
+            # Generate model name for display based on whether model selection is enabled
+            if st.session_state.can_select_model:
+                display_model = st.session_state.selected_model.upper()
+            else:
+                # If a task is active, use the model assigned to that task
+                display_model = (st.session_state.task_models[current_task_id].upper() 
+                                 if current_task_id 
+                                 else st.session_state.selected_model.upper())
+            
             # Get response from RAG model
-            with st.spinner(f"Thinking using {st.session_state.selected_model.upper()}..."):
-                response = process_rag_query(rag_query)
+            with st.spinner(f"Thinking using {display_model}..."):
+                response = process_rag_query(rag_query, current_task_id)
             
             # Add assistant response to chat history
             st.session_state.rag_messages.append({"role": "assistant", "content": response})
