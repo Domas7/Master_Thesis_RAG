@@ -5,6 +5,7 @@ import datetime
 import os
 import json
 import random
+from streamlit.components.v1 import html
 
 # Initialize session state variables if they don't exist
 if 'user_msgs' not in st.session_state:
@@ -261,6 +262,17 @@ def process_rag_query(query, task_id=None):
     
     return result
 
+# Function to switch between tabs using JavaScript
+def switch_tab(tab_index):
+    """Generate JavaScript to switch to the specified tab index"""
+    return f"""
+    <script>
+    var tabGroup = window.parent.document.getElementsByClassName("stTabs")[0];
+    var tabs = tabGroup.getElementsByTagName("button");
+    tabs[{tab_index}].click();
+    </script>
+    """
+
 # Login form
 if not st.session_state.logged_in:
     st.title("NASA Lessons Learned Login")
@@ -289,11 +301,66 @@ else:
     st.sidebar.write(f"Logged in as: **{st.session_state.username}**")
     
     # Define tabs here, inside the else block
-    tab1, tab3 = st.tabs(["RAG Query", "About"])
+    tab3, tab1 = st.tabs(["About", "RAG Query"])
     
     with tab3:
-        messages = st.container(height=500)
+        messages = st.container(height=310)
         messages.chat_message("assistant").write(st.session_state.bot_msgs[0])
+
+        # Add back the columns for better centering
+        col1, col2, col3 = st.columns([1, 2, 1])
+        with col2:
+            # Custom CSS for a colorful, rainbow gradient button - using more specific selectors
+            st.markdown("""
+            <style>
+            /* Override the default Streamlit button styling completely */
+            div[data-testid="element-container"] button[kind="primary"] {
+                background: linear-gradient(124deg, 
+                    #ff2400, #e81d1d, #e8b71d, #e3e81d, #1de840, 
+                    #1ddde8, #2b1de8, #dd00f3, #dd00f3) !important;
+                background-size: 1800% 1800% !important;
+                animation: rainbow 10s ease infinite !important;
+                color: white !important;
+                padding: 15px 32px !important;
+                text-align: center !important;
+                display: inline-block !important;
+                font-size: 42px !important;
+                font-weight: bold !important;
+                margin: 10px 0px !important;
+                cursor: pointer !important;
+                border-radius: 12px !important;
+                border: none !important;
+                width: 100% !important;
+                height: auto !important;
+                transition: all 0.3s !important;
+                box-shadow: 0 6px 20px rgba(0,0,0,0.4) !important;
+                text-shadow: 2px 2px 4px rgba(0,0,0,0.5) !important;
+            }
+            
+            /* Hover and active states */
+            div[data-testid="element-container"] button[kind="primary"]:hover {
+                transform: translateY(-5px) !important;
+                box-shadow: 0 10px 25px rgba(0,0,0,0.5) !important;
+            }
+            div[data-testid="element-container"] button[kind="primary"]:active {
+                transform: translateY(3px) !important;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.3) !important;
+            }
+            
+            /* More specific override for Streamlit's button styling */
+            div[data-testid="stButton"] > button[kind="primary"] {
+                background-image: linear-gradient(124deg, 
+                    #ff2400, #e81d1d, #e8b71d, #e3e81d, #1de840, 
+                    #1ddde8, #2b1de8, #dd00f3, #dd00f3) !important;
+                background-size: 1800% 1800% !important;
+                animation: rainbow 10s ease infinite !important;
+            }
+            </style>
+            """, unsafe_allow_html=True)
+            
+            # Use Streamlit's button with our CSS applied for reliable tab switching
+            if st.button("START", key="rainbow_button", type="primary", use_container_width=True):
+                html(switch_tab(1), height=0)
 
         # Only show user-bot message pairs if there are any
         if st.session_state.user_msgs:
