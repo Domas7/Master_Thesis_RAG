@@ -20,9 +20,19 @@ from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain.globals import set_llm_cache
 from langchain.cache import InMemoryCache
 from langchain_openai import OpenAIEmbeddings, ChatOpenAI
+from langchain_core.language_models.llms import LLM
+from langchain_core.callbacks.manager import CallbackManagerForLLMRun
+from typing import Any, List, Mapping, Optional
 import requests
 import openai
 import threading
+
+# Add Together AI integration
+try:
+    from together import Together
+    TOGETHER_AVAILABLE = True
+except ImportError:
+    TOGETHER_AVAILABLE = False
 
 # Set up logging configuration
 logging.basicConfig(
@@ -41,6 +51,7 @@ load_dotenv()
 # Try to get API keys from environment variables first
 openai_api_key = os.getenv('OPENAI_API_KEY')
 langchain_api_key = os.getenv('LANGCHAIN_API_KEY')
+together_api_key = os.getenv('TOGETHER_API_KEY')  # Add Together API key
 
 # If not found in environment, try to get from Streamlit secrets
 try:
@@ -48,6 +59,8 @@ try:
         openai_api_key = st.secrets['OPENAI_API_KEY']
     if not langchain_api_key and 'LANGCHAIN_API_KEY' in st.secrets:
         langchain_api_key = st.secrets['LANGCHAIN_API_KEY']
+    if not together_api_key and 'TOGETHER_API_KEY' in st.secrets:
+        together_api_key = st.secrets['TOGETHER_API_KEY']
 except Exception as e:
     logger.warning(f"Could not access Streamlit secrets: {e}")
 
@@ -56,6 +69,8 @@ if openai_api_key:
     os.environ['OPENAI_API_KEY'] = openai_api_key
 if langchain_api_key:
     os.environ['LANGCHAIN_API_KEY'] = langchain_api_key
+if together_api_key:
+    os.environ['TOGETHER_API_KEY'] = together_api_key
 
 # Set up logging configuration
 logging.basicConfig(
@@ -91,6 +106,54 @@ Format:
 DO NOT include a Sources section in your response. The system will add this automatically based on the actual documents used.
 """)
 
+# Create a custom langchain LLM class for TogetherAI
+class TogetherLLM(LLM):
+    """Custom LLM class for TogetherAI that inherits from LangChain's LLM base class."""
+    
+    model_name: str = "meta-llama/Llama-3.3-70B-Instruct-Turbo-Free"
+    temperature: float = 0.1
+    max_tokens: int = 1024
+    together_client: Any = None
+    
+    def __init__(self, model_name="meta-llama/Llama-3.3-70B-Instruct-Turbo-Free", temperature=0.1, max_tokens=1024):
+        """Initialize TogetherLLM."""
+        super().__init__()
+        self.model_name = model_name
+        self.temperature = temperature
+        self.max_tokens = max_tokens
+        self.together_client = Together()
+    
+    @property
+    def _llm_type(self) -> str:
+        """Return type of LLM."""
+        return "together_ai"
+    
+    def _call(
+        self,
+        prompt: str,
+        stop: Optional[List[str]] = None,
+        run_manager: Optional[CallbackManagerForLLMRun] = None,
+        **kwargs: Any,
+    ) -> str:
+        """Process the prompt using TogetherAI."""
+        try:
+            response = self.together_client.chat.completions.create(
+                model=self.model_name,
+                messages=[
+                    {
+                        "role": "user",
+                        "content": prompt
+                    }
+                ],
+                temperature=self.temperature,
+                max_tokens=self.max_tokens,
+                stop=stop
+            )
+            return response.choices[0].message.content
+        except Exception as e:
+            logger.error(f"Error using TogetherAI: {e}")
+            return f"Error: Could not generate response with TogetherAI ({str(e)})"
+
 class RAGModel:
     def __init__(self, chunks_dir=["../../reprocessed_section_chunks", 
                                   "../../reprocessed_section_chunks_2", 
@@ -114,8 +177,10 @@ class RAGModel:
         self.db = None
         self.retriever = None
         self.llm = None
+        self.together_llm = None  # Add TogetherAI LLM
         self.model_loading = False
         self.model_loaded = False
+        self.together_available = TOGETHER_AVAILABLE and together_api_key is not None
         
         # Create index directory if it doesn't exist
         self.index_dir.mkdir(parents=True, exist_ok=True)
@@ -140,33 +205,47 @@ class RAGModel:
             logger.info("Starting background model loading...")
             self.model_loading = True
             try:
-                # Try to connect to Ollama
-                response = requests.get("http://localhost:11434/api/tags")
-                if response.status_code == 200:
-                    self.llm = OllamaLLM(
-                        model="wizardlm2",
-                        temperature=0.1,
-                        num_ctx=512,
-                        request_timeout=60.0,
-                        num_predict=256,
-                        num_thread=4,
-                        stop=["4. Sources"]
-                    )
-                    # Make a dummy call to ensure model is loaded
-                    self.llm.invoke("Hello")
-                    self.model_loaded = True
-                    logger.info("Using Ollama model (wizardlm2) for responses")
-                else:
-                    logger.warning("Ollama is not available, falling back to OpenAI")
-                    self.llm = ChatOpenAI(
-                        model="gpt-4o-mini",
-                        temperature=0.1,
-                        max_tokens=1024
-                    )
-                    self.model_loaded = True
-                    logger.info("Using OpenAI model (gpt-4o-mini) for responses")
+                # MODIFIED: Try TogetherAI first if available
+                if self.together_available:
+                    logger.info("Trying TogetherAI first...")
+                    try:
+                        self.together_llm = TogetherLLM()
+                        # Test with a simple call
+                        test_response = self.together_llm.invoke("Hello")
+                        if test_response and not test_response.startswith("Error:"):
+                            self.model_loaded = True
+                            logger.info("Using TogetherAI Llama-3.3-70B model for responses")
+                            return  # Successfully loaded TogetherAI, no need to try Ollama
+                        else:
+                            raise Exception("TogetherAI test failed")
+                    except Exception as e:
+                        logger.warning(f"TogetherAI not available: {e}")
+                        self.together_llm = None  # Reset to None in case it was partially initialized
+                
+                # Fall back to Ollama if TogetherAI is not available
+                try:
+                    response = requests.get("http://localhost:11434/api/tags")
+                    if response.status_code == 200:
+                        self.llm = OllamaLLM(
+                            model="wizardlm2",
+                            temperature=0.1,
+                            num_ctx=512,
+                            request_timeout=60.0,
+                            num_predict=256,
+                            num_thread=4,
+                            stop=["4. Sources"]
+                        )
+                        # Make a dummy call to ensure model is loaded
+                        self.llm.invoke("Hello")
+                        self.model_loaded = True
+                        logger.info("Using Ollama model (wizardlm2) for responses as fallback")
+                    else:
+                        raise Exception("Ollama not available")
+                except Exception as ollama_error:
+                    logger.warning(f"Ollama not available: {ollama_error}")
+                    raise Exception("Neither TogetherAI nor Ollama are available")
             except Exception as e:
-                logger.error(f"Error loading model in background: {e}")
+                logger.error(f"Error loading local models: {e}")
                 logger.warning("Falling back to OpenAI")
                 self.llm = ChatOpenAI(
                     model="gpt-4o-mini",
@@ -389,30 +468,67 @@ class RAGModel:
             
             # Initialize the appropriate LLM based on model_name
             if model_name.lower() == "llama":
-                if self.llm is None:
+                # CHANGED: Always prioritize TogetherAI when model is "llama"
+                # First, try to initialize TogetherAI if not already done
+                if self.together_available and not self.together_llm:
+                    try:
+                        self.together_llm = TogetherLLM()
+                        # Test with a simple call
+                        test_response = self.together_llm.invoke("Hello")
+                        if test_response.startswith("Error:"):
+                            self.together_llm = None
+                            logger.warning("TogetherAI test failed, will use alternative model")
+                        else:
+                            logger.info("TogetherAI Llama-3.3-70B model initialized on demand")
+                    except Exception as e:
+                        logger.warning(f"Error initializing TogetherAI: {e}")
+                        self.together_llm = None
+                
+                # Now check if TogetherAI is available to use
+                if self.together_available and self.together_llm is not None:
+                    # Create a more concise prompt for faster processing
+                    llama_prompt = ChatPromptTemplate.from_template("""
+                    Based on the context, provide a concise answer to the question.
+
+                    Context: {context}
+                    Question: {input}
+
+                    Format your response as:
+                    1. Brief Answer
+                    2. Key Points
+                    """)
+                    
+                    # Use TogetherAI LLM
+                    combine_docs_chain = create_stuff_documents_chain(self.together_llm, llama_prompt)
+                    logger.info("Using TogetherAI Llama-3.3-70B model for this query")
+                    
+                # Fall back to Ollama if it's available
+                elif self.llm is not None:
+                    # Create a more concise prompt for faster processing
+                    llama_prompt = ChatPromptTemplate.from_template("""
+                    Based on the context, provide a concise answer to the question.
+
+                    Context: {context}
+                    Question: {input}
+
+                    Format your response as:
+                    1. Brief Answer
+                    2. Key Points
+                    """)
+                    
+                    # Use the concise prompt for faster processing
+                    combine_docs_chain = create_stuff_documents_chain(self.llm, llama_prompt)
+                    logger.info("Using Ollama model (wizardlm2) for this query")
+                
+                # If neither is available, handle the loading state
+                else:
                     if self.model_loading:
                         return "The model is still loading. Please try again in a few moments."
                     else:
                         # Start loading the model if it hasn't been loaded yet
                         self._start_background_model_loading()
                         return "The model is being loaded. Please try again in a few moments."
-                
-                # Create a more concise prompt for faster processing
-                llama_prompt = ChatPromptTemplate.from_template("""
-                Based on the context, provide a concise answer to the question.
-
-                Context: {context}
-                Question: {input}
-
-                Format your response as:
-                1. Brief Answer
-                2. Key Points
-                """)
-                
-                # Use the concise prompt for faster processing
-                combine_docs_chain = create_stuff_documents_chain(self.llm, llama_prompt)
-                logger.info("Using Ollama model (wizardlm2) for this query")
-                
+            
             else:  # Default to OpenAI
                 llm = ChatOpenAI(
                     model="gpt-4o-mini",

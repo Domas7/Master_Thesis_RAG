@@ -6,6 +6,10 @@ import os
 import json
 import random
 from streamlit.components.v1 import html
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 # Initialize session state variables if they don't exist
 if 'user_msgs' not in st.session_state:
@@ -40,6 +44,9 @@ if 'show_feedback_popup' not in st.session_state:
     st.session_state.show_feedback_popup = False
 if 'skipped_tasks' not in st.session_state:
     st.session_state.skipped_tasks = set()
+# Add a flag for switching to About tab after login
+if 'switch_to_about' not in st.session_state:
+    st.session_state.switch_to_about = False
 
 # Initialize the RAG model
 rag_model = get_rag_model()
@@ -273,6 +280,18 @@ def switch_tab(tab_index):
     </script>
     """
 
+# Function to stay on the RAG Query tab (index 0) after form submission
+def stay_on_rag_tab():
+    """Switch to the RAG Query tab after a form submission"""
+    # We use index 0 because RAG Query is the first tab (index 0)
+    st.markdown(switch_tab(0), unsafe_allow_html=True)
+
+# Function to switch to the About tab (index 1) after login
+def go_to_about_tab():
+    """Switch to the About tab after successful login"""
+    # We use index 1 because About is the second tab (index 1)
+    st.markdown(switch_tab(1), unsafe_allow_html=True)
+
 # Login form
 if not st.session_state.logged_in:
     st.title("NASA Lessons Learned Login")
@@ -286,6 +305,7 @@ if not st.session_state.logged_in:
             if username in USERS and USERS[username] == password:
                 st.session_state.logged_in = True
                 st.session_state.username = username
+                st.session_state.switch_to_about = True  # Set flag to switch tabs after rerun
                 st.success(f"Welcome, {username}!")
                 st.rerun()
             else:
@@ -301,8 +321,13 @@ else:
     st.sidebar.write(f"Logged in as: **{st.session_state.username}**")
     
     # Define tabs here, inside the else block
-    tab3, tab1 = st.tabs(["About", "RAG Query"])
+    tab1, tab3 = st.tabs(["RAG Query", "About"])
     
+    # Check if we need to switch to About tab (after successful login)
+    if st.session_state.switch_to_about:
+        st.session_state.switch_to_about = False  # Reset the flag
+        html(switch_tab(1), height=0)  # Switch to About tab (index 1)
+
     with tab3:
         messages = st.container(height=320)
         messages.chat_message("assistant").write(st.session_state.bot_msgs[0])
@@ -360,7 +385,7 @@ else:
             
             # Use Streamlit's button with our CSS applied for reliable tab switching
             if st.button("START", key="rainbow_button", type="primary", use_container_width=True):
-                html(switch_tab(1), height=0)
+                html(switch_tab(0), height=0)
 
         # Only show user-bot message pairs if there are any
         if st.session_state.user_msgs:
@@ -552,6 +577,9 @@ else:
                         hint_text += f"\n• {concept_hints[concept]}"
                     
                     st.error(f"❌ Not quite right. Your answer needs more detail. {hint_text}")
+                
+                # Stay on the RAG tab instead of switching back to About tab
+                stay_on_rag_tab()
             
             # Handle skip button action
             if can_skip and skip_button:
@@ -576,6 +604,8 @@ else:
                     st.session_state.can_select_model = True
                     st.session_state.show_feedback_popup = True
                     st.success("All tasks complete! You can now choose which AI model to use.")
+                    # Stay on the RAG tab instead of switching back to About tab
+                    stay_on_rag_tab()
                     st.rerun()  # Rerun to show the popup
             
             # Display task status summary
