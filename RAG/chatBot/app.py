@@ -35,6 +35,10 @@ if 'can_select_model' not in st.session_state:
     st.session_state.can_select_model = False
 if 'current_task_id' not in st.session_state:
     st.session_state.current_task_id = None
+if 'show_feedback_popup' not in st.session_state:
+    st.session_state.show_feedback_popup = False
+if 'skipped_tasks' not in st.session_state:
+    st.session_state.skipped_tasks = set()
 
 # Initialize the RAG model
 rag_model = get_rag_model()
@@ -179,7 +183,8 @@ def log_user_answer(username, task_id, answer, is_correct, model_used=None, quer
         "task_id": task_id,
         "answer": answer,
         "is_correct": is_correct,
-        "timestamp": timestamp
+        "timestamp": timestamp,
+        "entry_type": "query" if task_id.startswith("query") or is_correct == "not_submitted" else "submission"
     }
     
     # Add model and query information if provided
@@ -221,6 +226,15 @@ def log_user_evaluation(username, evaluation_data):
     
     return True
 
+def check_all_tasks_completed_or_skipped():
+    """Check if all tasks are either completed or skipped"""
+    for i in range(1, 6):
+        task_key = f"task{i}"
+        if (not st.session_state.task_completion[task_key]["correct"] and 
+            task_key not in st.session_state.skipped_tasks):
+            return False
+    return True
+
 def process_rag_query(query, task_id=None):
     """Process a query using the RAG model with the selected model"""
     # If task_id is provided, use it; otherwise use the current active task
@@ -238,9 +252,9 @@ def process_rag_query(query, task_id=None):
     if st.session_state.logged_in:
         log_user_answer(
             st.session_state.username, 
-            "query" if task_to_use is None else task_to_use, 
+            "query" if task_to_use is None else f"query_{task_to_use}", 
             result, 
-            True,  # Not applicable for queries
+            "not_submitted",  # Mark as not submitted since this is just a query
             model_used=model_to_use,
             query=query
         )
@@ -275,7 +289,7 @@ else:
     st.sidebar.write(f"Logged in as: **{st.session_state.username}**")
     
     # Define tabs here, inside the else block
-    tab1, tab2, tab3 = st.tabs(["RAG Query", "Lesson Recommender", "Explore Mission Database"])
+    tab1, tab3 = st.tabs(["RAG Query", "Explore Mission Database"])
     
     with tab3:
         messages = st.container(height=500)
@@ -302,13 +316,7 @@ else:
                     "task4": {"completed": False, "correct": False, "attempts": 0},
                     "task5": {"completed": False, "correct": False, "attempts": 0}
                 }
-            
-            # Display which model is assigned to each task (for debugging/transparency)
-            st.subheader("Task Model Assignments")
-            for i in range(1, 6):
-                task_key = f"task{i}"
-                model_name = st.session_state.task_models[task_key].upper()
-                st.write(f"Task {i}: {model_name}")
+        
             
             # Task selection and submission system
             selected_task = st.selectbox(
@@ -405,7 +413,33 @@ else:
             st.write("Submit your findings:")
             user_answer = st.text_area("Your answer", height=150, key=f"answer_{task_id}")
             
-            if st.button("Submit Answer", key=f"submit_{task_id}"):
+            # Create columns for Submit and Skip buttons
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                submit_button = st.button("Submit Answer", key=f"submit_{task_id}")
+            
+            with col2:
+                # Only show skip button if there have been at least 4 unsuccessful attempts
+                can_skip = task_id in st.session_state.task_completion and st.session_state.task_completion[task_id]["attempts"] >= 4
+                
+                if can_skip:
+                    skip_button = st.button("Skip Task", key=f"skip_{task_id}")
+                else:
+                    # Show disabled skip button with attempts counter
+                    attempts = 0
+                    if task_id in st.session_state.task_completion:
+                        attempts = st.session_state.task_completion[task_id]["attempts"]
+                    
+                    remaining = max(0, 4 - attempts)
+                    st.button(
+                        f"Skip ({remaining} more attempts)",
+                        key=f"skip_disabled_{task_id}",
+                        disabled=True
+                    )
+                    skip_button = False
+            
+            if submit_button:
                 # Evaluate the answer
                 is_correct, feedback_message, missing_concepts = evaluate_task_answer(task_id, user_answer)
                 
@@ -424,7 +458,8 @@ else:
                     task_id, 
                     user_answer, 
                     is_correct,
-                    model_used=st.session_state.task_models[task_id]
+                    model_used=st.session_state.task_models[task_id],
+                    query=f"Task submission - {task_id}"  # Mark as an actual task submission
                 )
                 
                 # Show feedback
@@ -451,6 +486,31 @@ else:
                     
                     st.error(f"❌ Not quite right. Your answer needs more detail. {hint_text}")
             
+            # Handle skip button action
+            if can_skip and skip_button:
+                # Mark task as skipped
+                st.session_state.skipped_tasks.add(task_id)
+                
+                # Log the skip action
+                log_user_answer(
+                    st.session_state.username, 
+                    task_id, 
+                    "SKIPPED", 
+                    False,
+                    model_used=st.session_state.task_models[task_id],
+                    query=f"Task skipped - {task_id}"  # Mark as a skipped task
+                )
+                
+                # Show confirmation
+                st.warning(f"Task {task_id[-1]} has been skipped. You can continue with other tasks.")
+                
+                # Check if all tasks are now completed or skipped
+                if check_all_tasks_completed_or_skipped():
+                    st.session_state.can_select_model = True
+                    st.session_state.show_feedback_popup = True
+                    st.success("All tasks complete! You can now choose which AI model to use.")
+                    st.rerun()  # Rerun to show the popup
+            
             # Display task status summary
             st.divider()
             st.subheader("Task Progress")
@@ -459,7 +519,10 @@ else:
                 task_key = f"task{i}"
                 task_data = st.session_state.task_completion[task_key]
                 
-                if not task_data["completed"]:
+                if task_key in st.session_state.skipped_tasks:
+                    status = "⏩ Skipped"
+                    color = "orange"
+                elif not task_data["completed"]:
                     status = "⚪ Not attempted"
                     color = "gray"
                 elif task_data["correct"]:
@@ -471,21 +534,19 @@ else:
                 
                 st.markdown(f"**Task {i}**: <span style='color:{color}'>{status}</span>", unsafe_allow_html=True)
 
-            # Check if all tasks are completed successfully
-            all_tasks_completed = all(st.session_state.task_completion[f"task{i}"]["correct"] for i in range(1, 6))
-            
-            # Update model selection availability based on task completion
-            if all_tasks_completed and not st.session_state.can_select_model:
+            # Check if all tasks are completed successfully or skipped
+            if check_all_tasks_completed_or_skipped() and not st.session_state.can_select_model:
                 st.session_state.can_select_model = True
+                st.session_state.show_feedback_popup = True
                 # Show message about model selection being available
                 st.success("🎉 All tasks completed! You can now choose which AI model to use.")
 
             # Show evaluation form if all tasks are completed successfully and evaluation not yet submitted
-            if all_tasks_completed and 'evaluation_submitted' not in st.session_state:
+            if check_all_tasks_completed_or_skipped() and 'evaluation_submitted' not in st.session_state:
                 st.session_state.show_evaluation_form = True
 
             # Display the evaluation form in a modal-like container
-            if all_tasks_completed and st.session_state.get('show_evaluation_form', False):
+            if check_all_tasks_completed_or_skipped() and st.session_state.get('show_evaluation_form', False):
                 st.markdown("### 🎉 Congratulations on completing all tasks!")
                 
                 with st.container():
@@ -644,11 +705,6 @@ else:
                 )
                 st.info("Complete all tasks to select a model. Currently using randomly assigned models per task.")
         
-        # Display which model is assigned to the current task (for user awareness)
-        if not st.session_state.can_select_model and st.session_state.current_task_id:
-            current_model = st.session_state.task_models[st.session_state.current_task_id].upper()
-            st.info(f"Currently using {current_model} model for {st.session_state.current_task_id.capitalize()}")
-        
         # Chat interface for RAG
         if 'rag_messages' not in st.session_state:
             st.session_state.rag_messages = [
@@ -691,3 +747,161 @@ else:
             # Display assistant response
             with st.chat_message("assistant"):
                 st.write(response)
+
+# Display feedback form as a popup when all tasks are completed/skipped
+if st.session_state.show_feedback_popup and 'evaluation_submitted' not in st.session_state:
+    # Create a custom dialog-like interface instead of using st.dialog()
+    feedback_container = st.container()
+    
+    with feedback_container:
+        # Add a colored background container to make it stand out
+        with st.container(border=True):
+            st.markdown("## 🎉 Feedback Form - Please complete before continuing")
+            st.markdown("### Thank you for completing the tasks!")
+            
+            with st.form("popup_evaluation_form"):
+                # Part 1: System Usability Scale (SUS) Questions
+                st.header("System Usability")
+                
+                # SUS Questions - Using 5-point Likert scale
+                sus_questions = [
+                    "I think that I would like to use this system frequently.",
+                    "I found the system unnecessarily complex.",
+                    "I thought the system was easy to use.",
+                    "I think that I would need the support of a technical person to be able to use this system.",
+                    "I found the various functions in this system were well integrated.",
+                    "I thought there was too much inconsistency in this system.",
+                    "I would imagine that most people would learn to use this system very quickly.",
+                    "I found the system very cumbersome to use.",
+                    "I felt very confident using the system.",
+                    "I needed to learn a lot of things before I could get going with this system."
+                ]
+                
+                sus_responses = {}
+                for i, question in enumerate(sus_questions, 1):
+                    sus_responses[f"sus_q{i}"] = st.radio(
+                        question,
+                        options=["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"],
+                        horizontal=True,
+                        key=f"popup_sus_q{i}"
+                    )
+                
+                # Task difficulty questions
+                st.header("Task Difficulty")
+                
+                # Create a more structured layout for task difficulty
+                task_difficulty = {}
+                for i in range(1, 6):
+                    task_key = f"task{i}"
+                    if task_key in st.session_state.skipped_tasks:
+                        # If task was skipped, mark as "Too Difficult" by default, but allow changing
+                        difficulty_options = ["Too Easy", "Easy", "Just Right", "Challenging", "Too Difficult"]
+                        default_idx = 4  # "Too Difficult"
+                        task_difficulty[task_key] = st.radio(
+                            f"How difficult was Task {i}? (Skipped)",
+                            options=difficulty_options,
+                            index=default_idx,
+                            horizontal=True,
+                            key=f"popup_difficulty_task{i}"
+                        )
+                    else:
+                        task_difficulty[task_key] = st.radio(
+                            f"How difficult was Task {i}?",
+                            options=["Too Easy", "Easy", "Just Right", "Challenging", "Too Difficult"],
+                            horizontal=True,
+                            key=f"popup_difficulty_task{i}"
+                        )
+                
+                # AI Assistant Performance
+                st.header("AI Assistant Performance")
+                
+                ai_helpfulness = st.radio(
+                    "How helpful was the AI assistant?",
+                    options=["Not helpful", "Slightly helpful", "Moderately helpful", "Very helpful", "Extremely helpful"],
+                    horizontal=True,
+                    key="popup_ai_helpfulness"
+                )
+                
+                ai_relevance = st.radio(
+                    "How relevant were the AI's responses to your questions?",
+                    options=["Not relevant", "Somewhat relevant", "Moderately relevant", "Very relevant", "Extremely relevant"],
+                    horizontal=True,
+                    key="popup_ai_relevance"
+                )
+                
+                # Research-Specific Questions
+                st.header("Research Features")
+                
+                retrieval_quality = st.radio(
+                    "How would you rate the quality of information you found?",
+                    options=["Poor", "Fair", "Good", "Very Good", "Excellent"],
+                    horizontal=True,
+                    key="popup_retrieval_quality"
+                )
+                
+                traditional_comparison = st.radio(
+                    "Compared to regular search methods (Google, Bing, etc.), this system is:",
+                    options=["Much worse", "Worse", "About the same", "Better", "Much better"],
+                    horizontal=True,
+                    key="popup_traditional_comparison"
+                )
+                
+                # Open-ended feedback
+                st.header("Additional Feedback")
+                
+                improvement_suggestions = st.text_area(
+                    "How can we improve this system?",
+                    height=100,
+                    key="popup_improvement_suggestions"
+                )
+                
+                favorite_feature = st.text_area(
+                    "What was your favorite feature?",
+                    height=100,
+                    key="popup_favorite_feature"
+                )
+                
+                # Add skipped tasks information
+                skipped_tasks_list = list(st.session_state.skipped_tasks)
+                
+                # Submit button
+                submitted = st.form_submit_button("Submit Feedback")
+                
+                if submitted:
+                    # Collect all evaluation data
+                    evaluation_data = {
+                        # System Usability Scale responses
+                        "sus_responses": sus_responses,
+                        
+                        # Task difficulty
+                        "task_difficulty": task_difficulty,
+                        
+                        # AI assistant evaluation
+                        "ai_helpfulness": ai_helpfulness,
+                        "ai_relevance": ai_relevance,
+                        
+                        # Research-specific evaluation
+                        "retrieval_quality": retrieval_quality,
+                        "traditional_comparison": traditional_comparison,
+                        
+                        # Open-ended feedback
+                        "improvement_suggestions": improvement_suggestions,
+                        "favorite_feature": favorite_feature,
+                        
+                        # Add information about skipped tasks
+                        "skipped_tasks": skipped_tasks_list
+                    }
+                    
+                    # Log the evaluation
+                    log_user_evaluation(st.session_state.username, evaluation_data)
+                    
+                    # Update session state
+                    st.session_state.evaluation_submitted = True
+                    st.session_state.show_feedback_popup = False
+                    
+                    # Show success message
+                    st.success("Thank you for your feedback! Your evaluation has been submitted successfully.")
+                    st.balloons()
+                    
+                    # Rerun to close the feedback form
+                    st.rerun()
