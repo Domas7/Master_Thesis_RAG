@@ -304,7 +304,7 @@ else:
     tab3, tab1 = st.tabs(["About", "RAG Query"])
     
     with tab3:
-        messages = st.container(height=310)
+        messages = st.container(height=320)
         messages.chat_message("assistant").write(st.session_state.bot_msgs[0])
 
         # Add back the columns for better centering
