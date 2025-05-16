@@ -332,10 +332,6 @@ else:
     except:
         is_ollama_available = False
     
-    if not is_ollama_available and not st.session_state.get('cloud_warning_shown', False):
-        st.session_state.cloud_warning_shown = True
-        st.warning("⚠️ Running in cloud environment: Using OpenAI for all models regardless of selection.", icon="⚠️")
-    
     # Define tabs here, inside the else block
     tab1, tab3 = st.tabs(["RAG Query", "About"])
     
