@@ -4,14 +4,12 @@ from rag_models import get_rag_model
 import datetime
 import os
 import json
-import random
-from streamlit.components.v1 import html
 
 # Initialize session state variables if they don't exist
 if 'user_msgs' not in st.session_state:
     st.session_state.user_msgs = []
 if 'bot_msgs' not in st.session_state:
-    st.session_state.bot_msgs = [f"Welcome to the Master Thesis Application that focuses on supporting human decision making using Retrieval Augmented Generation (RAG) - a technology that combines AI with relevant information from trusted documents to provide more accurate and factual responses.\n\nAs part of the thesis evaluation, you'll complete 5 engineering tasks displayed in the sidebar. You'll take on the role of different engineers solving real-world problems. If a task proves particularly challenging, you may skip it after 4 attempts. Once you've completed or skipped all tasks, a feedback form will appear to help improve the application. Thank you for your participation!"]
+    st.session_state.bot_msgs = [f"Welcome to the NASA Lessons Learned app. You can ask questions about NASA missions and documents, or use the playlist feature to save interesting papers."]
 if 'show_song_selection' not in st.session_state:
     st.session_state.show_song_selection = False
 if 'song_options' not in st.session_state:
@@ -26,20 +24,6 @@ if 'username' not in st.session_state:
     st.session_state.username = ""
 if 'completed_tasks' not in st.session_state:
     st.session_state.completed_tasks = set()
-# Initialize task model assignments if not exists
-if 'task_models' not in st.session_state:
-    # Randomly assign models to tasks
-    st.session_state.task_models = {
-        f"task{i}": random.choice(["openai", "llama"]) for i in range(1, 6)
-    }
-if 'can_select_model' not in st.session_state:
-    st.session_state.can_select_model = False
-if 'current_task_id' not in st.session_state:
-    st.session_state.current_task_id = None
-if 'show_feedback_popup' not in st.session_state:
-    st.session_state.show_feedback_popup = False
-if 'skipped_tasks' not in st.session_state:
-    st.session_state.skipped_tasks = set()
 
 # Initialize the RAG model
 rag_model = get_rag_model()
@@ -48,32 +32,7 @@ rag_model = get_rag_model()
 USERS = {
     "user1": "password1",
     "user2": "password2",
-    "admin": "adminpass",
-    "bruker1": "passord1",
-    "bruker2": "passord2",
-    "bruker3": "passord3",
-    "bruker4": "passord4",
-    "Snorre": "Snorre123",
-    "Martin": "Martin123",
-    "Christoffer": "Christoffer123",
-    "Marius": "Marius123",
-    "Edvard": "Edvard123",
-    "Daniel": "Daniel123",
-    "Stine": "Stine123",
-    "Eirik": "Eirik123",
-    "Fredrik": "Fredrik123",
-    "Emerson": "Emerson123",
-    "Johan": "Johan123",
-    "Dominykas": "Dominykas123",
-    "Chiran": "Chiran123",
-    "Filip": "Filip123",
-    "Sina": "Sina123",
-    "Håvard": "Håvard123",
-    "Kevin": "Kevin123",
-    "Jonathan": "Jonathan123",
-    "Tord": "Tord123",
-    "Patrik": "Patrik123",
-    "Kien": "Kien123",
+    "admin": "adminpass"
 }
 
 # Define key terms/concepts that should be in correct answers - move this outside the function
@@ -172,8 +131,8 @@ def evaluate_task_answer(task_id, answer):
         # Return the list of missing concepts for targeted feedback
         return False, task_concepts["feedback_correct"], missing_concepts
 
-# Function to log user answers with model information
-def log_user_answer(username, task_id, answer, is_correct, model_used=None, query=None):
+# Function to log user answers2
+def log_user_answer(username, task_id, answer, is_correct):
     log_dir = "user_answers"
     if not os.path.exists(log_dir):
         os.makedirs(log_dir)
@@ -184,15 +143,8 @@ def log_user_answer(username, task_id, answer, is_correct, model_used=None, quer
         "task_id": task_id,
         "answer": answer,
         "is_correct": is_correct,
-        "timestamp": timestamp,
-        "entry_type": "query" if task_id.startswith("query") or is_correct == "not_submitted" else "submission"
+        "timestamp": timestamp
     }
-    
-    # Add model and query information if provided
-    if model_used:
-        log_entry["model_used"] = model_used
-    if query:
-        log_entry["query"] = query
     
     log_file = os.path.join(log_dir, f"{username}_answers.json")
     
@@ -227,51 +179,9 @@ def log_user_evaluation(username, evaluation_data):
     
     return True
 
-def check_all_tasks_completed_or_skipped():
-    """Check if all tasks are either completed or skipped"""
-    for i in range(1, 6):
-        task_key = f"task{i}"
-        if (not st.session_state.task_completion[task_key]["correct"] and 
-            task_key not in st.session_state.skipped_tasks):
-            return False
-    return True
-
-def process_rag_query(query, task_id=None):
+def process_rag_query(query):
     """Process a query using the RAG model with the selected model"""
-    # If task_id is provided, use it; otherwise use the current active task
-    task_to_use = task_id if task_id else st.session_state.current_task_id
-    
-    # If a task is active and model selection is disabled, use the assigned model for that task
-    if task_to_use and not st.session_state.can_select_model:
-        model_to_use = st.session_state.task_models[task_to_use]
-    else:
-        model_to_use = st.session_state.selected_model
-    
-    result = rag_model.query(query, model_to_use)
-    
-    # Log the query and model used
-    if st.session_state.logged_in:
-        log_user_answer(
-            st.session_state.username, 
-            "query" if task_to_use is None else f"query_{task_to_use}", 
-            result, 
-            "not_submitted",  # Mark as not submitted since this is just a query
-            model_used=model_to_use,
-            query=query
-        )
-    
-    return result
-
-# Function to switch between tabs using JavaScript
-def switch_tab(tab_index):
-    """Generate JavaScript to switch to the specified tab index"""
-    return f"""
-    <script>
-    var tabGroup = window.parent.document.getElementsByClassName("stTabs")[0];
-    var tabs = tabGroup.getElementsByTagName("button");
-    tabs[{tab_index}].click();
-    </script>
-    """
+    return rag_model.query(query, st.session_state.selected_model)
 
 # Login form
 if not st.session_state.logged_in:
@@ -301,66 +211,11 @@ else:
     st.sidebar.write(f"Logged in as: **{st.session_state.username}**")
     
     # Define tabs here, inside the else block
-    tab3, tab1 = st.tabs(["About", "RAG Query"])
+    tab1, tab2, tab3 = st.tabs(["RAG Query", "Lesson Recommender", "Explore Mission Database"])
     
     with tab3:
-        messages = st.container(height=320)
+        messages = st.container(height=500)
         messages.chat_message("assistant").write(st.session_state.bot_msgs[0])
-
-        # Add back the columns for better centering
-        col1, col2, col3 = st.columns([1, 2, 1])
-        with col2:
-            # Custom CSS for a colorful, rainbow gradient button - using more specific selectors
-            st.markdown("""
-            <style>
-            /* Override the default Streamlit button styling completely */
-            div[data-testid="element-container"] button[kind="primary"] {
-                background: linear-gradient(124deg, 
-                    #ff2400, #e81d1d, #e8b71d, #e3e81d, #1de840, 
-                    #1ddde8, #2b1de8, #dd00f3, #dd00f3) !important;
-                background-size: 1800% 1800% !important;
-                animation: rainbow 10s ease infinite !important;
-                color: white !important;
-                padding: 15px 32px !important;
-                text-align: center !important;
-                display: inline-block !important;
-                font-size: 42px !important;
-                font-weight: bold !important;
-                margin: 10px 0px !important;
-                cursor: pointer !important;
-                border-radius: 12px !important;
-                border: none !important;
-                width: 100% !important;
-                height: auto !important;
-                transition: all 0.3s !important;
-                box-shadow: 0 6px 20px rgba(0,0,0,0.4) !important;
-                text-shadow: 2px 2px 4px rgba(0,0,0,0.5) !important;
-            }
-            
-            /* Hover and active states */
-            div[data-testid="element-container"] button[kind="primary"]:hover {
-                transform: translateY(-5px) !important;
-                box-shadow: 0 10px 25px rgba(0,0,0,0.5) !important;
-            }
-            div[data-testid="element-container"] button[kind="primary"]:active {
-                transform: translateY(3px) !important;
-                box-shadow: 0 2px 10px rgba(0,0,0,0.3) !important;
-            }
-            
-            /* More specific override for Streamlit's button styling */
-            div[data-testid="stButton"] > button[kind="primary"] {
-                background-image: linear-gradient(124deg, 
-                    #ff2400, #e81d1d, #e8b71d, #e3e81d, #1de840, 
-                    #1ddde8, #2b1de8, #dd00f3, #dd00f3) !important;
-                background-size: 1800% 1800% !important;
-                animation: rainbow 10s ease infinite !important;
-            }
-            </style>
-            """, unsafe_allow_html=True)
-            
-            # Use Streamlit's button with our CSS applied for reliable tab switching
-            if st.button("START", key="rainbow_button", type="primary", use_container_width=True):
-                html(switch_tab(1), height=0)
 
         # Only show user-bot message pairs if there are any
         if st.session_state.user_msgs:
@@ -383,7 +238,6 @@ else:
                     "task4": {"completed": False, "correct": False, "attempts": 0},
                     "task5": {"completed": False, "correct": False, "attempts": 0}
                 }
-        
             
             # Task selection and submission system
             selected_task = st.selectbox(
@@ -396,117 +250,64 @@ else:
             )
             
             task_id = f"task{selected_task[5:6]}"  # Extract task number
-            # Store the currently selected task in session state
-            st.session_state.current_task_id = task_id
             
             # Display task description based on selection
             if selected_task == "Task 1: Engine Rollback Investigation":
                 st.markdown("""
                 ### Task 1: Engine Rollback Investigation
-                """)
-                # Make the task description non-copyable using HTML/CSS
-                st.markdown("""
-                <div style="user-select: none; -webkit-user-select: none; -ms-user-select: none;">
                 You're an aerospace engineer analyzing engine performance in icing conditions. Your team needs to understand what particle characteristics lead to engine rollback events. Research the Propulsion Systems Laboratory (PSL) test data findings to determine critical ice particle sizes and temperature conditions that contribute to these events.
                 
                 Expected findings should include:
                 - Analysis of Propulsion Systems Laboratory (PSL) data points on the LF11 engine model
                 - Critical particle size requirements for engine rollback (when thrust unexpectedly decreases)
                 - Relevant wet bulb temperature range in the Low Pressure Compressor (LPC) region
-                </div>
-                """, unsafe_allow_html=True)
+                """)
             elif selected_task == "Task 2: Satellite Thermal System Evaluation":
                 st.markdown("""
                 ### Task 2: Satellite Thermal System Evaluation
-                """)
-                # Make the task description non-copyable
-                st.markdown("""
-                <div style="user-select: none; -webkit-user-select: none; -ms-user-select: none;">
                 As a thermal engineer reviewing post-launch performance, you need to assess how well the Cloud-Aerosol Lidar and Infrared Pathfinder Satellite Observation (CALIPSO) payload thermal system functioned across different operational modes. Investigate the thermal performance data to prepare a brief report on system stability and margin conditions.
                 
                 Expected findings should include:
                 - Thermal boundary condition performance during System Health Monitoring (SHM) and Data Acquisition (DAQ) modes
                 - System behavior in various standby and safe modes (reduced power and emergency operations)
                 - Heater performance and temperature control effectiveness
-                </div>
-                """, unsafe_allow_html=True)
+                """)
             elif selected_task == "Task 3: Aircraft Noise Profile Assessment":
                 st.markdown("""
                 ### Task 3: Aircraft Noise Profile Assessment
-                """)
-                # Make the task description non-copyable
-                st.markdown("""
-                <div style="user-select: none; -webkit-user-select: none; -ms-user-select: none;">
                 You're working on noise reduction for a new aircraft design. Your task is to understand how engine power settings affect different noise components. Research how noise profiles vary between approach and takeoff conditions to inform your design recommendations.
                 
                 Expected findings should include:
                 - Inlet broadband component behavior (noise distributed across many frequencies) at low power settings
                 - Relationship between flight velocity and airframe noise (noise from the aircraft body)
                 - Comparative noise levels at high takeoff power
-                </div>
-                """, unsafe_allow_html=True)
+                """)
             elif selected_task == "Task 4: Critical Power System Design":
                 st.markdown("""
                 ### Task 4: Critical Power System Design
-                """)
-                # Make the task description non-copyable
-                st.markdown("""
-                <div style="user-select: none; -webkit-user-select: none; -ms-user-select: none;">
                 You're designing power systems for a new space mission with sensitive equipment. Your project manager wants recommendations on implementing Uninterruptible Power Supply (UPS) systems. Research the benefits and applications of UPS in NASA missions to justify your proposal.
                 
                 Expected findings should include:
                 - Safety benefits for personnel and equipment
                 - Critical applications for emergency operations
                 - Power quality improvement capabilities (voltage stability, frequency regulation)
-                </div>
-                """, unsafe_allow_html=True)
+                """)
             elif selected_task == "Task 5: Electronics System Safety Review":
                 st.markdown("""
                 ### Task 5: Electronics System Safety Review
-                """)
-                # Make the task description non-copyable
-                st.markdown("""
-                <div style="user-select: none; -webkit-user-select: none; -ms-user-select: none;">
                 As a systems safety engineer preparing for Critical Design Review, you need to recommend appropriate analysis techniques for a complex electro-mechanical system. Research analytical methods that can identify potential hidden circuit problems before manufacturing begins.
                 
                 Expected findings should include:
                 - Applicable system types for specialized circuit analysis (such as FMEA or fault tree analysis)
                 - Optimal implementation timing in the project lifecycle
                 - Benefits for high-criticality systems (systems where failure would be catastrophic)
-                </div>
-                """, unsafe_allow_html=True)
+                """)
             
             # Task answer submission
             st.write("Submit your findings:")
             user_answer = st.text_area("Your answer", height=150, key=f"answer_{task_id}")
             
-            # Create columns for Submit and Skip buttons
-            col1, col2 = st.columns(2)
-            
-            with col1:
-                submit_button = st.button("Submit Answer", key=f"submit_{task_id}")
-            
-            with col2:
-                # Only show skip button if there have been at least 4 unsuccessful attempts
-                can_skip = task_id in st.session_state.task_completion and st.session_state.task_completion[task_id]["attempts"] >= 4
-                
-                if can_skip:
-                    skip_button = st.button("Skip Task", key=f"skip_{task_id}")
-                else:
-                    # Show disabled skip button with attempts counter
-                    attempts = 0
-                    if task_id in st.session_state.task_completion:
-                        attempts = st.session_state.task_completion[task_id]["attempts"]
-                    
-                    remaining = max(0, 4 - attempts)
-                    st.button(
-                        f"Skip ({remaining} more attempts)",
-                        key=f"skip_disabled_{task_id}",
-                        disabled=True
-                    )
-                    skip_button = False
-            
-            if submit_button:
+            if st.button("Submit Answer", key=f"submit_{task_id}"):
                 # Evaluate the answer
                 is_correct, feedback_message, missing_concepts = evaluate_task_answer(task_id, user_answer)
                 
@@ -519,25 +320,13 @@ else:
                 st.session_state.task_completion[task_id]["completed"] = True
                 st.session_state.task_completion[task_id]["correct"] = is_correct
                 
-                # Log the user's answer with the model used for this task
-                log_user_answer(
-                    st.session_state.username, 
-                    task_id, 
-                    user_answer, 
-                    is_correct,
-                    model_used=st.session_state.task_models[task_id],
-                    query=f"Task submission - {task_id}"  # Mark as an actual task submission
-                )
+                # Log the user's answer
+                log_user_answer(st.session_state.username, task_id, user_answer, is_correct)
                 
                 # Show feedback
                 if is_correct:
                     st.success(f"✅ Correct! {feedback_message}")
                     st.session_state.completed_tasks.add(task_id)
-                    
-                    # Check if all tasks are completed and update model selection availability
-                    all_completed = all(st.session_state.task_completion[f"task{i}"]["correct"] for i in range(1, 6))
-                    if all_completed:
-                        st.session_state.can_select_model = True
                 else:
                     # Get the task's concept hints
                     concept_hints = key_concepts[task_id]["concept_hints"]
@@ -553,31 +342,6 @@ else:
                     
                     st.error(f"❌ Not quite right. Your answer needs more detail. {hint_text}")
             
-            # Handle skip button action
-            if can_skip and skip_button:
-                # Mark task as skipped
-                st.session_state.skipped_tasks.add(task_id)
-                
-                # Log the skip action
-                log_user_answer(
-                    st.session_state.username, 
-                    task_id, 
-                    "SKIPPED", 
-                    False,
-                    model_used=st.session_state.task_models[task_id],
-                    query=f"Task skipped - {task_id}"  # Mark as a skipped task
-                )
-                
-                # Show confirmation
-                st.warning(f"Task {task_id[-1]} has been skipped. You can continue with other tasks.")
-                
-                # Check if all tasks are now completed or skipped
-                if check_all_tasks_completed_or_skipped():
-                    st.session_state.can_select_model = True
-                    st.session_state.show_feedback_popup = True
-                    st.success("All tasks complete! You can now choose which AI model to use.")
-                    st.rerun()  # Rerun to show the popup
-            
             # Display task status summary
             st.divider()
             st.subheader("Task Progress")
@@ -586,10 +350,7 @@ else:
                 task_key = f"task{i}"
                 task_data = st.session_state.task_completion[task_key]
                 
-                if task_key in st.session_state.skipped_tasks:
-                    status = "⏩ Skipped"
-                    color = "orange"
-                elif not task_data["completed"]:
+                if not task_data["completed"]:
                     status = "⚪ Not attempted"
                     color = "gray"
                 elif task_data["correct"]:
@@ -601,95 +362,160 @@ else:
                 
                 st.markdown(f"**Task {i}**: <span style='color:{color}'>{status}</span>", unsafe_allow_html=True)
 
-            # Check if all tasks are completed successfully or skipped
-            if check_all_tasks_completed_or_skipped() and not st.session_state.can_select_model:
-                st.session_state.can_select_model = True
-                st.session_state.show_feedback_popup = True
-                # Show message about model selection being available
-                st.success("🎉 All tasks completed! You can now choose which AI model to use.")
+            # Check if all tasks are completed successfully
+            all_tasks_completed = all(st.session_state.task_completion[f"task{i}"]["correct"] for i in range(1, 6))
 
             # Show evaluation form if all tasks are completed successfully and evaluation not yet submitted
-            if check_all_tasks_completed_or_skipped() and 'evaluation_submitted' not in st.session_state:
+            if all_tasks_completed and 'evaluation_submitted' not in st.session_state:
                 st.session_state.show_evaluation_form = True
 
             # Display the evaluation form in a modal-like container
-            if check_all_tasks_completed_or_skipped() and st.session_state.get('show_evaluation_form', False):
+            if all_tasks_completed and st.session_state.get('show_evaluation_form', False):
                 st.markdown("### 🎉 Congratulations on completing all tasks!")
                 
                 with st.container():
                     st.markdown("""
-                    ## Feedback Form
-                    Please tell us what you think about the NASA Lessons Learned system.
-                    Your feedback will help us improve it.
+                    ## Final Evaluation Form
+                    Please take a moment to provide feedback on your experience with the NASA Lessons Learned system.
+                    Your input helps us improve the learning experience and will be valuable for research purposes.
                     """)
                     
                     with st.form("evaluation_form"):
-                        # Part 1: System Usability Scale (SUS) Questions
-                        st.header("System Usability")
+                        # Part 1: General System Evaluation
+                        st.header("Part 1: General System Evaluation")
                         
-                        # SUS Questions - Using 5-point Likert scale
-                        sus_questions = [
-                            "I think that I would like to use this system frequently.",
-                            "I found the system unnecessarily complex.",
-                            "I thought the system was easy to use.",
-                            "I think that I would need the support of a technical person to be able to use this system.",
-                            "I found the various functions in this system were well integrated.",
-                            "I thought there was too much inconsistency in this system.",
-                            "I would imagine that most people would learn to use this system very quickly.",
-                            "I found the system very cumbersome to use.",
-                            "I felt very confident using the system.",
-                            "I needed to learn a lot of things before I could get going with this system."
-                        ]
-                        
-                        sus_responses = {}
-                        for i, question in enumerate(sus_questions, 1):
-                            sus_responses[f"sus_q{i}"] = st.radio(
-                                question,
-                                options=["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"],
-                                horizontal=True,
-                                key=f"sus_q{i}"
-                            )
+                        # System usability questions
+                        st.subheader("System Usability")
+                        usability_score = st.radio(
+                            "How would you rate the overall usability of the system?",
+                            options=["★", "★★", "★★★", "★★★★", "★★★★★"],
+                            horizontal=True
+                        )
                         
                         # Task difficulty questions
-                        st.header("Task Difficulty")
+                        st.subheader("Task Difficulty")
                         
                         # Create a more structured layout for task difficulty
                         task_difficulty = {}
                         for i in range(1, 6):
                             task_difficulty[f"task{i}"] = st.radio(
-                                f"How difficult was Task {i}?",
+                                f"Rate the difficulty of Task {i}:",
                                 options=["Too Easy", "Easy", "Just Right", "Challenging", "Too Difficult"],
                                 horizontal=True,
                                 key=f"difficulty_task{i}"
                             )
                         
-                        # AI Assistant Performance
-                        st.header("AI Assistant Performance")
-                        
-                        ai_helpfulness = st.radio(
-                            "How helpful was the AI assistant?",
-                            options=["Not helpful", "Slightly helpful", "Moderately helpful", "Very helpful", "Extremely helpful"],
+                        # Learning experience questions
+                        st.subheader("Learning Experience")
+                        learning_value = st.radio(
+                            "How valuable was this experience for learning about NASA missions?",
+                            options=["★", "★★", "★★★", "★★★★", "★★★★★"],
                             horizontal=True
                         )
                         
-                        ai_relevance = st.radio(
-                            "How relevant were the AI's responses to your questions?",
-                            options=["Not relevant", "Somewhat relevant", "Moderately relevant", "Very relevant", "Extremely relevant"],
+                        knowledge_gain = st.radio(
+                            "How much did your knowledge about NASA lessons learned increase?",
+                            options=["★", "★★", "★★★", "★★★★", "★★★★★"],
                             horizontal=True
                         )
                         
-                        # Research-Specific Questions
-                        st.header("Research Features")
+                        # Part 2: RAG Chat Agent Evaluation
+                        st.header("Part 2: RAG Chat Agent Evaluation")
+                        
+                        # General RAG system feedback
+                        st.subheader("Overall AI Assistant Performance")
+                        rag_helpfulness = st.radio(
+                            "How helpful was the AI assistant in completing your tasks?",
+                            options=["★", "★★", "★★★", "★★★★", "★★★★★"],
+                            horizontal=True
+                        )
+                        
+                        # Model-specific evaluations
+                        st.subheader("Model-Specific Evaluation")
+                        
+                        # OpenAI (ChatGPT) evaluation
+                        st.markdown("**OpenAI (ChatGPT) Model**")
+                        openai_accuracy = st.radio(
+                            "How would you rate the accuracy of the OpenAI (ChatGPT) responses?",
+                            options=["★", "★★", "★★★", "★★★★", "★★★★★"],
+                            horizontal=True,
+                            key="openai_accuracy"
+                        )
+                        
+                        openai_relevance = st.radio(
+                            "How relevant were the OpenAI (ChatGPT) responses to your queries?",
+                            options=["★", "★★", "★★★", "★★★★", "★★★★★"],
+                            horizontal=True,
+                            key="openai_relevance"
+                        )
+                        
+                        openai_speed = st.radio(
+                            "How would you rate the response speed of the OpenAI (ChatGPT) model?",
+                            options=["★", "★★", "★★★", "★★★★", "★★★★★"],
+                            horizontal=True,
+                            key="openai_speed"
+                        )
+                        
+                        # Llama model evaluation
+                        st.markdown("**Llama Model**")
+                        llama_accuracy = st.radio(
+                            "How would you rate the accuracy of the Llama model responses?",
+                            options=["★", "★★", "★★★", "★★★★", "★★★★★"],
+                            horizontal=True,
+                            key="llama_accuracy"
+                        )
+                        
+                        llama_relevance = st.radio(
+                            "How relevant were the Llama model responses to your queries?",
+                            options=["★", "★★", "★★★", "★★★★", "★★★★★"],
+                            horizontal=True,
+                            key="llama_relevance"
+                        )
+                        
+                        llama_speed = st.radio(
+                            "How would you rate the response speed of the Llama model?",
+                            options=["★", "★★", "★★★", "★★★★", "★★★★★"],
+                            horizontal=True,
+                            key="llama_speed"
+                        )
+                        
+                        # Model comparison
+                        st.subheader("Model Comparison")
+                        preferred_model = st.radio(
+                            "Which model did you prefer overall?",
+                            options=["OpenAI (ChatGPT)", "Llama", "No preference"],
+                            horizontal=True
+                        )
+                        
+                        model_preference_reason = st.text_area(
+                            "Why did you prefer this model?",
+                            height=100
+                        )
+                        
+                        # Part 3: Research-Specific Questions
+                        st.header("Part 3: Research-Specific Questions")
+                        
+                        # Information retrieval effectiveness
+                        st.subheader("Information Retrieval")
                         
                         retrieval_quality = st.radio(
-                            "How would you rate the quality of information you found?",
-                            options=["Poor", "Fair", "Good", "Very Good", "Excellent"],
+                            "How would you rate the quality of retrieved information?",
+                            options=["★", "★★", "★★★", "★★★★", "★★★★★"],
                             horizontal=True
                         )
                         
+                        # Comparison to traditional methods
+                        st.subheader("Comparison to Traditional Methods")
+                        
                         traditional_comparison = st.radio(
-                            "Compared to regular search methods (Google, Bing, etc.), this system is:",
+                            "Compared to traditional document search methods, this system is:",
                             options=["Much worse", "Worse", "About the same", "Better", "Much better"],
+                            horizontal=True
+                        )
+                        
+                        time_saving = st.radio(
+                            "How much time do you think this system saved you compared to manual research?",
+                            options=["No time saved", "A little time", "Moderate time", "Significant time", "Extensive time"],
                             horizontal=True
                         )
                         
@@ -697,34 +523,45 @@ else:
                         st.header("Additional Feedback")
                         
                         improvement_suggestions = st.text_area(
-                            "How can we improve this system?",
+                            "What suggestions do you have for improving the system?",
                             height=100
                         )
                         
                         favorite_feature = st.text_area(
-                            "What was your favorite feature?",
+                            "What was your favorite feature of the system?",
                             height=100
                         )
                         
+                        
                         # Submit button
-                        submitted = st.form_submit_button("Submit Feedback")
+                        submitted = st.form_submit_button("Submit Evaluation")
                         
                         if submitted:
                             # Collect all evaluation data
                             evaluation_data = {
-                                # System Usability Scale responses
-                                "sus_responses": sus_responses,
-                                
-                                # Task difficulty
+                                # General system evaluation
+                                "usability_score": len(usability_score),
                                 "task_difficulty": task_difficulty,
+                                "learning_value": len(learning_value),
+                                "knowledge_gain": len(knowledge_gain),
                                 
-                                # AI assistant evaluation
-                                "ai_helpfulness": ai_helpfulness,
-                                "ai_relevance": ai_relevance,
+                                # RAG chat agent evaluation
+                                "rag_helpfulness": len(rag_helpfulness),
+                                
+                                # Model-specific evaluation
+                                "openai_accuracy": len(openai_accuracy),
+                                "openai_relevance": len(openai_relevance),
+                                "openai_speed": len(openai_speed),
+                                "llama_accuracy": len(llama_accuracy),
+                                "llama_relevance": len(llama_relevance),
+                                "llama_speed": len(llama_speed),
+                                "preferred_model": preferred_model,
+                                "model_preference_reason": model_preference_reason,
                                 
                                 # Research-specific evaluation
-                                "retrieval_quality": retrieval_quality,
+                                "retrieval_quality": len(retrieval_quality),
                                 "traditional_comparison": traditional_comparison,
+                                "time_saving": time_saving,
                                 
                                 # Open-ended feedback
                                 "improvement_suggestions": improvement_suggestions,
@@ -745,32 +582,20 @@ else:
     with tab1:
         st.header("NASA Mission Knowledge Base")
         
-        # Model selection with conditional enabling
+        # Model selection
         model_col1, model_col2 = st.columns(2)
         with model_col1:
             st.write("Select AI Model:")
         with model_col2:
             model_options = ["OpenAI", "Llama"]
-            
-            # Only allow model selection after all tasks are completed
-            if st.session_state.can_select_model:
-                selected_index = 0 if st.session_state.selected_model == "openai" else 1
-                selected_model = st.selectbox(
-                    "Model",
-                    model_options,
-                    index=selected_index,
-                    label_visibility="collapsed"
-                )
-                st.session_state.selected_model = selected_model.lower()
-            else:
-                # Show disabled dropdown with info message
-                st.selectbox(
-                    "Model",
-                    model_options,
-                    disabled=True,
-                    label_visibility="collapsed"
-                )
-                st.info("Complete all tasks to select a model. Currently using randomly assigned models per task.")
+            selected_index = 0 if st.session_state.selected_model == "openai" else 1
+            selected_model = st.selectbox(
+                "Model",
+                model_options,
+                index=selected_index,
+                label_visibility="collapsed"
+            )
+            st.session_state.selected_model = selected_model.lower()
         
         # Chat interface for RAG
         if 'rag_messages' not in st.session_state:
@@ -792,21 +617,9 @@ else:
             with st.chat_message("user"):
                 st.write(rag_query)
             
-            # Use the current task ID from session state instead of trying to determine it here
-            current_task_id = st.session_state.current_task_id
-            
-            # Generate model name for display based on whether model selection is enabled
-            if st.session_state.can_select_model:
-                display_model = st.session_state.selected_model.upper()
-            else:
-                # If a task is active, use the model assigned to that task
-                display_model = (st.session_state.task_models[current_task_id].upper() 
-                                 if current_task_id 
-                                 else st.session_state.selected_model.upper())
-            
             # Get response from RAG model
-            with st.spinner(f"Thinking using {display_model}..."):
-                response = process_rag_query(rag_query, current_task_id)
+            with st.spinner(f"Thinking using {st.session_state.selected_model.upper()}..."):
+                response = process_rag_query(rag_query)
             
             # Add assistant response to chat history
             st.session_state.rag_messages.append({"role": "assistant", "content": response})
@@ -814,161 +627,3 @@ else:
             # Display assistant response
             with st.chat_message("assistant"):
                 st.write(response)
-
-# Display feedback form as a popup when all tasks are completed/skipped
-if st.session_state.show_feedback_popup and 'evaluation_submitted' not in st.session_state:
-    # Create a custom dialog-like interface instead of using st.dialog()
-    feedback_container = st.container()
-    
-    with feedback_container:
-        # Add a colored background container to make it stand out
-        with st.container(border=True):
-            st.markdown("## 🎉 Feedback Form - Please complete before continuing")
-            st.markdown("### Thank you for completing the tasks!")
-            
-            with st.form("popup_evaluation_form"):
-                # Part 1: System Usability Scale (SUS) Questions
-                st.header("System Usability")
-                
-                # SUS Questions - Using 5-point Likert scale
-                sus_questions = [
-                    "I think that I would like to use this system frequently.",
-                    "I found the system unnecessarily complex.",
-                    "I thought the system was easy to use.",
-                    "I think that I would need the support of a technical person to be able to use this system.",
-                    "I found the various functions in this system were well integrated.",
-                    "I thought there was too much inconsistency in this system.",
-                    "I would imagine that most people would learn to use this system very quickly.",
-                    "I found the system very cumbersome to use.",
-                    "I felt very confident using the system.",
-                    "I needed to learn a lot of things before I could get going with this system."
-                ]
-                
-                sus_responses = {}
-                for i, question in enumerate(sus_questions, 1):
-                    sus_responses[f"sus_q{i}"] = st.radio(
-                        question,
-                        options=["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"],
-                        horizontal=True,
-                        key=f"popup_sus_q{i}"
-                    )
-                
-                # Task difficulty questions
-                st.header("Task Difficulty")
-                
-                # Create a more structured layout for task difficulty
-                task_difficulty = {}
-                for i in range(1, 6):
-                    task_key = f"task{i}"
-                    if task_key in st.session_state.skipped_tasks:
-                        # If task was skipped, mark as "Too Difficult" by default, but allow changing
-                        difficulty_options = ["Too Easy", "Easy", "Just Right", "Challenging", "Too Difficult"]
-                        default_idx = 4  # "Too Difficult"
-                        task_difficulty[task_key] = st.radio(
-                            f"How difficult was Task {i}? (Skipped)",
-                            options=difficulty_options,
-                            index=default_idx,
-                            horizontal=True,
-                            key=f"popup_difficulty_task{i}"
-                        )
-                    else:
-                        task_difficulty[task_key] = st.radio(
-                            f"How difficult was Task {i}?",
-                            options=["Too Easy", "Easy", "Just Right", "Challenging", "Too Difficult"],
-                            horizontal=True,
-                            key=f"popup_difficulty_task{i}"
-                        )
-                
-                # AI Assistant Performance
-                st.header("AI Assistant Performance")
-                
-                ai_helpfulness = st.radio(
-                    "How helpful was the AI assistant?",
-                    options=["Not helpful", "Slightly helpful", "Moderately helpful", "Very helpful", "Extremely helpful"],
-                    horizontal=True,
-                    key="popup_ai_helpfulness"
-                )
-                
-                ai_relevance = st.radio(
-                    "How relevant were the AI's responses to your questions?",
-                    options=["Not relevant", "Somewhat relevant", "Moderately relevant", "Very relevant", "Extremely relevant"],
-                    horizontal=True,
-                    key="popup_ai_relevance"
-                )
-                
-                # Research-Specific Questions
-                st.header("Research Features")
-                
-                retrieval_quality = st.radio(
-                    "How would you rate the quality of information you found?",
-                    options=["Poor", "Fair", "Good", "Very Good", "Excellent"],
-                    horizontal=True,
-                    key="popup_retrieval_quality"
-                )
-                
-                traditional_comparison = st.radio(
-                    "Compared to regular search methods (Google, Bing, etc.), this system is:",
-                    options=["Much worse", "Worse", "About the same", "Better", "Much better"],
-                    horizontal=True,
-                    key="popup_traditional_comparison"
-                )
-                
-                # Open-ended feedback
-                st.header("Additional Feedback")
-                
-                improvement_suggestions = st.text_area(
-                    "How can we improve this system?",
-                    height=100,
-                    key="popup_improvement_suggestions"
-                )
-                
-                favorite_feature = st.text_area(
-                    "What was your favorite feature?",
-                    height=100,
-                    key="popup_favorite_feature"
-                )
-                
-                # Add skipped tasks information
-                skipped_tasks_list = list(st.session_state.skipped_tasks)
-                
-                # Submit button
-                submitted = st.form_submit_button("Submit Feedback")
-                
-                if submitted:
-                    # Collect all evaluation data
-                    evaluation_data = {
-                        # System Usability Scale responses
-                        "sus_responses": sus_responses,
-                        
-                        # Task difficulty
-                        "task_difficulty": task_difficulty,
-                        
-                        # AI assistant evaluation
-                        "ai_helpfulness": ai_helpfulness,
-                        "ai_relevance": ai_relevance,
-                        
-                        # Research-specific evaluation
-                        "retrieval_quality": retrieval_quality,
-                        "traditional_comparison": traditional_comparison,
-                        
-                        # Open-ended feedback
-                        "improvement_suggestions": improvement_suggestions,
-                        "favorite_feature": favorite_feature,
-                        
-                        # Add information about skipped tasks
-                        "skipped_tasks": skipped_tasks_list
-                    }
-                    
-                    # Log the evaluation
-                    log_user_evaluation(st.session_state.username, evaluation_data)
-                    
-                    # Update session state
-                    st.session_state.evaluation_submitted = True
-                    st.session_state.show_feedback_popup = False
-                    
-                    # Show success message
-                    st.success("Thank you for your feedback! Your evaluation has been submitted successfully.")
-                    st.balloons()
-                    
-                    # Rerun to close the feedback form
-                    st.rerun()
