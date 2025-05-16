@@ -10,7 +10,7 @@ import random
 if 'user_msgs' not in st.session_state:
     st.session_state.user_msgs = []
 if 'bot_msgs' not in st.session_state:
-    st.session_state.bot_msgs = [f"Welcome to the NASA Lessons Learned app. You can ask questions about NASA missions and documents, or use the playlist feature to save interesting papers."]
+    st.session_state.bot_msgs = [f"Welcome to the Master Thesis Application that focuses on supporting human decision making using Retrieval Augmented Generation (RAG) - a technology that combines AI with relevant information from trusted documents to provide more accurate and factual responses.\n\nAs part of the thesis evaluation, you'll complete 5 engineering tasks displayed in the sidebar. You'll take on the role of different engineers solving real-world problems. If a task proves particularly challenging, you may skip it after 4 attempts. Once you've completed or skipped all tasks, a feedback form will appear to help improve the application. Thank you for your participation!"]
 if 'show_song_selection' not in st.session_state:
     st.session_state.show_song_selection = False
 if 'song_options' not in st.session_state:
@@ -289,7 +289,7 @@ else:
     st.sidebar.write(f"Logged in as: **{st.session_state.username}**")
     
     # Define tabs here, inside the else block
-    tab1, tab3 = st.tabs(["RAG Query", "Explore Mission Database"])
+    tab1, tab3 = st.tabs(["RAG Query", "About"])
     
     with tab3:
         messages = st.container(height=500)
