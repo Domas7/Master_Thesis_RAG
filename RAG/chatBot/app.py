@@ -7,6 +7,7 @@ import json
 import random
 from streamlit.components.v1 import html
 from dotenv import load_dotenv
+import requests
 
 # Load environment variables
 load_dotenv()
@@ -47,6 +48,9 @@ if 'skipped_tasks' not in st.session_state:
 # Add a flag for switching to About tab after login
 if 'switch_to_about' not in st.session_state:
     st.session_state.switch_to_about = False
+# Flag to track if we've shown the cloud environment warning
+if 'cloud_warning_shown' not in st.session_state:
+    st.session_state.cloud_warning_shown = False
 
 # Initialize the RAG model
 rag_model = get_rag_model()
@@ -319,6 +323,18 @@ else:
     
     # Display current user
     st.sidebar.write(f"Logged in as: **{st.session_state.username}**")
+    
+    # Show cloud environment warning if needed
+    is_ollama_available = False
+    try:
+        response = requests.get("http://localhost:11434/api/tags", timeout=1)
+        is_ollama_available = response.status_code == 200
+    except:
+        is_ollama_available = False
+    
+    if not is_ollama_available and not st.session_state.get('cloud_warning_shown', False):
+        st.session_state.cloud_warning_shown = True
+        st.warning("⚠️ Running in cloud environment: Using OpenAI for all models regardless of selection.", icon="⚠️")
     
     # Define tabs here, inside the else block
     tab1, tab3 = st.tabs(["RAG Query", "About"])

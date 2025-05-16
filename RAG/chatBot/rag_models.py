@@ -31,8 +31,10 @@ import threading
 try:
     from together import Together
     TOGETHER_AVAILABLE = True
-except ImportError:
+    print("TogetherAI library successfully imported!")
+except ImportError as e:
     TOGETHER_AVAILABLE = False
+    print(f"TogetherAI library not available: {e}. Will fall back to OpenAI.")
 
 # Set up logging configuration
 logging.basicConfig(
@@ -217,10 +219,13 @@ class RAGModel:
                             logger.info("Using TogetherAI Llama-3.3-70B model for responses")
                             return  # Successfully loaded TogetherAI, no need to try Ollama
                         else:
+                            logger.warning(f"TogetherAI test call failed with response: {test_response}")
                             raise Exception("TogetherAI test failed")
                     except Exception as e:
-                        logger.warning(f"TogetherAI not available: {e}")
+                        logger.warning(f"TogetherAI not available: {str(e)}")
                         self.together_llm = None  # Reset to None in case it was partially initialized
+                else:
+                    logger.warning("TogetherAI not available: library not imported or API key missing")
                 
                 # Fall back to Ollama if TogetherAI is not available
                 try:
@@ -240,12 +245,13 @@ class RAGModel:
                         self.model_loaded = True
                         logger.info("Using Ollama model (wizardlm2) for responses as fallback")
                     else:
+                        logger.warning(f"Ollama API returned status code: {response.status_code}")
                         raise Exception("Ollama not available")
                 except Exception as ollama_error:
-                    logger.warning(f"Ollama not available: {ollama_error}")
-                    raise Exception("Neither TogetherAI nor Ollama are available")
+                    logger.warning(f"Ollama not available: {str(ollama_error)}")
+                    raise Exception(f"Neither TogetherAI nor Ollama are available. TogetherAI error: {str(e) if 'e' in locals() else 'Not attempted'}, Ollama error: {str(ollama_error)}")
             except Exception as e:
-                logger.error(f"Error loading local models: {e}")
+                logger.error(f"Error loading local models: {str(e)}")
                 logger.warning("Falling back to OpenAI")
                 self.llm = ChatOpenAI(
                     model="gpt-4o-mini",
