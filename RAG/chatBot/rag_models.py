@@ -26,6 +26,7 @@ from typing import Any, List, Mapping, Optional
 import requests
 import openai
 import threading
+from supabase import create_client, Client
 
 # Add Together AI integration
 try:
@@ -35,6 +36,39 @@ try:
 except ImportError as e:
     TOGETHER_AVAILABLE = False
     print(f"TogetherAI library not available: {e}. Will fall back to OpenAI.")
+
+# Load environment variables from .env file if it exists
+load_dotenv()
+
+# Initialize Supabase client
+SUPABASE_URL = "https://ylxcsjarxlrdrtmkdfjk.supabase.co"
+
+# Try to get Supabase keys from various sources
+supabase_key = None
+
+# 1. Try environment variables
+supabase_key = os.getenv('SUPABASE_ANON_KEY')
+
+# 2. Try Streamlit secrets if available
+if not supabase_key:
+    try:
+        if 'SUPABASE_ANON_KEY' in st.secrets:
+            supabase_key = st.secrets['SUPABASE_ANON_KEY']
+    except Exception as e:
+        print(f"Could not access Streamlit secrets: {e}")
+
+# 3. Fallback to hardcoded key if needed
+if not supabase_key:
+    supabase_key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlseGNzamFyeGxyZHJ0bWtkZmprIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzc5NjI1MTQsImV4cCI6MjA1MzUzODUxNH0.N0SLqiMO6KxAlf_hyNTu1W1RZ8MfltuXwtdc1o-7eAs"
+
+supabase: Client = None
+try:
+    supabase = create_client(SUPABASE_URL, supabase_key)
+    st.session_state.supabase_connected = True
+    print("Supabase connection successful in rag_models.py!")
+except Exception as e:
+    st.session_state.supabase_connected = False
+    print(f"Failed to connect to Supabase in rag_models.py: {e}")
 
 # Set up logging configuration
 logging.basicConfig(
@@ -47,8 +81,43 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# Load environment variables from .env file if it exists
-load_dotenv()
+# Custom logger handler to also log to Supabase
+class SupabaseHandler(logging.Handler):
+    def emit(self, record):
+        if not hasattr(st.session_state, 'supabase_connected') or not st.session_state.supabase_connected:
+            return
+        
+        try:
+            # Check if table exists
+            try:
+                supabase.table("system_logs").select("*").limit(1).execute()
+                table_exists = True
+            except Exception:
+                # Table doesn't exist - silently fail
+                print("system_logs table doesn't exist in Supabase. Skipping remote logging.")
+                return
+            
+            if table_exists:
+                log_entry = {
+                    "timestamp": datetime.now().isoformat(),
+                    "level": record.levelname,
+                    "message": self.format(record),
+                    "logger": record.name,
+                    "pathname": record.pathname,
+                    "lineno": record.lineno
+                }
+                
+                # Insert into Supabase
+                supabase.table("system_logs").insert(log_entry).execute()
+        except Exception as e:
+            # Don't use logger here to avoid infinite recursion
+            print(f"Failed to log to Supabase: {e}")
+
+# Add Supabase handler if connected
+if supabase and st.session_state.get('supabase_connected', False):
+    supabase_handler = SupabaseHandler()
+    supabase_handler.setLevel(logging.INFO)
+    logger.addHandler(supabase_handler)
 
 # Try to get API keys from environment variables first
 openai_api_key = os.getenv('OPENAI_API_KEY')
@@ -73,17 +142,6 @@ if langchain_api_key:
     os.environ['LANGCHAIN_API_KEY'] = langchain_api_key
 if together_api_key:
     os.environ['TOGETHER_API_KEY'] = together_api_key
-
-# Set up logging configuration
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.FileHandler(f"rag_logs_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"),
-        logging.StreamHandler()
-    ]
-)
-logger = logging.getLogger(__name__)
 
 # Load environment variables
 load_dotenv()
@@ -608,6 +666,37 @@ class RAGModel:
             
             query_duration = time.time() - query_start_time
             logger.info(f"Query completed in {query_duration:.2f} seconds")
+            
+            # Log the query to Supabase if connected
+            if st.session_state.get('supabase_connected', False) and supabase:
+                try:
+                    # Check if table exists
+                    try:
+                        supabase.table("rag_queries").select("*").limit(1).execute()
+                        table_exists = True
+                    except Exception:
+                        print("rag_queries table doesn't exist in Supabase. Skipping remote logging.")
+                        table_exists = False
+                    
+                    if table_exists:
+                        # Get username from session state if available
+                        username = st.session_state.get('username', 'anonymous')
+                        # Get current task ID from session state if available
+                        task_id = st.session_state.get('current_task_id', None)
+                        
+                        query_log = {
+                            "timestamp": datetime.now().isoformat(),
+                            "username": username,
+                            "task_id": task_id,
+                            "question": question,
+                            "model": model_name,
+                            "processing_time": query_duration,
+                            "num_docs_retrieved": len(retrieved_docs),
+                            "answer_length": len(answer) if 'answer' in locals() else 0
+                        }
+                        supabase.table("rag_queries").insert(query_log).execute()
+                except Exception as e:
+                    logger.error(f"Failed to log query to Supabase: {e}")
             
             return answer
             

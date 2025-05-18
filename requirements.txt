@@ -15,3 +15,4 @@ langchain-huggingface>=0.0.5
 torch>=2.0.0
 transformers>=4.30.0
 together>=0.2.8
+supabase>=2.15.0

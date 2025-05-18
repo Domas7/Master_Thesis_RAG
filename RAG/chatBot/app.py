@@ -8,9 +8,40 @@ import random
 from streamlit.components.v1 import html
 from dotenv import load_dotenv
 import requests
+from supabase import create_client, Client
 
 # Load environment variables
 load_dotenv()
+
+# Initialize Supabase client
+SUPABASE_URL = "https://ylxcsjarxlrdrtmkdfjk.supabase.co"
+
+# Try to get Supabase keys from various sources
+supabase_key = None
+
+# 1. Try environment variables
+supabase_key = os.getenv('SUPABASE_ANON_KEY')
+
+# 2. Try Streamlit secrets if available
+if not supabase_key:
+    try:
+        if 'SUPABASE_ANON_KEY' in st.secrets:
+            supabase_key = st.secrets['SUPABASE_ANON_KEY']
+    except Exception as e:
+        print(f"Could not access Streamlit secrets: {e}")
+
+# 3. Fallback to hardcoded key if needed
+if not supabase_key:
+    supabase_key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlseGNzamFyeGxyZHJ0bWtkZmprIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzc5NjI1MTQsImV4cCI6MjA1MzUzODUxNH0.N0SLqiMO6KxAlf_hyNTu1W1RZ8MfltuXwtdc1o-7eAs"
+
+supabase: Client = None
+try:
+    supabase = create_client(SUPABASE_URL, supabase_key)
+    st.session_state.supabase_connected = True
+    print("Supabase connection successful!")
+except Exception as e:
+    st.session_state.supabase_connected = False
+    print(f"Failed to connect to Supabase: {e}")
 
 # Initialize session state variables if they don't exist
 if 'user_msgs' not in st.session_state:
@@ -64,14 +95,14 @@ USERS = {
     "bruker2": "passord2",
     "bruker3": "passord3",
     "bruker4": "passord4",
-    "Snorre": "Snorre123",
-    "Martin": "Martin123",
-    "Christoffer": "Christoffer123",
-    "Marius": "Marius123",
-    "Edvard": "Edvard123",
+    "Snorre": "Snorre123", # Done
+    "Martin": "Martin123", # Done
+    "Christoffer": "Christoffer123", # Done
+    "Marius": "Marius123", # Done
+    "Edvard": "Edvard123", # Done
     "Daniel": "Daniel123",
-    "Stine": "Stine123",
-    "Eirik": "Eirik123",
+    "Stine": "Stine123", # Done
+    "Eirik": "Eirik123", # Done
     "Fredrik": "Fredrik123",
     "Emerson": "Emerson123",
     "Johan": "Johan123",
@@ -185,10 +216,6 @@ def evaluate_task_answer(task_id, answer):
 
 # Function to log user answers with model information
 def log_user_answer(username, task_id, answer, is_correct, model_used=None, query=None):
-    log_dir = "user_answers"
-    if not os.path.exists(log_dir):
-        os.makedirs(log_dir)
-    
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     log_entry = {
         "username": username,
@@ -205,7 +232,44 @@ def log_user_answer(username, task_id, answer, is_correct, model_used=None, quer
     if query:
         log_entry["query"] = query
     
-    log_file = os.path.join(log_dir, f"{username}_answers.json")
+    # Try to log to Supabase first
+    if st.session_state.get('supabase_connected', False) and supabase:
+        try:
+            # Check if table exists by trying to select a single row first
+            try:
+                supabase.table("user_answers").select("*").limit(1).execute()
+                table_exists = True
+            except Exception:
+                print("user_answers table doesn't exist in Supabase. Falling back to local logging.")
+                table_exists = False
+            
+            if table_exists:
+                response = supabase.table("user_answers").insert(log_entry).execute()
+                if hasattr(response, 'error') and response.error:
+                    print(f"Supabase error: {response.error}")
+                    # Fall back to local logging on error
+                    _log_to_local_file(username, log_entry, "user_answers")
+                else:
+                    print(f"Successfully logged to Supabase: {task_id}")
+                    return
+            else:
+                # Fall back to local logging if table doesn't exist
+                _log_to_local_file(username, log_entry, "user_answers")
+        except Exception as e:
+            print(f"Error logging to Supabase: {e}")
+            # Fall back to local logging on exception
+            _log_to_local_file(username, log_entry, "user_answers")
+    else:
+        # Fall back to local logging if Supabase is not connected
+        _log_to_local_file(username, log_entry, "user_answers")
+
+# Helper function for local file logging
+def _log_to_local_file(username, log_entry, log_type):
+    log_dir = log_type  # "user_answers" or "user_evaluations"
+    if not os.path.exists(log_dir):
+        os.makedirs(log_dir)
+    
+    log_file = os.path.join(log_dir, f"{username}_{log_type}.json")
     
     # Load existing logs if file exists
     if os.path.exists(log_file):
@@ -222,19 +286,40 @@ def log_user_answer(username, task_id, answer, is_correct, model_used=None, quer
 # Add this function after your other logging functions
 def log_user_evaluation(username, evaluation_data):
     """Log user's final evaluation feedback"""
-    log_dir = "user_evaluations"
-    if not os.path.exists(log_dir):
-        os.makedirs(log_dir)
-    
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     evaluation_data["timestamp"] = timestamp
     evaluation_data["username"] = username
     
-    log_file = os.path.join(log_dir, f"{username}_evaluation.json")
-    
-    # Save evaluation data
-    with open(log_file, 'w') as f:
-        json.dump(evaluation_data, f, indent=2)
+    # Try to log to Supabase first
+    if st.session_state.get('supabase_connected', False) and supabase:
+        try:
+            # Check if table exists by trying to select a single row first
+            try:
+                supabase.table("user_evaluations").select("*").limit(1).execute()
+                table_exists = True
+            except Exception:
+                print("user_evaluations table doesn't exist in Supabase. Falling back to local logging.")
+                table_exists = False
+            
+            if table_exists:
+                response = supabase.table("user_evaluations").insert(evaluation_data).execute()
+                if hasattr(response, 'error') and response.error:
+                    print(f"Supabase error: {response.error}")
+                    # Fall back to local logging on error
+                    _log_to_local_file(username, evaluation_data, "user_evaluations")
+                else:
+                    print(f"Successfully logged evaluation to Supabase for user: {username}")
+                    return True
+            else:
+                # Fall back to local logging if table doesn't exist
+                _log_to_local_file(username, evaluation_data, "user_evaluations")
+        except Exception as e:
+            print(f"Error logging evaluation to Supabase: {e}")
+            # Fall back to local logging on exception
+            _log_to_local_file(username, evaluation_data, "user_evaluations")
+    else:
+        # Fall back to local logging if Supabase is not connected
+        _log_to_local_file(username, evaluation_data, "user_evaluations")
     
     return True
 
