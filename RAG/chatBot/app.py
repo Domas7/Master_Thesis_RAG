@@ -385,6 +385,9 @@ def go_to_about_tab():
 if not st.session_state.logged_in:
     st.title("NASA Lessons Learned Login")
     
+    # Add the message about user evaluation
+    st.info("The user evaluation has been conducted. Please use username: admin and password: adminpass to log in.")
+    
     with st.form("login_form"):
         username = st.text_input("Username")
         password = st.text_input("Password", type="password")
