@@ -78,39 +78,11 @@ for json_file in json_files:
     except json.JSONDecodeError:
         print(f"Warning: File {json_file} contains invalid JSON, skipping.")
 
-# Combined figure: Number of documents by chunk count (bar chart)
-plt.figure(figsize=(18, 6))
+# Documents by chunk count (bar chart)
+plt.figure(figsize=(10, 6))
+plt.title('Distribution of Documents by Chunk Count', fontsize=16)
 
-# Create subplots for each file plus one for combined data
-fig, axes = plt.subplots(1, 4, figsize=(20, 6))
-fig.suptitle('Distribution of Documents by Chunk Count (Bar Chart)', fontsize=16)
-
-# Process each file separately
-for i, (file_key, docs) in enumerate(documents_by_file.items()):
-    # Count how many documents have each chunk count
-    chunk_count_distribution = {}
-    for doc, count in docs.items():
-        # Cap at 80 chunks per document
-        count = min(count, 80)
-        if count in chunk_count_distribution:
-            chunk_count_distribution[count] += 1
-        else:
-            chunk_count_distribution[count] = 1
-    
-    # Convert to list of tuples and sort numerically
-    if chunk_count_distribution:
-        sorted_items = sorted(chunk_count_distribution.items(), key=lambda x: int(x[0]))
-        # Unpack into separate lists for plotting
-        chunk_counts, doc_counts = zip(*sorted_items)
-        
-        # Plot on the corresponding subplot
-        axes[i].bar(chunk_counts, doc_counts)
-        axes[i].set_xlabel('Number of Chunks per Document')
-        axes[i].set_ylabel('Number of Documents')
-        axes[i].set_title(f'File {i+1}: {file_key}')
-        axes[i].grid(True, alpha=0.3, axis='y')
-
-# Process combined data for the last subplot
+# Process combined data
 chunk_count_distribution = {}
 for doc, count in documents.items():
     # Cap at 80 chunks per document
@@ -122,197 +94,46 @@ for doc, count in documents.items():
 
 # Convert to list of tuples and sort numerically
 sorted_items = sorted(chunk_count_distribution.items(), key=lambda x: int(x[0]))
-# Unpack into separate lists for plotting
 chunk_counts, doc_counts = zip(*sorted_items)
 
-# Plot on the last subplot
-axes[3].bar(chunk_counts, doc_counts)
-axes[3].set_xlabel('Number of Chunks per Document (capped at 80)')
-axes[3].set_ylabel('Number of Documents')
-axes[3].set_title('All Files Combined')
-axes[3].grid(True, alpha=0.3, axis='y')
-
-plt.tight_layout(rect=[0, 0, 1, 0.95])  # Adjust for the suptitle
-plt.savefig('statistics/documents_by_chunk_count_combined_bar.png')
+plt.bar(chunk_counts, doc_counts)
+plt.xlabel('Number of Chunks per Document (capped at 80)')
+plt.ylabel('Number of Documents')
+plt.grid(True, alpha=0.3, axis='y')
+plt.tight_layout()
+plt.savefig('statistics/documents_by_chunk_count_bar.png')
 plt.close()
 
-# Combined figure: Number of documents by chunk count (line graph)
-plt.figure(figsize=(18, 6))
+# Documents by chunk count (line graph)
+plt.figure(figsize=(10, 6))
+plt.title('Distribution of Documents by Chunk Count', fontsize=16)
 
-# Create subplots for each file plus one for combined data
-fig, axes = plt.subplots(1, 4, figsize=(20, 6))
-fig.suptitle('Distribution of Documents by Chunk Count (Line Graph)', fontsize=16)
-
-# Process each file separately
-for i, (file_key, docs) in enumerate(documents_by_file.items()):
-    # Count how many documents have each chunk count
-    chunk_count_distribution = {}
-    for doc, count in docs.items():
-        # Cap at 80 chunks per document
-        count = min(count, 80)
-        if count in chunk_count_distribution:
-            chunk_count_distribution[count] += 1
-        else:
-            chunk_count_distribution[count] = 1
-    
-    # Convert to list of tuples and sort numerically
-    if chunk_count_distribution:
-        sorted_items = sorted(chunk_count_distribution.items(), key=lambda x: int(x[0]))
-        # Unpack into separate lists for plotting
-        chunk_counts, doc_counts = zip(*sorted_items)
-        
-        # Plot on the corresponding subplot
-        axes[i].plot(chunk_counts, doc_counts, marker='o', linestyle='-', linewidth=2, markersize=4)
-        axes[i].fill_between(chunk_counts, doc_counts, alpha=0.3)
-        axes[i].set_xlabel('Number of Chunks per Document (capped at 80)')
-        axes[i].set_ylabel('Number of Documents')
-        axes[i].set_title(f'File {i+1}: {file_key}')
-        axes[i].grid(True, alpha=0.3)
-
-# Process combined data for the last subplot
-chunk_count_distribution = {}
-for doc, count in documents.items():
-    # Cap at 80 chunks per document
-    count = min(count, 80)
-    if count in chunk_count_distribution:
-        chunk_count_distribution[count] += 1
-    else:
-        chunk_count_distribution[count] = 1
-
-# Convert to list of tuples and sort numerically
-sorted_items = sorted(chunk_count_distribution.items(), key=lambda x: int(x[0]))
-# Unpack into separate lists for plotting
-chunk_counts, doc_counts = zip(*sorted_items)
-
-# Plot on the last subplot
-axes[3].plot(chunk_counts, doc_counts, marker='o', linestyle='-', linewidth=2, markersize=4)
-axes[3].fill_between(chunk_counts, doc_counts, alpha=0.3)
-axes[3].set_xlabel('Number of Chunks per Document (capped at 80)')
-axes[3].set_ylabel('Number of Documents')
-axes[3].set_title('All Files Combined')
-axes[3].grid(True, alpha=0.3)
-
-plt.tight_layout(rect=[0, 0, 1, 0.95])  # Adjust for the suptitle
-plt.savefig('statistics/documents_by_chunk_count_combined_line.png')
+plt.plot(chunk_counts, doc_counts, marker='o', linestyle='-', linewidth=2, markersize=4)
+plt.fill_between(chunk_counts, doc_counts, alpha=0.3)
+plt.xlabel('Number of Chunks per Document (capped at 80)')
+plt.ylabel('Number of Documents')
+plt.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.savefig('statistics/documents_by_chunk_count_line.png')
 plt.close()
 
-# Combined figure: Token distribution
-plt.figure(figsize=(20, 6))
-fig, axes = plt.subplots(1, 4, figsize=(20, 6))
-fig.suptitle('Distribution of Chunk Lengths in Tokens', fontsize=16)
+# Token distribution with cleaner presentation
+plt.figure(figsize=(12, 8))
+plt.title('Tokens per Chunk', fontsize=16)
 
-# Process each file separately
-for i, (file_key, lengths) in enumerate(chunk_lengths_by_file.items()):
-    # Convert to tokens
-    token_lengths = [length / 4 for length in lengths]  # Estimate tokens (4 chars ≈ 1 token)
-    
-    # Filter out chunks with fewer than 50 tokens (likely errors)
-    filtered_token_lengths = [length for length in token_lengths if length >= 50]
-    
-    # Filter to only include tokens up to 2000 (instead of capping)
-    displayed_token_lengths = [length for length in filtered_token_lengths if length <= 2000]
-    
-    # Count how many were above the cap
-    above_cap_count = len(filtered_token_lengths) - len(displayed_token_lengths)
-    
-    # Plot on the corresponding subplot
-    axes[i].hist(displayed_token_lengths, bins=20, alpha=0.7, color='teal')
-    axes[i].set_xlabel('Estimated Tokens (up to 2,000)')
-    axes[i].set_ylabel('Frequency')
-    axes[i].set_title(f'File {i+1}: {file_key}')
-    axes[i].grid(True, alpha=0.3)
-    
-    # Add text showing how many chunks were filtered
-    filtered_count = len(token_lengths) - len(filtered_token_lengths)
-    if filtered_count > 0 or above_cap_count > 0:
-        filter_text = []
-        if filtered_count > 0:
-            filter_text.append(f"Filtered out {filtered_count} chunks with <50 tokens")
-        if above_cap_count > 0:
-            filter_text.append(f"Not shown: {above_cap_count} chunks with >2000 tokens")
-        
-        axes[i].text(0.05, 0.95, "\n".join(filter_text), 
-                    transform=axes[i].transAxes, fontsize=9, 
-                    verticalalignment='top', bbox=dict(boxstyle='round', facecolor='white', alpha=0.7))
-
-# Process combined data for the last subplot
+# Calculate token lengths and apply filters
 token_lengths = [length / 4 for length in chunk_lengths]  # Estimate tokens (4 chars ≈ 1 token)
-
-# Filter out chunks with fewer than 10 tokens (likely errors)
-filtered_token_lengths = [length for length in token_lengths if length >= 50]
-
-# Filter to only include tokens up to 2000 (instead of capping)
+filtered_token_lengths = [length for length in token_lengths if length >= 40]  # Changed to 40
 displayed_token_lengths = [length for length in filtered_token_lengths if length <= 2000]
 
-# Count how many were above the cap
-above_cap_count = len(filtered_token_lengths) - len(displayed_token_lengths)
+# Create histogram
+plt.hist(displayed_token_lengths, bins=30, alpha=0.7, color='teal')
+plt.xlabel('Number of Tokens per Chunk (capped at 2,000)', fontsize=12)
+plt.ylabel('Number of Chunks', fontsize=12)
+plt.grid(True, alpha=0.3)
 
-# Plot on the last subplot
-axes[3].hist(displayed_token_lengths, bins=20, alpha=0.7, color='teal')
-axes[3].set_xlabel('Estimated Tokens (up to 2,000)')
-axes[3].set_ylabel('Frequency')
-axes[3].set_title('All Files Combined')
-axes[3].grid(True, alpha=0.3)
-
-# Add text showing how many chunks were filtered
-filtered_count = len(token_lengths) - len(filtered_token_lengths)
-if filtered_count > 0 or above_cap_count > 0:
-    filter_text = []
-    if filtered_count > 0:
-        filter_text.append(f"Filtered out {filtered_count} chunks with <50 tokens")
-    if above_cap_count > 0:
-        filter_text.append(f"Not shown: {above_cap_count} chunks with >2000 tokens")
-    
-    axes[3].text(0.05, 0.95, "\n".join(filter_text), 
-                transform=axes[3].transAxes, fontsize=9, 
-                verticalalignment='top', bbox=dict(boxstyle='round', facecolor='white', alpha=0.7))
-
-plt.tight_layout(rect=[0, 0, 1, 0.95])  # Adjust for the suptitle
-plt.savefig('statistics/chunk_token_distribution_combined.png')
-plt.close()
-
-# Create additional figures for combined data with different token caps
-token_caps = [500, 1000, 1500, 2000]
-token_lengths = [length / 4 for length in chunk_lengths]  # Estimate tokens (4 chars ≈ 1 token)
-filtered_token_lengths = [length for length in token_lengths if length >= 50]
-
-# Create a figure with 4 subplots for different token caps
-plt.figure(figsize=(20, 12))
-fig, axes = plt.subplots(2, 2, figsize=(20, 12))
-fig.suptitle('Distribution of Chunk Lengths in Tokens (All Files Combined)', fontsize=16)
-
-# Flatten axes for easier iteration
-axes = axes.flatten()
-
-for i, cap in enumerate(token_caps):
-    # Filter to only include tokens up to the current cap
-    displayed_token_lengths = [length for length in filtered_token_lengths if length <= cap]
-    
-    # Count how many were above the cap
-    above_cap_count = len(filtered_token_lengths) - len(displayed_token_lengths)
-    
-    # Plot on the corresponding subplot
-    axes[i].hist(displayed_token_lengths, bins=20, alpha=0.7, color='teal')
-    axes[i].set_xlabel(f'Estimated Tokens (up to {cap})')
-    axes[i].set_ylabel('Frequency')
-    axes[i].set_title(f'Token Cap: {cap}')
-    axes[i].grid(True, alpha=0.3)
-    
-    # Add text showing how many chunks were filtered
-    filtered_count = len(token_lengths) - len(filtered_token_lengths)
-    if filtered_count > 0 or above_cap_count > 0:
-        filter_text = []
-        if filtered_count > 0:
-            filter_text.append(f"Filtered out {filtered_count} chunks with <50 tokens")
-        if above_cap_count > 0:
-            filter_text.append(f"Not shown: {above_cap_count} chunks with >{cap} tokens")
-        
-        axes[i].text(0.05, 0.95, "\n".join(filter_text), 
-                    transform=axes[i].transAxes, fontsize=9, 
-                    verticalalignment='top', bbox=dict(boxstyle='round', facecolor='white', alpha=0.7))
-
-plt.tight_layout(rect=[0, 0, 1, 0.95])  # Adjust for the suptitle
-plt.savefig('statistics/chunk_token_distribution_different_caps.png')
+plt.tight_layout()
+plt.savefig('statistics/chunk_token_distribution.png', dpi=300, bbox_inches='tight')
 plt.close()
 
 # Create a summary dataframe for more detailed analysis

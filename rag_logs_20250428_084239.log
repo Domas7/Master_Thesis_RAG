@@ -1,5 +1,0 @@
-2025-04-28 08:42:39,420 - RAG.chatBot.rag_models - INFO - Environment variables loaded
-2025-04-28 08:42:41,839 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
-2025-04-28 08:42:44,230 - RAG.chatBot.rag_models - INFO - Looking for chunks in: [PosixPath('/home/domas/Downloads/Master Thesis/RAG/chatBot/../../reprocessed_section_chunks'), PosixPath('/home/domas/Downloads/Master Thesis/RAG/chatBot/../../reprocessed_section_chunks_2'), PosixPath('/home/domas/Downloads/Master Thesis/RAG/chatBot/../../reprocessed_section_chunks_3')]
-2025-04-28 08:42:44,230 - RAG.chatBot.rag_models - INFO - Loading existing vector store...
-2025-04-28 08:42:45,341 - RAG.chatBot.rag_models - INFO - Vector store loaded successfully

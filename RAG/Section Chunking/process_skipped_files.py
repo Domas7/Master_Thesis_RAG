@@ -15,6 +15,11 @@ from dataclasses import dataclass
 import copy
 import traceback
 
+
+# This file is not relevant for the thesis. When working with chunking, some files were skipped, if they took too long and similarly,
+# The skipped files were logged and this file was created to process the skipped files, which follows THE SAME structure as the main processing file
+# just with more lenient approach, meaning give it more time, more tries and so on.. 
+
 # Timeout exception and handler
 class TimeoutException(Exception):
     pass
@@ -84,7 +89,6 @@ class SkippedFilesChunker:
         self.logger.info(f"Loaded {len(self.download_urls)} download URLs from log file")
     
     def process_pdfs(self):
-        """Process all skipped PDFs from the previous run"""
         # Load the list of skipped files from the chunk_statistics.json
         try:
             with open("RAG/Section Chunking/skipped_chunk_statistics_1591.json", 'r') as f:
@@ -324,7 +328,6 @@ class SkippedFilesChunker:
         return file_chunks, [error_info] if error_info else [], stats
     
     def extract_sections_from_markdown(self, markdown_text: str, pdf_path: str) -> List[Section]:
-        """Extract sections from markdown text"""
         sections = []
         current_section = None
         current_content = []
@@ -435,7 +438,6 @@ class SkippedFilesChunker:
         return sections
     
     def verify_sections(self, sections: List[Section], pdf_path: str) -> None:
-        """Verify that sections are valid and fix if needed"""
         # If no sections were found, create a default section
         if not sections:
             self.logger.warning(f"No sections found in {pdf_path}, creating default section")
@@ -455,7 +457,6 @@ class SkippedFilesChunker:
                 sections[i].content = f"[Empty section: {section.title}]"
     
     def get_download_url(self, filename: str) -> str:
-        """Get download URL for a file, either from log or by generating it."""
         # First try to find the exact filename in our dictionary
         if filename in self.download_urls:
             return self.download_urls[filename]
@@ -482,7 +483,6 @@ class SkippedFilesChunker:
         return f"https://ntrs.nasa.gov/search?q={safe_filename}"
     
     def extract_document_id(self, filename):
-        """Try to extract NASA document ID from filename."""
         # Try to extract numeric ID (common pattern)
         numeric_match = re.search(r'(\d{8,})', filename)
         if numeric_match:

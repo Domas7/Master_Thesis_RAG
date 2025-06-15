@@ -94,28 +94,28 @@ USERS = {
     "bruker1": "passord1",
     "bruker2": "passord2",
     "bruker3": "passord3",
-    "bruker4": "passord4",
-    "Snorre": "Snorre123", # Done
-    "Martin": "Martin123", # Done
-    "Christoffer": "Christoffer123", # Done
-    "Marius": "Marius123", # Done
-    "Edvard": "Edvard123", # Done
-    "Daniel": "Daniel123",
-    "Stine": "Stine123", # Done
-    "Eirik": "Eirik123", # Done
-    "Fredrik": "Fredrik123",
-    "Emerson": "Emerson123",
-    "Johan": "Johan123",
-    "Dominykas": "Dominykas123",
-    "Chiran": "Chiran123",
-    "Filip": "Filip123",
-    "Sina": "Sina123",
-    "Håvard": "Håvard123",
-    "Kevin": "Kevin123",
-    "Jonathan": "Jonathan123",
-    "Tord": "Tord123",
-    "Patrik": "Patrik123",
-    "Kien": "Kien123",
+    "bruker4": "passord4", # Sent to Cephas
+    "Snorre": "Snorre123", # Sent
+    "Martin": "Martin123", # Sent
+    "Christoffer": "Christoffer123", # Sent
+    "Marius": "Marius123", # Sent
+    "Edvard": "Edvard123", # Sent
+    "Daniel": "Daniel123", # Sent
+    "Stine": "Stine123", # Sent
+    "Eirik": "Eirik123", # Sent
+    "Fredrik": "Fredrik123", # Sent
+    "Emerson": "Emerson123", # Sent
+    "Johan": "Johan123", # Sent
+    "Dominykas": "Dominykas123", # Sent
+    "Chiran": "Chiran123", # Sent
+    "Filip": "Filip123", # Sent
+    "Sina": "Sina123", # Sent
+    "Håvard": "Håvard123", # Sent
+    "Kevin": "Kevin123", # Sent
+    "Jonathan": "Jonathan123", # Sent
+    "Tord": "Tord123", # Sent
+    "Patrik": "Patrik123", # Sent 
+    "Kien": "Kien123", # Sent
 }
 
 # Define key terms/concepts that should be in correct answers - move this outside the function
@@ -950,7 +950,7 @@ if st.session_state.show_feedback_popup and 'evaluation_submitted' not in st.ses
     with feedback_container:
         # Add a colored background container to make it stand out
         with st.container(border=True):
-            st.markdown("## 🎉 Feedback Form - Please complete before continuing")
+            st.markdown("## Feedback Form - Please complete before continuing")
             st.markdown("### Thank you for completing the tasks!")
             
             with st.form("popup_evaluation_form"):

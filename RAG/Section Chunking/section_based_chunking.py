@@ -22,10 +22,13 @@ from functools import partial
 # 6. References ruins everything, references may contain different bolding, spacing and so on, a lot of chunks created there.
 # 7. Page breaks are not handled well, creates new chunk on new page? Because of double /n/n ?
 
-# Timeout exception class
+# Timeout exception class, used to avoid infinite loops.
 class TimeoutException(Exception):
     pass
 
+
+# For the @data and @context parts, following the pymupdf4llm approach found, not sure if they are necessary, but since the implementation had them, I added them.
+# Some of them are not used, but nice to have as a reference. 
 # Context manager for timeout
 @contextmanager
 def time_limit(seconds):
@@ -56,6 +59,10 @@ class Section:
     level: int  # Hierarchy level (1 for main sections, 2 for subsections, etc.)
     page_number: int
 
+
+# A lot of functions in this class are no longer used, they were implemented when working with chunking, as I forgot to include download_url, some meta data and so on
+# so instead of running the code from the beginning each time which took hours, I implemented additional functions to save time.
+# these functions are currently kept for reference what has been done to not forget mentioning them in the thesis. 
 class SectionChunker:
     """Extract sections from PDFs using pymupdf4llm for accurate header detection"""
     
@@ -90,11 +97,6 @@ class SectionChunker:
         self.logger.info(f"Loaded {len(self.download_urls)} download URLs from log file")
     
     def extract_sections_from_markdown(self, markdown_text: str, pdf_path: str) -> List[Section]:
-        """
-        Extract sections from markdown text based on header markers (# tags).
-        Improved to handle page breaks properly and detect subsections in content,
-        including bold headers without newlines.
-        """
         sections = []
         current_section = None
         current_content = []
@@ -413,10 +415,7 @@ class SectionChunker:
         return sections
     
     def post_process_sections(self, sections: List[Section]) -> List[Section]:
-        """
-        Post-process sections to merge duplicates and handle special cases.
-        Improved to handle page breaks and subsection continuations.
-        """
+
         if not sections:
             return []
         
@@ -790,47 +789,6 @@ class SectionChunker:
         
         self.logger.info(f"Extracted {len(download_urls)} download URLs from log file")
         return download_urls
-
-    def get_download_url(self, filename):
-        """Get download URL for a file, either from log or by generating it."""
-        # First try to find the exact filename in our dictionary
-        if filename in self.download_urls:
-            return self.download_urls[filename]
-        
-        # If not found, try to find a match ignoring case
-        for key, url in self.download_urls.items():
-            if filename.lower() == key.lower():
-                return url
-        
-        # If still not found, try to extract document ID from filename and generate URL
-        doc_id = self.extract_document_id(filename)
-        if doc_id:
-            return f"https://ntrs.nasa.gov/api/citations/{doc_id}/downloads/{filename}?attachment=true"
-        
-        # Last resort: search for partial matches in the log-extracted URLs
-        for key, url in self.download_urls.items():
-            # Check if the filename is contained within the key or vice versa
-            if filename in key or key in filename:
-                return url
-        
-        # If all else fails, return a search URL
-        self.logger.warning(f"Could not find or generate download URL for {filename}")
-        safe_filename = filename.replace(' ', '%20').replace('.pdf', '')
-        return f"https://ntrs.nasa.gov/search?q={safe_filename}"
-
-    def extract_document_id(self, filename):
-        """Try to extract NASA document ID from filename."""
-        # Try to extract numeric ID (common pattern)
-        numeric_match = re.search(r'(\d{8,})', filename)
-        if numeric_match:
-            return numeric_match.group(1)
-        
-        # Try to extract NASA document ID format (e.g., NASA-TM-123456)
-        nasa_id_match = re.search(r'(NASA-[A-Z]+-\d+)', filename, re.IGNORECASE)
-        if nasa_id_match:
-            return nasa_id_match.group(1)
-        
-        return None
 
 if __name__ == "__main__":
     chunker = SectionChunker()

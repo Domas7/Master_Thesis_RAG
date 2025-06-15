@@ -1,6 +1,8 @@
 import json
 import os
 
+# HELPER FILE, not relevant
+
 # Load the file
 input_file = "RAG/SPACECRAFT22_section_chunks_CHECKTHIS.json"
 output_file = "RAG/Section Chunking/skipped_files_filtered_3.json"

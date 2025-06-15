@@ -3,6 +3,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 from collections import Counter
 
+# This class is not relevant for the thesis, it is a helper file to compare semantic and recursive chunking 
+# It is kept here for reference in case I will work with it later.
+
+
 def load_chunks(file_path):
     """Load chunks from a JSON file."""
     with open(file_path, 'r') as f:

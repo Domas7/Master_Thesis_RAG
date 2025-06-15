@@ -1,0 +1,913 @@
+{
+  "sus": {
+    "mean_score": 76.5,
+    "median_score": 78.75,
+    "min_score": 40.0,
+    "max_score": 100.0,
+    "scores_by_user": [
+      {
+        "username": "Filip",
+        "sus_score": 95.0
+      },
+      {
+        "username": "Eirik",
+        "sus_score": 80.0
+      },
+      {
+        "username": "Stine",
+        "sus_score": 90.0
+      },
+      {
+        "username": "Edvard",
+        "sus_score": 77.5
+      },
+      {
+        "username": "Dominykas",
+        "sus_score": 40.0
+      },
+      {
+        "username": "Martin",
+        "sus_score": 62.5
+      },
+      {
+        "username": "Mathias",
+        "sus_score": 75.0
+      },
+      {
+        "username": "Sean",
+        "sus_score": 90.0
+      },
+      {
+        "username": "Christoffer",
+        "sus_score": 100.0
+      },
+      {
+        "username": "Johan",
+        "sus_score": 57.5
+      },
+      {
+        "username": "user1",
+        "sus_score": 50.0
+      },
+      {
+        "username": "Daniel",
+        "sus_score": 62.5
+      },
+      {
+        "username": "Chiran",
+        "sus_score": 67.5
+      },
+      {
+        "username": "Snorre",
+        "sus_score": 72.5
+      },
+      {
+        "username": "Kevin",
+        "sus_score": 100.0
+      },
+      {
+        "username": "Sina",
+        "sus_score": 95.0
+      },
+      {
+        "username": "Kien",
+        "sus_score": 82.5
+      },
+      {
+        "username": "Patrik",
+        "sus_score": 82.5
+      },
+      {
+        "username": "Moritz",
+        "sus_score": 82.5
+      },
+      {
+        "username": "Marius",
+        "sus_score": 67.5
+      }
+    ],
+    "interpretation": "Very Good (B)"
+  },
+  "completion_data": [
+    {
+      "username": "Dominykas",
+      "task_id": "task1",
+      "model_used": "llama",
+      "time_to_complete_minutes": -14.8579115,
+      "is_correct": true
+    },
+    {
+      "username": "Dominykas",
+      "task_id": "task2",
+      "model_used": "llama",
+      "time_to_complete_minutes": 0.6833333333333333,
+      "is_correct": true
+    },
+    {
+      "username": "Dominykas",
+      "task_id": "task3",
+      "model_used": "openai",
+      "time_to_complete_minutes": 0.4166666666666667,
+      "is_correct": true
+    },
+    {
+      "username": "user1",
+      "task_id": "task1",
+      "model_used": "openai",
+      "time_to_complete_minutes": 1.8266780833333334,
+      "is_correct": true
+    },
+    {
+      "username": "user1",
+      "task_id": "task2",
+      "model_used": "llama",
+      "time_to_complete_minutes": 2.433333333333333,
+      "is_correct": true
+    },
+    {
+      "username": "user1",
+      "task_id": "task3",
+      "model_used": "openai",
+      "time_to_complete_minutes": 0.65,
+      "is_correct": true
+    },
+    {
+      "username": "Filip",
+      "task_id": "task1",
+      "model_used": "openai",
+      "time_to_complete_minutes": 7.787314183333334,
+      "is_correct": true
+    },
+    {
+      "username": "Filip",
+      "task_id": "task3",
+      "model_used": "openai",
+      "time_to_complete_minutes": 5.55,
+      "is_correct": true
+    },
+    {
+      "username": "Filip",
+      "task_id": "task4",
+      "model_used": "openai",
+      "time_to_complete_minutes": 2.283333333333333,
+      "is_correct": true
+    },
+    {
+      "username": "Filip",
+      "task_id": "task5",
+      "model_used": "openai",
+      "time_to_complete_minutes": 2.1,
+      "is_correct": true
+    },
+    {
+      "username": "Eirik",
+      "task_id": "task1",
+      "model_used": "llama",
+      "time_to_complete_minutes": 5.058267916666667,
+      "is_correct": true
+    },
+    {
+      "username": "Eirik",
+      "task_id": "task2",
+      "model_used": "llama",
+      "time_to_complete_minutes": 3.533333333333333,
+      "is_correct": true
+    },
+    {
+      "username": "Eirik",
+      "task_id": "task3",
+      "model_used": "llama",
+      "time_to_complete_minutes": 3.7666666666666666,
+      "is_correct": true
+    },
+    {
+      "username": "Eirik",
+      "task_id": "task5",
+      "model_used": "openai",
+      "time_to_complete_minutes": 4.066666666666666,
+      "is_correct": true
+    },
+    {
+      "username": "Stine",
+      "task_id": "task1",
+      "model_used": "llama",
+      "time_to_complete_minutes": 1.4355782833333335,
+      "is_correct": true
+    },
+    {
+      "username": "Stine",
+      "task_id": "task2",
+      "model_used": "openai",
+      "time_to_complete_minutes": 2.5166666666666666,
+      "is_correct": true
+    },
+    {
+      "username": "Stine",
+      "task_id": "task3",
+      "model_used": "llama",
+      "time_to_complete_minutes": 3.15,
+      "is_correct": true
+    },
+    {
+      "username": "Stine",
+      "task_id": "task4",
+      "model_used": "openai",
+      "time_to_complete_minutes": 2.0166666666666666,
+      "is_correct": true
+    },
+    {
+      "username": "Stine",
+      "task_id": "task5",
+      "model_used": "llama",
+      "time_to_complete_minutes": 5.216666666666667,
+      "is_correct": true
+    },
+    {
+      "username": "Christoffer",
+      "task_id": "task1",
+      "model_used": "openai",
+      "time_to_complete_minutes": 4.4651613,
+      "is_correct": true
+    },
+    {
+      "username": "Christoffer",
+      "task_id": "task2",
+      "model_used": "llama",
+      "time_to_complete_minutes": 3.1333333333333333,
+      "is_correct": true
+    },
+    {
+      "username": "Christoffer",
+      "task_id": "task3",
+      "model_used": "openai",
+      "time_to_complete_minutes": 2.783333333333333,
+      "is_correct": true
+    },
+    {
+      "username": "Christoffer",
+      "task_id": "task4",
+      "model_used": "openai",
+      "time_to_complete_minutes": 1.5833333333333333,
+      "is_correct": true
+    },
+    {
+      "username": "Christoffer",
+      "task_id": "task5",
+      "model_used": "llama",
+      "time_to_complete_minutes": 2.7,
+      "is_correct": true
+    },
+    {
+      "username": "Edvard",
+      "task_id": "task1",
+      "model_used": "llama",
+      "time_to_complete_minutes": 5.320348733333334,
+      "is_correct": true
+    },
+    {
+      "username": "Edvard",
+      "task_id": "task3",
+      "model_used": "llama",
+      "time_to_complete_minutes": -5.216666666666667,
+      "is_correct": true
+    },
+    {
+      "username": "Edvard",
+      "task_id": "task4",
+      "model_used": "llama",
+      "time_to_complete_minutes": 1.6833333333333333,
+      "is_correct": true
+    },
+    {
+      "username": "Edvard",
+      "task_id": "task5",
+      "model_used": "llama",
+      "time_to_complete_minutes": 1.55,
+      "is_correct": true
+    },
+    {
+      "username": "Martin",
+      "task_id": "task2",
+      "model_used": "llama",
+      "time_to_complete_minutes": 6.05,
+      "is_correct": true
+    },
+    {
+      "username": "Martin",
+      "task_id": "task3",
+      "model_used": "llama",
+      "time_to_complete_minutes": 2.283333333333333,
+      "is_correct": true
+    },
+    {
+      "username": "Martin",
+      "task_id": "task4",
+      "model_used": "openai",
+      "time_to_complete_minutes": 1.2833333333333334,
+      "is_correct": true
+    },
+    {
+      "username": "Martin",
+      "task_id": "task5",
+      "model_used": "llama",
+      "time_to_complete_minutes": 1.7,
+      "is_correct": true
+    },
+    {
+      "username": "Mathias",
+      "task_id": "task1",
+      "model_used": "openai",
+      "time_to_complete_minutes": 0.2435022,
+      "is_correct": true
+    },
+    {
+      "username": "Mathias",
+      "task_id": "task2",
+      "model_used": "llama",
+      "time_to_complete_minutes": 0.8833333333333333,
+      "is_correct": true
+    },
+    {
+      "username": "Mathias",
+      "task_id": "task3",
+      "model_used": "openai",
+      "time_to_complete_minutes": 0.9,
+      "is_correct": true
+    },
+    {
+      "username": "Mathias",
+      "task_id": "task4",
+      "model_used": "llama",
+      "time_to_complete_minutes": 0.95,
+      "is_correct": true
+    },
+    {
+      "username": "Mathias",
+      "task_id": "task5",
+      "model_used": "llama",
+      "time_to_complete_minutes": 0.9333333333333333,
+      "is_correct": true
+    },
+    {
+      "username": "Sean",
+      "task_id": "task1",
+      "model_used": "llama",
+      "time_to_complete_minutes": 0.11895190000000001,
+      "is_correct": true
+    },
+    {
+      "username": "Sean",
+      "task_id": "task2",
+      "model_used": "llama",
+      "time_to_complete_minutes": 2.2333333333333334,
+      "is_correct": true
+    },
+    {
+      "username": "Sean",
+      "task_id": "task3",
+      "model_used": "openai",
+      "time_to_complete_minutes": 1.6166666666666667,
+      "is_correct": true
+    },
+    {
+      "username": "Sean",
+      "task_id": "task4",
+      "model_used": "openai",
+      "time_to_complete_minutes": 1.2166666666666666,
+      "is_correct": true
+    },
+    {
+      "username": "Sean",
+      "task_id": "task5",
+      "model_used": "llama",
+      "time_to_complete_minutes": 1.9666666666666666,
+      "is_correct": true
+    },
+    {
+      "username": "Snorre",
+      "task_id": "task2",
+      "model_used": "llama",
+      "time_to_complete_minutes": 8.016666666666667,
+      "is_correct": true
+    },
+    {
+      "username": "Snorre",
+      "task_id": "task3",
+      "model_used": "openai",
+      "time_to_complete_minutes": -10.166666666666666,
+      "is_correct": true
+    },
+    {
+      "username": "Snorre",
+      "task_id": "task4",
+      "model_used": "openai",
+      "time_to_complete_minutes": 3.783333333333333,
+      "is_correct": true
+    },
+    {
+      "username": "Snorre",
+      "task_id": "task5",
+      "model_used": "llama",
+      "time_to_complete_minutes": 2.95,
+      "is_correct": true
+    },
+    {
+      "username": "Daniel",
+      "task_id": "task1",
+      "model_used": "llama",
+      "time_to_complete_minutes": 1.0558452666666667,
+      "is_correct": true
+    },
+    {
+      "username": "Daniel",
+      "task_id": "task2",
+      "model_used": "llama",
+      "time_to_complete_minutes": 3.4166666666666665,
+      "is_correct": true
+    },
+    {
+      "username": "Daniel",
+      "task_id": "task3",
+      "model_used": "llama",
+      "time_to_complete_minutes": 4.233333333333333,
+      "is_correct": true
+    },
+    {
+      "username": "Daniel",
+      "task_id": "task4",
+      "model_used": "openai",
+      "time_to_complete_minutes": 3.966666666666667,
+      "is_correct": true
+    },
+    {
+      "username": "Daniel",
+      "task_id": "task5",
+      "model_used": "llama",
+      "time_to_complete_minutes": 5.5,
+      "is_correct": true
+    },
+    {
+      "username": "Johan",
+      "task_id": "task1",
+      "model_used": "openai",
+      "time_to_complete_minutes": 7.392131233333333,
+      "is_correct": true
+    },
+    {
+      "username": "Johan",
+      "task_id": "task2",
+      "model_used": "llama",
+      "time_to_complete_minutes": -5.6,
+      "is_correct": true
+    },
+    {
+      "username": "Johan",
+      "task_id": "task3",
+      "model_used": "openai",
+      "time_to_complete_minutes": 7.583333333333333,
+      "is_correct": true
+    },
+    {
+      "username": "Johan",
+      "task_id": "task4",
+      "model_used": "openai",
+      "time_to_complete_minutes": 1.2,
+      "is_correct": true
+    },
+    {
+      "username": "Johan",
+      "task_id": "task5",
+      "model_used": "openai",
+      "time_to_complete_minutes": 6.816666666666666,
+      "is_correct": true
+    },
+    {
+      "username": "Chiran",
+      "task_id": "task2",
+      "model_used": "openai",
+      "time_to_complete_minutes": 4.7,
+      "is_correct": true
+    },
+    {
+      "username": "Chiran",
+      "task_id": "task3",
+      "model_used": "llama",
+      "time_to_complete_minutes": 3.566666666666667,
+      "is_correct": true
+    },
+    {
+      "username": "Chiran",
+      "task_id": "task4",
+      "model_used": "openai",
+      "time_to_complete_minutes": 2.4166666666666665,
+      "is_correct": true
+    },
+    {
+      "username": "Chiran",
+      "task_id": "task5",
+      "model_used": "openai",
+      "time_to_complete_minutes": 2.75,
+      "is_correct": true
+    },
+    {
+      "username": "Kevin",
+      "task_id": "task1",
+      "model_used": "openai",
+      "time_to_complete_minutes": 0.23278408333333334,
+      "is_correct": true
+    },
+    {
+      "username": "Kevin",
+      "task_id": "task2",
+      "model_used": "openai",
+      "time_to_complete_minutes": 4.516666666666667,
+      "is_correct": true
+    },
+    {
+      "username": "Kevin",
+      "task_id": "task3",
+      "model_used": "openai",
+      "time_to_complete_minutes": 1.4166666666666667,
+      "is_correct": true
+    },
+    {
+      "username": "Kevin",
+      "task_id": "task4",
+      "model_used": "llama",
+      "time_to_complete_minutes": 1.0166666666666666,
+      "is_correct": true
+    },
+    {
+      "username": "Kevin",
+      "task_id": "task5",
+      "model_used": "llama",
+      "time_to_complete_minutes": 4.716666666666667,
+      "is_correct": true
+    },
+    {
+      "username": "Patrik",
+      "task_id": "task1",
+      "model_used": "openai",
+      "time_to_complete_minutes": 1.3057758166666666,
+      "is_correct": true
+    },
+    {
+      "username": "Patrik",
+      "task_id": "task2",
+      "model_used": "openai",
+      "time_to_complete_minutes": 1.5166666666666666,
+      "is_correct": true
+    },
+    {
+      "username": "Patrik",
+      "task_id": "task3",
+      "model_used": "llama",
+      "time_to_complete_minutes": 1.2666666666666666,
+      "is_correct": true
+    },
+    {
+      "username": "Patrik",
+      "task_id": "task4",
+      "model_used": "llama",
+      "time_to_complete_minutes": 1.1666666666666667,
+      "is_correct": true
+    },
+    {
+      "username": "Patrik",
+      "task_id": "task5",
+      "model_used": "openai",
+      "time_to_complete_minutes": 5.366666666666666,
+      "is_correct": true
+    },
+    {
+      "username": "Sina",
+      "task_id": "task1",
+      "model_used": "openai",
+      "time_to_complete_minutes": 6.083245716666667,
+      "is_correct": true
+    },
+    {
+      "username": "Sina",
+      "task_id": "task2",
+      "model_used": "openai",
+      "time_to_complete_minutes": 7.566666666666666,
+      "is_correct": true
+    },
+    {
+      "username": "Sina",
+      "task_id": "task3",
+      "model_used": "llama",
+      "time_to_complete_minutes": 4.783333333333333,
+      "is_correct": true
+    },
+    {
+      "username": "Sina",
+      "task_id": "task4",
+      "model_used": "llama",
+      "time_to_complete_minutes": 4.2,
+      "is_correct": true
+    },
+    {
+      "username": "Sina",
+      "task_id": "task5",
+      "model_used": "openai",
+      "time_to_complete_minutes": 4.833333333333333,
+      "is_correct": true
+    },
+    {
+      "username": "Kien",
+      "task_id": "task1",
+      "model_used": "llama",
+      "time_to_complete_minutes": 7.947365216666666,
+      "is_correct": true
+    },
+    {
+      "username": "Kien",
+      "task_id": "task2",
+      "model_used": "llama",
+      "time_to_complete_minutes": 9.383333333333333,
+      "is_correct": true
+    },
+    {
+      "username": "Kien",
+      "task_id": "task3",
+      "model_used": "llama",
+      "time_to_complete_minutes": 4.516666666666667,
+      "is_correct": true
+    },
+    {
+      "username": "Kien",
+      "task_id": "task4",
+      "model_used": "openai",
+      "time_to_complete_minutes": 5.666666666666667,
+      "is_correct": true
+    },
+    {
+      "username": "Kien",
+      "task_id": "task5",
+      "model_used": "llama",
+      "time_to_complete_minutes": 6.166666666666667,
+      "is_correct": true
+    },
+    {
+      "username": "Moritz",
+      "task_id": "task1",
+      "model_used": "llama",
+      "time_to_complete_minutes": 9.059870933333334,
+      "is_correct": true
+    },
+    {
+      "username": "Moritz",
+      "task_id": "task2",
+      "model_used": "openai",
+      "time_to_complete_minutes": 6.05,
+      "is_correct": true
+    },
+    {
+      "username": "Moritz",
+      "task_id": "task3",
+      "model_used": "llama",
+      "time_to_complete_minutes": 4.066666666666666,
+      "is_correct": true
+    },
+    {
+      "username": "Moritz",
+      "task_id": "task4",
+      "model_used": "llama",
+      "time_to_complete_minutes": 4.3,
+      "is_correct": true
+    },
+    {
+      "username": "Moritz",
+      "task_id": "task5",
+      "model_used": "llama",
+      "time_to_complete_minutes": 4.466666666666667,
+      "is_correct": true
+    },
+    {
+      "username": "Marius",
+      "task_id": "task1",
+      "model_used": "openai",
+      "time_to_complete_minutes": 2.488484216666667,
+      "is_correct": true
+    },
+    {
+      "username": "Marius",
+      "task_id": "task2",
+      "model_used": "openai",
+      "time_to_complete_minutes": 4.483333333333333,
+      "is_correct": true
+    },
+    {
+      "username": "Marius",
+      "task_id": "task4",
+      "model_used": "llama",
+      "time_to_complete_minutes": 7.666666666666667,
+      "is_correct": true
+    }
+  ],
+  "task_completion": {
+    "mean_time_minutes": 2.952803714962121,
+    "median_time_minutes": 2.8666666666666667,
+    "success_rate": 100.0
+  },
+  "task_stats": [
+    {
+      "task_id": "task1",
+      "mean_time": 2.76255256372549,
+      "median_time": 2.488484216666667,
+      "attempts": 17,
+      "success_rate": 100.0
+    },
+    {
+      "task_id": "task2",
+      "mean_time": 3.6398148148148146,
+      "median_time": 3.4749999999999996,
+      "attempts": 18,
+      "success_rate": 100.0
+    },
+    {
+      "task_id": "task3",
+      "mean_time": 1.9561403508771928,
+      "median_time": 2.783333333333333,
+      "attempts": 19,
+      "success_rate": 100.0
+    },
+    {
+      "task_id": "task4",
+      "mean_time": 2.7294117647058824,
+      "median_time": 2.0166666666666666,
+      "attempts": 17,
+      "success_rate": 100.0
+    },
+    {
+      "task_id": "task5",
+      "mean_time": 3.7529411764705882,
+      "median_time": 4.066666666666666,
+      "attempts": 17,
+      "success_rate": 100.0
+    }
+  ],
+  "model_comparison": [
+    {
+      "task_id": "task1",
+      "model_used": "llama",
+      "mean_time": 1.8922895937500002,
+      "median_time": 3.2469231,
+      "attempts": 8,
+      "success_rate": 100.0
+    },
+    {
+      "task_id": "task1",
+      "model_used": "openai",
+      "mean_time": 3.5361196481481483,
+      "median_time": 2.488484216666667,
+      "attempts": 9,
+      "success_rate": 100.0
+    },
+    {
+      "task_id": "task2",
+      "model_used": "llama",
+      "mean_time": 3.106060606060606,
+      "median_time": 3.1333333333333333,
+      "attempts": 11,
+      "success_rate": 100.0
+    },
+    {
+      "task_id": "task2",
+      "model_used": "openai",
+      "mean_time": 4.478571428571429,
+      "median_time": 4.516666666666667,
+      "attempts": 7,
+      "success_rate": 100.0
+    },
+    {
+      "task_id": "task3",
+      "model_used": "llama",
+      "mean_time": 2.6416666666666666,
+      "median_time": 3.666666666666667,
+      "attempts": 10,
+      "success_rate": 100.0
+    },
+    {
+      "task_id": "task3",
+      "model_used": "openai",
+      "mean_time": 1.1944444444444444,
+      "median_time": 1.4166666666666667,
+      "attempts": 9,
+      "success_rate": 100.0
+    },
+    {
+      "task_id": "task4",
+      "model_used": "llama",
+      "mean_time": 2.9976190476190476,
+      "median_time": 1.6833333333333333,
+      "attempts": 7,
+      "success_rate": 100.0
+    },
+    {
+      "task_id": "task4",
+      "model_used": "openai",
+      "mean_time": 2.5416666666666665,
+      "median_time": 2.15,
+      "attempts": 10,
+      "success_rate": 100.0
+    },
+    {
+      "task_id": "task5",
+      "model_used": "llama",
+      "mean_time": 3.4424242424242424,
+      "median_time": 2.95,
+      "attempts": 11,
+      "success_rate": 100.0
+    },
+    {
+      "task_id": "task5",
+      "model_used": "openai",
+      "mean_time": 4.322222222222222,
+      "median_time": 4.449999999999999,
+      "attempts": 6,
+      "success_rate": 100.0
+    }
+  ],
+  "task_difficulty": [
+    {
+      "task_id": "task1",
+      "Challenging": "5",
+      "Easy": "6",
+      "Just Right": "5",
+      "Too Difficult": "0",
+      "Too Easy": "4",
+      "Challenging_pct": 25.0,
+      "Easy_pct": 30.0,
+      "Just Right_pct": 25.0,
+      "Too Difficult_pct": 0.0,
+      "Too Easy_pct": 20.0
+    },
+    {
+      "task_id": "task2",
+      "Challenging": "4",
+      "Easy": "10",
+      "Just Right": "3",
+      "Too Difficult": "0",
+      "Too Easy": "3",
+      "Challenging_pct": 20.0,
+      "Easy_pct": 50.0,
+      "Just Right_pct": 15.0,
+      "Too Difficult_pct": 0.0,
+      "Too Easy_pct": 15.0
+    },
+    {
+      "task_id": "task3",
+      "Challenging": "2",
+      "Easy": "9",
+      "Just Right": "6",
+      "Too Difficult": "0",
+      "Too Easy": "3",
+      "Challenging_pct": 10.0,
+      "Easy_pct": 45.0,
+      "Just Right_pct": 30.0,
+      "Too Difficult_pct": 0.0,
+      "Too Easy_pct": 15.0
+    },
+    {
+      "task_id": "task4",
+      "Challenging": "3",
+      "Easy": "10",
+      "Just Right": "5",
+      "Too Difficult": "0",
+      "Too Easy": "2",
+      "Challenging_pct": 15.0,
+      "Easy_pct": 50.0,
+      "Just Right_pct": 25.0,
+      "Too Difficult_pct": 0.0,
+      "Too Easy_pct": 10.0
+    },
+    {
+      "task_id": "task5",
+      "Challenging": "2",
+      "Easy": "5",
+      "Just Right": "8",
+      "Too Difficult": "1",
+      "Too Easy": "4",
+      "Challenging_pct": 10.0,
+      "Easy_pct": 25.0,
+      "Just Right_pct": 40.0,
+      "Too Difficult_pct": 5.0,
+      "Too Easy_pct": 20.0
+    }
+  ],
+  "ai_performance": {
+    "helpfulness": {
+      "Extremely helpful": 14,
+      "Very helpful": 3,
+      "Moderately helpful": 2,
+      "Not helpful": 1
+    },
+    "relevance": {
+      "Very relevant": 10,
+      "Extremely relevant": 9,
+      "Not relevant": 1
+    }
+  }
+}

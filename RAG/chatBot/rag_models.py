@@ -82,7 +82,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Custom logger handler to also log to Supabase
-class SupabaseHandler(logging.Handler):
+class SupabaseHandler(logging.Handler): 
     def emit(self, record):
         if not hasattr(st.session_state, 'supabase_connected') or not st.session_state.supabase_connected:
             return
@@ -167,6 +167,8 @@ DO NOT include a Sources section in your response. The system will add this auto
 """)
 
 # Create a custom langchain LLM class for TogetherAI
+# Going for unstructured approach of having several classes in a single file, not the best practice, but had a lot of issues/bugs when running, so having everything in one file made it easier to track issues.
+# Move the classes into own files later on.
 class TogetherLLM(LLM):
     """Custom LLM class for TogetherAI that inherits from LangChain's LLM base class."""
     
@@ -285,7 +287,7 @@ class RAGModel:
                 else:
                     logger.warning("TogetherAI not available: library not imported or API key missing")
                 
-                # Fall back to Ollama if TogetherAI is not available
+                # WE ARE NOT LONGER USING THE wizardlm2 model, but for it is kept as an possibility when testing locally in the future.
                 try:
                     response = requests.get("http://localhost:11434/api/tags")
                     if response.status_code == 200:
@@ -415,6 +417,21 @@ class RAGModel:
                     
                     if not pd.isna(row.get('recommendations')) and row['recommendations'] != 'None':
                         content_parts.append(f"Recommendations: {row['recommendations']}")
+
+                    if not pd.isna(row.get('evidence')) and row['evidence'] != 'None':
+                        content_parts.append(f"Evidence: {row['evidence']}")
+
+                    if not pd.isna(row.get('program_relation')) and row['program_relation'] != 'None':
+                        content_parts.append(f"Program Relation: {row['program_relation']}")
+
+                    if not pd.isna(row.get('program_phase')) and row['program_phase'] != 'None':
+                        content_parts.append(f"Program Phase: {row['program_phase']}")
+
+                    if not pd.isna(row.get('mission_directorate')) and row['mission_directorate'] != 'None':
+                        content_parts.append(f"Mission Directorate: {row['mission_directorate']}")
+
+                    if not pd.isna(row.get('topics')) and row['topics'] != 'None':
+                        content_parts.append(f"Topics: {row['topics']}")
                     
                     content = "\n\n".join(content_parts)
                     
@@ -423,7 +440,9 @@ class RAGModel:
                         'title': row.get('subject', 'NASA Lesson Learned'),
                         'url': row.get('url', ''),
                         'source_type': 'lessons_learned',
-                        'mission_directorate': row.get('mission_directorate', '')
+                        'mission_directorate': row.get('mission_directorate', ''),
+                        'program_phase': row.get('program_phase', ''),
+                        'topics': row.get('topics', '')
                     }
                     
                     # Create document
@@ -464,8 +483,8 @@ class RAGModel:
         if self.db:
             self.retriever = self.db.as_retriever(
                 search_kwargs={
-                    "k": 5,
-                    "score_threshold": 0.7
+                    "k": 5, # Experimenting with this
+                    "score_threshold": 0.7 # this as well
                 }
             )
         print("8")
@@ -552,14 +571,18 @@ class RAGModel:
                 if self.together_available and self.together_llm is not None:
                     # Create a more concise prompt for faster processing
                     llama_prompt = ChatPromptTemplate.from_template("""
-                    Based on the context, provide a concise answer to the question.
+                        You are an expert in analyzing NASA documents and mission data. Based on the following context, please provide concise answers derived from the context.
 
-                    Context: {context}
-                    Question: {input}
+                        Context: {context}
 
-                    Format your response as:
-                    1. Brief Answer
-                    2. Key Points
+                        Question: {input}
+
+                        Format:
+                        1. Brief Answer
+                        2. Key Points
+                        3. Relevant Mission Details (if applicable)
+
+                        DO NOT include a Sources section in your response. The system will add this automatically based on the actual documents used.
                     """)
                     
                     # Use TogetherAI LLM
@@ -570,14 +593,18 @@ class RAGModel:
                 elif self.llm is not None:
                     # Create a more concise prompt for faster processing
                     llama_prompt = ChatPromptTemplate.from_template("""
-                    Based on the context, provide a concise answer to the question.
+                        You are an expert in analyzing NASA documents and mission data. Based on the following context, please provide concise answers derived from the context.
 
-                    Context: {context}
-                    Question: {input}
+                        Context: {context}
 
-                    Format your response as:
-                    1. Brief Answer
-                    2. Key Points
+                        Question: {input}
+
+                        Format:
+                        1. Brief Answer
+                        2. Key Points
+                        3. Relevant Mission Details (if applicable)
+
+                        DO NOT include a Sources section in your response. The system will add this automatically based on the actual documents used.
                     """)
                     
                     # Use the concise prompt for faster processing
@@ -593,7 +620,7 @@ class RAGModel:
                         self._start_background_model_loading()
                         return "The model is being loaded. Please try again in a few moments."
             
-            else:  # Default to OpenAI
+            else:  # Default to OpenAI change this latter, we don't actually want to fallback, give error instead. 
                 llm = ChatOpenAI(
                     model="gpt-4o-mini",
                     temperature=0.1,
@@ -703,6 +730,101 @@ class RAGModel:
         except Exception as e:
             logger.error(f"Error processing query: {e}")
             return f"Sorry, I encountered an error: {str(e)}"
+
+    def get_document_by_id(self, doc_id):
+        logger.info(f"Looking for document with ID: {doc_id}")
+        
+        # First check if it's a lessons learned URL
+        if doc_id.startswith("https://"):
+            if self.lessons_learned_path.exists():
+                try:
+                    import pandas as pd
+                    df = pd.read_csv(self.lessons_learned_path)
+                    lesson = df[df['url'] == doc_id].iloc[0]
+                    
+                    # Combine relevant fields into content
+                    content_parts = []
+                    if not pd.isna(lesson.get('subject')):
+                        content_parts.append(f"Subject: {lesson['subject']}")
+                    if not pd.isna(lesson.get('abstract')) and lesson['abstract'] != 'None':
+                        content_parts.append(f"Abstract: {lesson['abstract']}")
+                    if not pd.isna(lesson.get('driving_event')) and lesson['driving_event'] != 'None':
+                        content_parts.append(f"Driving Event: {lesson['driving_event']}")
+                    if not pd.isna(lesson.get('lessons_learned')) and lesson['lessons_learned'] != 'None':
+                        content_parts.append(f"Lessons Learned: {lesson['lessons_learned']}")
+                    if not pd.isna(lesson.get('recommendations')) and lesson['recommendations'] != 'None':
+                        content_parts.append(f"Recommendations: {lesson['recommendations']}")
+                    if not pd.isna(lesson.get('evidence')) and lesson['evidence'] != 'None':
+                        content_parts.append(f"Evidence: {lesson['evidence']}")
+                    if not pd.isna(lesson.get('program_relation')) and lesson['program_relation'] != 'None':
+                        content_parts.append(f"Program Relation: {lesson['program_relation']}")
+                    if not pd.isna(lesson.get('program_phase')) and lesson['program_phase'] != 'None':
+                        content_parts.append(f"Program Phase: {lesson['program_phase']}")
+                    if not pd.isna(lesson.get('mission_directorate')) and lesson['mission_directorate'] != 'None':
+                        content_parts.append(f"Mission Directorate: {lesson['mission_directorate']}")
+                    if not pd.isna(lesson.get('topics')) and lesson['topics'] != 'None':
+                        content_parts.append(f"Topics: {lesson['topics']}")
+                    
+                    content = "\n\n".join(content_parts)
+                    
+                    # Create metadata
+                    metadata_dict = {
+                        'title': lesson.get('subject', 'NASA Lesson Learned'),
+                        'url': doc_id,
+                        'source_type': 'lessons_learned',
+                        'mission_directorate': lesson.get('mission_directorate', ''),
+                        'program_phase': lesson.get('program_phase', ''),
+                        'topics': lesson.get('topics', '')
+                    }
+                    
+                    return Document(
+                        page_content=content,
+                        metadata=metadata_dict
+                    )
+                except Exception as e:
+                    logger.error(f"Error retrieving lesson learned document: {e}")
+                    return None
+        
+        # If not a URL, treat as a PDF chunk ID
+        for chunks_dir in self.chunks_dirs:
+            try:
+                # The chunk ID format is typically "filename_pagenumber"
+                # Extract the filename part
+                file_prefix = doc_id.split('_')[0] if '_' in doc_id else doc_id
+                
+                # Search through all JSON files in the directory
+                for json_file in chunks_dir.glob("**/*.json*"):
+                    with open(json_file, 'r') as f:
+                        data = json.load(f)
+                        
+                        # Handle both single objects and arrays
+                        items = data if isinstance(data, list) else [data]
+                        
+                        for item in items:
+                            if item.get('chunk_id') == doc_id:
+                                metadata_dict = {
+                                    'title': item.get('title', ''),
+                                    'chunk_id': doc_id,
+                                    'page_number': item.get('page_number', ''),
+                                    'section_level': item.get('section_level', ''),
+                                    'file_name': item.get('metadata', {}).get('file_name', ''),
+                                    'source_type': 'pdf'
+                                }
+                                
+                                # Add download_url if available
+                                if 'metadata' in item and 'download_url' in item['metadata']:
+                                    metadata_dict['download_url'] = item['metadata']['download_url']
+                                
+                                return Document(
+                                    page_content=item.get('content', ''),
+                                    metadata=metadata_dict
+                                )
+            except Exception as e:
+                logger.error(f"Error searching in {chunks_dir}: {e}")
+                continue
+        
+        logger.warning(f"Document with ID {doc_id} not found")
+        return None
 
 # Singleton instance
 _rag_model = None

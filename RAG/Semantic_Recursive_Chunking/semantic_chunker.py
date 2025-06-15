@@ -14,11 +14,11 @@ from nltk.tokenize import sent_tokenize
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+
+# This class is not relevant for the thesis, it is a helper file for the semantic chunking, which is not used in the final implementation. 
+# It is kept here for reference in case I will work with it later.
+
 class SemanticChunker:
-    """
-    A class that implements semantic-based text chunking for PDF documents.
-    Uses TF-IDF and cosine similarity to identify natural semantic boundaries in text.
-    """
     
     def __init__(self, 
                  input_dir: str = "../../TESTING_FOLDER_FEW_PDFS", 

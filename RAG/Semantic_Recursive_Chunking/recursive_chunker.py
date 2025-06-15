@@ -8,27 +8,17 @@ import pymupdf4llm  # Using pymupdf4llm instead of direct fitz
 import fitz  # Still needed for metadata extraction
 import datetime
 
+# This class is not relevant for the thesis, it is a helper file for the recursive chunking, which is not used in the final implementation. 
+# It is kept here for reference in case I will work with it later.
+
 class RecursiveChunker:
-    """
-    A class that implements recursive text chunking for PDF documents.
-    It splits documents into smaller, overlapping chunks while preserving
-    natural text boundaries like paragraphs and sentences.
-    """
     
     def __init__(self, 
                  input_dir: str = "../../TESTING_FOLDER_FEW_PDFS",  # Updated path to go up two directories
                  output_file: str = "recursive_chunks.json",
                  max_chunk_size: int = 1000,
                  overlap_size: int = 100):  
-        """
-        Initialize the chunker with configuration parameters.
-        
-        Args:
-            input_dir: Directory containing PDF files to process
-            output_file: Where to save the resulting chunks as JSON
-            max_chunk_size: Maximum characters allowed in each chunk
-            overlap_size: Number of characters to overlap between chunks for context
-        """
+
         self.input_dir = input_dir
         self.output_file = output_file
         self.max_chunk_size = max_chunk_size
@@ -61,15 +51,6 @@ class RecursiveChunker:
         os.makedirs(self.temp_dir, exist_ok=True)
     
     def extract_text_from_pdf(self, pdf_path: str) -> str:
-        """
-        Extract raw text content from a PDF file using pymupdf4llm.
-        
-        Args:
-            pdf_path: Path to the PDF file
-            
-        Returns:
-            Extracted text as a string, or empty string if extraction fails
-        """
         try:
             # Use pymupdf4llm to convert PDF to markdown
             markdown_text = pymupdf4llm.to_markdown(pdf_path)
@@ -98,16 +79,6 @@ class RecursiveChunker:
             return ""
     
     def extract_metadata(self, pdf_path: str) -> Dict[str, Any]:
-        """
-        Extract metadata (title, author, etc.) from a PDF file.
-        Falls back to filename if metadata is not available.
-        
-        Args:
-            pdf_path: Path to the PDF file
-            
-        Returns:
-            Dictionary containing metadata fields
-        """
         try:
             doc = fitz.open(pdf_path)
             metadata = doc.metadata
@@ -140,18 +111,6 @@ class RecursiveChunker:
             }
     
     def recursive_split(self, text: str, separators: List[str], max_size: int) -> List[str]:
-        """
-        Recursively split text into chunks using natural separators.
-        Always respects word boundaries and tries to respect sentence boundaries.
-        
-        Args:
-            text: Text to split
-            separators: List of separators to try, in order of preference
-            max_size: Maximum size of each chunk
-            
-        Returns:
-            List of text chunks
-        """
         # If text is already small enough, return it as a single chunk
         if len(text) <= max_size:
             return [text]
@@ -232,16 +191,6 @@ class RecursiveChunker:
         return [text]
     
     def create_overlapping_chunks(self, chunks: List[str]) -> List[str]:
-        """
-        Create overlapping chunks to provide context between chunks.
-        Ensures that chunks don't start in the middle of words.
-        
-        Args:
-            chunks: List of text chunks
-            
-        Returns:
-            List of overlapping text chunks
-        """
         if not chunks or len(chunks) <= 1:
             return chunks
         
@@ -279,14 +228,6 @@ class RecursiveChunker:
         return result
     
     def process_pdfs(self) -> None:
-        """
-        Main processing function that:
-        1. Finds all PDFs in the input directory
-        2. Extracts text and metadata from each PDF
-        3. Creates chunks using recursive splitting
-        4. Adds overlap between chunks
-        5. Saves results and statistics
-        """
         # Find all PDF files in the input directory
         pdf_files = []
         
@@ -406,13 +347,6 @@ class RecursiveChunker:
         })
     
     def save_statistics(self, chunk_counts: Dict[str, int], global_stats: Dict[str, Any]) -> None:
-        """
-        Save processing statistics to a JSON file.
-        
-        Args:
-            chunk_counts: Dictionary mapping filenames to number of chunks
-            global_stats: Dictionary with global statistics
-        """
         # Calculate per-file statistics
         per_file_stats = []
         for filename, count in chunk_counts.items():

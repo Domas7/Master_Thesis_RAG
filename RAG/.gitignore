@@ -6,6 +6,11 @@ __pycache__
 *.pyd
 *.pyw
 
+Diagrams&Visuals/
+/home/domas/Downloads/Master Thesis/RAG/Diagrams&Visuals
+RAG/Diagrams&Visuals
+.RAG/Diagrams&Visuals
+RAG/Diagrams&Visuals/
 *.pdf
 *.csv
 *.json
